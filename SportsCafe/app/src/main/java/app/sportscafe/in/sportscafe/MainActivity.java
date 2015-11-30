@@ -1,5 +1,6 @@
 package app.sportscafe.in.sportscafe;
 
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +20,9 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener
 {
-
+    ArticlesFragment articlesFragment;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        articlesFragment = new ArticlesFragment();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -93,6 +94,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri)
+    {
+
     }
 
     /**
@@ -151,6 +158,8 @@ public class MainActivity extends AppCompatActivity
         {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            if(position==1)
+                return articlesFragment.newInstance();
             return PlaceholderFragment.newInstance(position + 1);
         }
 
