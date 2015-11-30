@@ -6,13 +6,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +33,9 @@ public class ArticlesFragment extends Fragment
     getArticlesTask task;
     SwipeRefreshLayout swipeRefreshLayout;
     Utilites util = new Utilites();
-    ArrayList<String> arrayList;
-    ArrayAdapter adapter;
-
+    ArticleAdapter adapter;
+    String image_width="800";
+    String image_height="400";
     private String mParam1;
     public String LOGGING = "LOGGING";
     //private String mParam2;
@@ -76,10 +75,13 @@ public class ArticlesFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefreshlayout);
-        final ListView listView = (ListView)view.findViewById(R.id.listview);
-        arrayList = new ArrayList();
-        adapter = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,arrayList);
-        listView.setAdapter(adapter);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        MainActivity activity = (MainActivity) getActivity();
+        adapter = new ArticleAdapter(new ArrayList<String>(),new ArrayList<String>(),new ArrayList<String>(),activity);
+        recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
@@ -87,9 +89,8 @@ public class ArticlesFragment extends Fragment
             {
                 task = new getArticlesTask();
                 task.execute();
-                adapter = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,arrayList);
                 adapter.notifyDataSetChanged();
-                listView.setAdapter(adapter);
+
             }
         });
         return view;
@@ -107,14 +108,26 @@ public class ArticlesFragment extends Fragment
     {
 
     }
+    public class loadImages extends AsyncTask<Void,Void,Void>
+    {
 
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            return null;
+        }
+    }
     public class getArticlesTask extends AsyncTask<Void,Void,Void>
     {
 
         @Override
         protected Void doInBackground(Void... params)
         {
+            ArrayList<String> titles = new ArrayList<>();
+            ArrayList<String> summaries = new ArrayList<>();
+            ArrayList<String> image_urls = new ArrayList<>();
             String link = util.ret_getArticlesWithConditionsURL();
+            String link_image = util.ret_ImageURL();
             JSONObject msg = new JSONObject();
             try
             {
@@ -160,8 +173,18 @@ public class ArticlesFragment extends Fragment
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString("title");
-                        arrayList.add(title);
+                        String summary = json_article.getString("contentSummary");
+                        JSONObject images = json_article.getJSONObject("images");
+                        JSONObject featured = images.getJSONObject("featured");
+                        String imageURL = featured.getString("path");
+                        titles.add(title);
+                        summaries.add(summary);
+                        image_urls.add(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
                     }
+                    MainActivity activity = (MainActivity)getActivity();
+                    adapter = new ArticleAdapter(titles,summaries,image_urls,activity);
+                    adapter.notifyDataSetChanged();
+
                 } catch (Exception e)
                 {
                     Log.d(LOGGING,"Error in Connecting : "+e);
@@ -180,6 +203,7 @@ public class ArticlesFragment extends Fragment
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
+            recyclerView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);
         }
     }

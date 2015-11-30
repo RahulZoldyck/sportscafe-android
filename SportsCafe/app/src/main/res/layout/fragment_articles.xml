@@ -6,10 +6,11 @@
              tools:context="app.sportscafe.in.sportscafe.ArticlesFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listview"
+        android:scrollbars="vertical"
+        android:id="@+id/recyclerview"
         android:text="@string/hello_blank_fragment"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>
