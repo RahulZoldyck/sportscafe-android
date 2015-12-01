@@ -5,11 +5,11 @@
              android:id="@+id/swiperefreshlayout"
              tools:context="app.sportscafe.in.sportscafe.ArticlesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:clickable="true"
         android:id="@+id/recyclerview"
         android:text="@string/hello_blank_fragment"/>
 
