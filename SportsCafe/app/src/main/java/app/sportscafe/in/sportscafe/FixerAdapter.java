@@ -49,7 +49,7 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
 
         if(match.getStatus().equals("Completed")){
             timeorscore.setText(match.getScore());
-            ll.setBackgroundColor(Color.parseColor("#3f85f4"));
+            ll.setBackgroundColor(Color.parseColor("#174586"));
         }
 
         else{
