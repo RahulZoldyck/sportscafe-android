@@ -27,34 +27,30 @@ import java.util.ArrayList;
 
 public class ArticlesFragment extends Fragment
 {
+    public Context context;
     public RecyclerView recyclerView;
-    public RecyclerView.Adapter recyclerAdapter;
     public RecyclerView.LayoutManager layoutManager;
-    getArticlesTask task;
     SwipeRefreshLayout swipeRefreshLayout;
+
     Utilites util = new Utilites();
     ArticleAdapter adapter;
-    String image_width="800";
-    String image_height="400";
-    private String mParam1;
-    public String LOGGING = "LOGGING";
-    //private String mParam2;
+    getArticlesTask task_articles;
+
+    public static String LOGGING = "LOGGING";
+
+    String image_width="600";
+    String image_height="300";
 
     private OnFragmentInteractionListener mListener;
 
     public ArticlesFragment()
     {
-        // Required empty public constructor
-    }
 
+    }
 
     public static ArticlesFragment newInstance()
     {
         ArticlesFragment fragment = new ArticlesFragment();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -62,11 +58,6 @@ public class ArticlesFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null)
-        {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
     }
 
     @Override
@@ -74,21 +65,21 @@ public class ArticlesFragment extends Fragment
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
+        context = getContext();
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefreshlayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        MainActivity activity = (MainActivity) getActivity();
-        adapter = new ArticleAdapter(new ArrayList<String>(),new ArrayList<String>(),new ArrayList<String>(),activity);
+        adapter = new ArticleAdapter(new ArrayList<Article>(),context);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
             {
-                task = new getArticlesTask();
-                task.execute();
+                task_articles = new getArticlesTask();
+                task_articles.execute();
                 adapter.notifyDataSetChanged();
 
             }
@@ -104,28 +95,14 @@ public class ArticlesFragment extends Fragment
         }
     }
 
-    public void getArticles()
-    {
-
-    }
-    public class loadImages extends AsyncTask<Void,Void,Void>
-    {
-
-        @Override
-        protected Void doInBackground(Void... params)
-        {
-            return null;
-        }
-    }
     public class getArticlesTask extends AsyncTask<Void,Void,Void>
     {
+        ArrayList<Article> articles = new ArrayList<>();
 
         @Override
         protected Void doInBackground(Void... params)
         {
-            ArrayList<String> titles = new ArrayList<>();
-            ArrayList<String> summaries = new ArrayList<>();
-            ArrayList<String> image_urls = new ArrayList<>();
+
             String link = util.ret_getArticlesWithConditionsURL();
             String link_image = util.ret_ImageURL();
             JSONObject msg = new JSONObject();
@@ -153,7 +130,6 @@ public class ArticlesFragment extends Fragment
                     connection.setRequestMethod("POST");
                     connection.setRequestProperty("Content-Type","application/json; charset=utf-8");
                     String param = object.toString();
-                    Log.d(LOGGING,param);
                     byte[] bytes = param.getBytes();
                     OutputStream out = connection.getOutputStream();
                     out.write(bytes);
@@ -165,7 +141,6 @@ public class ArticlesFragment extends Fragment
                     String result="";
                     while((line = reader.readLine())!=null)
                         result = result+line;
-                    Log.d(LOGGING,result);
                     JSONArray jsonArray = new JSONArray(result);
                     Integer length = jsonArray.length();
                     for(int i=0;i<length;i++)
@@ -177,12 +152,19 @@ public class ArticlesFragment extends Fragment
                         JSONObject images = json_article.getJSONObject("images");
                         JSONObject featured = images.getJSONObject("featured");
                         String imageURL = featured.getString("path");
-                        titles.add(title);
-                        summaries.add(summary);
-                        image_urls.add(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
+                        JSONObject classifications = json_article.getJSONObject("classifications");
+                        JSONObject sections = classifications.getJSONObject("sections");
+                        String articleType = sections.getString("articleType");
+                        String sport = sections.getString("sport");
+                        Article article_temp = new Article();
+                        article_temp.setTitle(title);
+                        article_temp.setSummary(summary);
+                        article_temp.setImage_URL(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
+                        article_temp.setArticleType(articleType);
+                        article_temp.setSport(sport);
+                        articles.add(article_temp);
                     }
-                    MainActivity activity = (MainActivity)getActivity();
-                    adapter = new ArticleAdapter(titles,summaries,image_urls,activity);
+                    adapter = new ArticleAdapter(articles,context);
                     adapter.notifyDataSetChanged();
 
                 } catch (Exception e)
@@ -194,7 +176,6 @@ public class ArticlesFragment extends Fragment
             {
                 Log.d(LOGGING,"Error in JSONAccum : "+e);
             }
-
 
             return null;
         }
@@ -232,7 +213,6 @@ public class ArticlesFragment extends Fragment
 
     public interface OnFragmentInteractionListener
     {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

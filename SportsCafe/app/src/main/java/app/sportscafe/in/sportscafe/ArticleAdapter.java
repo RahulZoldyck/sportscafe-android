@@ -1,18 +1,15 @@
 package app.sportscafe.in.sportscafe;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
-import java.net.URL;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 /**
@@ -20,18 +17,15 @@ import java.util.ArrayList;
  */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>
 {
-    public String LOGGING="LOGGING";
-    MainActivity activity_parent;
-    ArrayList<String> title = new ArrayList<>();
-    ArrayList<String> summary = new ArrayList<>();
-    ArrayList<String> image_URL = new ArrayList<>();
-    public ArticleAdapter(ArrayList<String> param_title, ArrayList<String> param_summary, ArrayList<String> param_imageURL, MainActivity activity)
+    Context context;
+    ArrayList<Article> articles = new ArrayList<>();
+
+    public ArticleAdapter(ArrayList<Article> articles_array,Context context)
     {
-        title = param_title;
-        summary = param_summary;
-        image_URL = param_imageURL;
-        activity_parent = activity;
+        this.articles = articles_array;
+        this.context = context;
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView textView_title;
@@ -57,51 +51,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public void onBindViewHolder(ArticleAdapter.ViewHolder holder, int position)
     {
-        holder.textView_title.setText(title.get(position));
-        holder.textView_summary.setText(summary.get(position));
-        holder.image.setImageBitmap(loadBitmap(position,image_URL.get(position)));
+        holder.textView_title.setText(articles.get(position).getTitle());
+        holder.textView_summary.setText(articles.get(position).getSummary());
+        Picasso.with(context)
+                .load(articles.get(position).getImage_URL())
+                .placeholder(R.drawable.sportscafe)
+                .into(holder.image);
     }
 
     @Override
     public int getItemCount()
     {
-        return title.size();
+        return articles.size();
     }
 
-    public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap>
-    {
-        Bitmap bitmap;
-        @Override
-        protected Bitmap doInBackground(String... params)
-        {
-            try
-            {
-                InputStream in = new URL(params[0]).openStream();
-                bitmap = BitmapFactory.decodeStream(in);
-                activity_parent.addBitmapToMemoryCache(String.valueOf(params[1]), bitmap);
-            } catch (Exception e)
-            {
-                Log.d(LOGGING,"Exception : "+e);
-            }
-
-            return bitmap;
-        }
-    }
-    public Bitmap loadBitmap(int resId,String url)
-    {
-        final String imageKey = String.valueOf(resId);
-        final Bitmap bitmap = activity_parent.getBitmapFromMemCache(imageKey);
-        Log.d(LOGGING,"Param : "+imageKey);
-        if (bitmap != null)
-        {
-            Log.d(LOGGING,"Bitmap Exists");
-            return bitmap;
-        } else
-        {
-            BitmapWorkerTask task = new BitmapWorkerTask();
-            task.execute(url,imageKey);
-            return BitmapFactory.decodeResource(activity_parent.getResources(),R.drawable.sportscafe);
-        }
-    }
 
 }
