@@ -75,11 +75,11 @@ public class Fixtures extends android.support.v4.app.Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Matches m= (Matches) parent.getItemAtPosition(position);
-                        if(m!=null && !m.getLink().equals("-1")){
-                            Uri uri = Uri.parse(m.getLink());
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
-                        }
+//                        if(m!=null && !m.getLink().equals("-1")){
+//                            Uri uri = Uri.parse(m.getLink());
+//                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                            startActivity(intent);
+//                        }
                     }
                 }
         );
@@ -109,7 +109,7 @@ public class Fixtures extends android.support.v4.app.Fragment {
 //            String nowAsISO = df.format();
             Date today=new Date(System.currentTimeMillis());
             Date yesterday=new Date(System.currentTimeMillis());
-            yesterday.setDate(today.getDate()-1);
+            yesterday.setDate(today.getDate()-2);
             Date tomorrow=new Date(System.currentTimeMillis());
             tomorrow.setDate(today.getDate()+2);
             String ISOtomo=df.format(tomorrow)+":00.000Z";
