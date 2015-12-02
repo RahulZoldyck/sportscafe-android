@@ -12,6 +12,7 @@ public class Article
     private String sport;
     private String date;
     private String articleType;
+    private String credits;
 
     public void setTitle(String title)
     {
@@ -79,5 +80,15 @@ public class Article
     public void setArticleType(String articleType)
     {
         this.articleType = articleType;
+    }
+
+    public String getCredits()
+    {
+        return credits;
+    }
+
+    public void setCredits(String credits)
+    {
+        this.credits = credits;
     }
 }
