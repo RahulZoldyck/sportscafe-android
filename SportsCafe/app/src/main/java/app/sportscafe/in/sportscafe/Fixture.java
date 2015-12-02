@@ -1,21 +1,17 @@
 package app.sportscafe.in.sportscafe;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +34,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 
-public class Fixtures extends android.support.v4.app.Fragment {
+public class Fixture extends android.support.v4.app.Fragment {
     RecyclerView mRecyclerView;
     View vh;
     SwipeRefreshLayout layout;
@@ -49,12 +45,12 @@ public class Fixtures extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
 
 
-    public static Fixtures newInstance() {
-        Fixtures fragment = new Fixtures();
+    public static Fixture newInstance() {
+        Fixture fragment = new Fixture();
         return fragment;
     }
 
-    public Fixtures() {
+    public Fixture() {
         // Required empty public constructor
     }
 
@@ -103,8 +99,8 @@ public class Fixtures extends android.support.v4.app.Fragment {
         @Override
         protected JSONObject doInBackground(Void... voids) {
             JSONObject data=new JSONObject();
-            TimeZone tz = TimeZone.getTimeZone("UTC");
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            TimeZone tz = TimeZone.getTimeZone(getResources().getString(R.string.utc));
+            DateFormat df = new SimpleDateFormat(getResources().getString(R.string.dateformatISO));
             df.setTimeZone(tz);
 //            String nowAsISO = df.format();
             Date today=new Date(System.currentTimeMillis());
@@ -154,7 +150,6 @@ public class Fixtures extends android.support.v4.app.Fragment {
             try {
                 jsons= new JSONObject(rawjson);
             } catch (JSONException e) {
-                Log.d("sportscafe",rawjson+"********************************************");
                 e.printStackTrace();
             }
 
@@ -164,8 +159,6 @@ public class Fixtures extends android.support.v4.app.Fragment {
             try {
 
                 JSONObject js=new JSONObject(rawjson);
-//                JSONObject json =new JSONObject();
-//                json.accumulate("$redact",js);
                 String params=js.toString();
                 byte[] bytes=params.getBytes();
 
@@ -290,18 +283,6 @@ public class Fixtures extends android.support.v4.app.Fragment {
         FixerAdapter adapter=new FixerAdapter(getContext(),matchArray);
         lv.setAdapter(adapter);
         layout.setRefreshing(false);
-
-//        mRecyclerView = (RecyclerView)vh. findViewById(R.id.my_recycler_view);
-//        mRecyclerView.setHasFixedSize(true);
-//        RecyclerView.LayoutManager  mLayoutManager = new LinearLayoutManager(getContext());
-//        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//
-//        mRecyclerView.setLayoutManager(layoutManager);
-//        RecyclerView.Adapter mAdapter= new FixtureAdaptor(matchArray);
-//        mRecyclerView.setAdapter(mAdapter);
-
-
 
 ;    }
 
