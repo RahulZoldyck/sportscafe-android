@@ -94,11 +94,11 @@ public class ArticlesFragment extends Fragment
             mListener.onFragmentInteraction(uri);
         }
     }
-    public class getAuthorByID extends AsyncTask<Void,Void,Void>
+    public class getAuthorByID extends AsyncTask<String,Void,String>
     {
 
         @Override
-        protected Void doInBackground(Void... params)
+        protected String doInBackground(String... params)
         {
             return null;
         }
@@ -125,7 +125,7 @@ public class ArticlesFragment extends Fragment
                 JSONObject sort = new JSONObject();
                 sort.accumulate("publishDate",-1);
                 options.accumulate("sort",sort);
-                options.accumulate("limit",25);
+                options.accumulate("limit",50);
                 msg.accumulate("conditions",conditions);
                 msg.accumulate("projection",projection);
                 msg.accumulate("options",options);
@@ -160,7 +160,23 @@ public class ArticlesFragment extends Fragment
                         try
                         {
                             authorId = json_article.getString("authorId");
-                            Log.d(LOGGING,authorId);
+                            if(authorId.equals(""))
+                                authorId = "Sportscafe Editor";
+                            else
+                            {
+                                int pos=-1;
+                                //TODO call api to get Author name
+                                for(int z=1;z<authorId.length();z++)
+                                {
+                                    Character c=authorId.charAt(z);
+                                    if(Character.isUpperCase(c))
+                                        pos = z;
+
+                                }
+                                if(pos!=-1)
+                                    authorId = authorId.substring(0,pos)+" "+authorId.substring(pos,authorId.length());
+
+                            }
                         }
                         catch (Exception e)
                         {
