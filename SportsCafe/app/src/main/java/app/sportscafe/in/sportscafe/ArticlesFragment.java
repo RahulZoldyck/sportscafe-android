@@ -94,7 +94,15 @@ public class ArticlesFragment extends Fragment
             mListener.onFragmentInteraction(uri);
         }
     }
+    public class getAuthorByID extends AsyncTask<Void,Void,Void>
+    {
 
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            return null;
+        }
+    }
     public class getArticlesTask extends AsyncTask<Void,Void,Void>
     {
         ArrayList<Article> articles = new ArrayList<>();
@@ -148,6 +156,16 @@ public class ArticlesFragment extends Fragment
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString("title");
+                        String authorId;
+                        try
+                        {
+                            authorId = json_article.getString("authorId");
+                            Log.d(LOGGING,authorId);
+                        }
+                        catch (Exception e)
+                        {
+                            authorId = "Sportscafe Editor";
+                        }
                         String summary = json_article.getString("contentSummary");
                         JSONObject images = json_article.getJSONObject("images");
                         JSONObject featured = images.getJSONObject("featured");
@@ -162,6 +180,7 @@ public class ArticlesFragment extends Fragment
                         article_temp.setImage_URL(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
+                        article_temp.setAuthor(authorId);
                         articles.add(article_temp);
                     }
                     adapter = new ArticleAdapter(articles,context);
