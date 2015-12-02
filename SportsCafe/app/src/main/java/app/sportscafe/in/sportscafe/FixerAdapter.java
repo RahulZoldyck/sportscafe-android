@@ -50,13 +50,13 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
 
         if(match.getStatus().equals("Completed")){
             timeorscore.setText(match.getScore());
-            ll.setBackgroundColor(Color.parseColor("#174586"));
+            ll.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
         }
 
         else{
             try {
                 timeorscore.setText(getTime(match.getDate()));
-                ll.setBackgroundColor(Color.parseColor("#CE2127"));
+                ll.setBackgroundColor(getContext().getResources().getColor(R.color.colorAccent));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -67,31 +67,31 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
 
     private String getDate(String date) throws ParseException {
 
-        java.text.DateFormat format=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+        java.text.DateFormat format=new SimpleDateFormat(getContext().getResources().getString(R.string.parseISO));
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date dates=format.parse(date);
-        java.text.DateFormat getformat=new SimpleDateFormat("MMM d, yyyy");
+        java.text.DateFormat getformat=new SimpleDateFormat(getContext().getResources().getString(R.string.dateFormat));
 
         return getformat.format(dates);
     }
 
     private String getTime(String date) throws ParseException {
-        java.text.DateFormat format=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        java.text.DateFormat format=new SimpleDateFormat(getContext().getResources().getString(R.string.parseISO));
+        format.setTimeZone(TimeZone.getTimeZone(getContext().getResources().getString(R.string.gmt)));
         Date dates=format.parse(date);
-        String amorpm="AM";
+        String amorpm=getContext().getResources().getString(R.string.am);
         String hr="00",mm;
         mm=String.valueOf(dates.getMinutes());
         if(dates.getHours()>12){
-            amorpm="PM";
+            amorpm=getContext().getResources().getString(R.string.pm);
             hr=String.valueOf(dates.getHours()-12);
         }
         if(dates.getHours()==12){
-            amorpm="PM";
+            amorpm=getContext().getResources().getString(R.string.pm);
             hr=String.valueOf(12);
         }
         if(dates.getHours()<12){
-            amorpm="AM";
+            amorpm=getContext().getResources().getString(R.string.am);
             hr=String.valueOf(dates.getHours());
         }
 
@@ -102,5 +102,5 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
 
         return hr+":"+mm+" "+amorpm;
     }
-   // 2015-10-31T18:30:00.000Z
+
 }

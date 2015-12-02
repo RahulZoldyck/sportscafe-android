@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +84,7 @@ public class Fixture extends android.support.v4.app.Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        getFixtures get=new getFixtures();
+                        AsyncFixtures get=new AsyncFixtures();
                         get.execute();
                     }
                 }
@@ -94,7 +93,7 @@ public class Fixture extends android.support.v4.app.Fragment {
         return v;
     }
 
-    class getFixtures extends AsyncTask<Void,Void,JSONObject>{
+    class AsyncFixtures extends AsyncTask<Void,Void,JSONObject>{
 
         @Override
         protected JSONObject doInBackground(Void... voids) {
@@ -102,14 +101,13 @@ public class Fixture extends android.support.v4.app.Fragment {
             TimeZone tz = TimeZone.getTimeZone(getResources().getString(R.string.utc));
             DateFormat df = new SimpleDateFormat(getResources().getString(R.string.dateformatISO));
             df.setTimeZone(tz);
-//            String nowAsISO = df.format();
             Date today=new Date(System.currentTimeMillis());
             Date yesterday=new Date(System.currentTimeMillis());
             yesterday.setDate(today.getDate()-2);
             Date tomorrow=new Date(System.currentTimeMillis());
             tomorrow.setDate(today.getDate()+2);
-            String ISOtomo=df.format(tomorrow)+":00.000Z";
-            String ISOyes=df.format(yesterday)+":00.000Z";
+            String ISOtomo=df.format(tomorrow)+getResources().getString(R.string.formatModification);
+            String ISOyes=df.format(yesterday)+getResources().getString(R.string.formatModification);
 
 
 
@@ -146,14 +144,6 @@ public class Fixture extends android.support.v4.app.Fragment {
                 "}"+
             "}}"+
             "}\"";
-            JSONObject jsons= null;
-            try {
-                jsons= new JSONObject(rawjson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
 
             // getting from REST API
             try {
@@ -162,7 +152,7 @@ public class Fixture extends android.support.v4.app.Fragment {
                 String params=js.toString();
                 byte[] bytes=params.getBytes();
 
-                URL url= new URL("https://sportscafe.in/api/fixtures/getMatchesWithAggregation");
+                URL url= new URL(new Utilites().getFixtureURL());
                 HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
@@ -181,7 +171,6 @@ public class Fixture extends android.support.v4.app.Fragment {
                     result=result+line;
                 }
                 JSONObject res=new JSONObject(result);
-                Log.d("sportscafe",res.toString());
                 data=res.getJSONObject("data");
 
             } catch (Exception e) {
@@ -312,7 +301,7 @@ public class Fixture extends android.support.v4.app.Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         public void onFragmentInteraction(Uri uri);
     }
 
