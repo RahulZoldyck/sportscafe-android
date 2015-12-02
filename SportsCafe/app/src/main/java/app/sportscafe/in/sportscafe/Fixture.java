@@ -1,21 +1,16 @@
 package app.sportscafe.in.sportscafe;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +33,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 
-public class Fixtures extends android.support.v4.app.Fragment {
+public class Fixture extends android.support.v4.app.Fragment {
     RecyclerView mRecyclerView;
     View vh;
     SwipeRefreshLayout layout;
@@ -49,12 +44,12 @@ public class Fixtures extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
 
 
-    public static Fixtures newInstance() {
-        Fixtures fragment = new Fixtures();
+    public static Fixture newInstance() {
+        Fixture fragment = new Fixture();
         return fragment;
     }
 
-    public Fixtures() {
+    public Fixture() {
         // Required empty public constructor
     }
 
@@ -89,7 +84,7 @@ public class Fixtures extends android.support.v4.app.Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        getFixtures get=new getFixtures();
+                        AsyncFixtures get=new AsyncFixtures();
                         get.execute();
                     }
                 }
@@ -98,22 +93,21 @@ public class Fixtures extends android.support.v4.app.Fragment {
         return v;
     }
 
-    class getFixtures extends AsyncTask<Void,Void,JSONObject>{
+    class AsyncFixtures extends AsyncTask<Void,Void,JSONObject>{
 
         @Override
         protected JSONObject doInBackground(Void... voids) {
             JSONObject data=new JSONObject();
-            TimeZone tz = TimeZone.getTimeZone("UTC");
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            TimeZone tz = TimeZone.getTimeZone(getResources().getString(R.string.utc));
+            DateFormat df = new SimpleDateFormat(getResources().getString(R.string.dateformatISO));
             df.setTimeZone(tz);
-//            String nowAsISO = df.format();
             Date today=new Date(System.currentTimeMillis());
             Date yesterday=new Date(System.currentTimeMillis());
             yesterday.setDate(today.getDate()-2);
             Date tomorrow=new Date(System.currentTimeMillis());
             tomorrow.setDate(today.getDate()+2);
-            String ISOtomo=df.format(tomorrow)+":00.000Z";
-            String ISOyes=df.format(yesterday)+":00.000Z";
+            String ISOtomo=df.format(tomorrow)+getResources().getString(R.string.formatModification);
+            String ISOyes=df.format(yesterday)+getResources().getString(R.string.formatModification);
 
 
 
@@ -150,26 +144,15 @@ public class Fixtures extends android.support.v4.app.Fragment {
                 "}"+
             "}}"+
             "}\"";
-            JSONObject jsons= null;
-            try {
-                jsons= new JSONObject(rawjson);
-            } catch (JSONException e) {
-                Log.d("sportscafe",rawjson+"********************************************");
-                e.printStackTrace();
-            }
-
-
 
             // getting from REST API
             try {
 
                 JSONObject js=new JSONObject(rawjson);
-//                JSONObject json =new JSONObject();
-//                json.accumulate("$redact",js);
                 String params=js.toString();
                 byte[] bytes=params.getBytes();
 
-                URL url= new URL("https://sportscafe.in/api/fixtures/getMatchesWithAggregation");
+                URL url= new URL(new Utilites().getFixtureURL());
                 HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
@@ -188,7 +171,6 @@ public class Fixtures extends android.support.v4.app.Fragment {
                     result=result+line;
                 }
                 JSONObject res=new JSONObject(result);
-                Log.d("sportscafe",res.toString());
                 data=res.getJSONObject("data");
 
             } catch (Exception e) {
@@ -291,18 +273,6 @@ public class Fixtures extends android.support.v4.app.Fragment {
         lv.setAdapter(adapter);
         layout.setRefreshing(false);
 
-//        mRecyclerView = (RecyclerView)vh. findViewById(R.id.my_recycler_view);
-//        mRecyclerView.setHasFixedSize(true);
-//        RecyclerView.LayoutManager  mLayoutManager = new LinearLayoutManager(getContext());
-//        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//
-//        mRecyclerView.setLayoutManager(layoutManager);
-//        RecyclerView.Adapter mAdapter= new FixtureAdaptor(matchArray);
-//        mRecyclerView.setAdapter(mAdapter);
-
-
-
 ;    }
 
 
@@ -331,7 +301,7 @@ public class Fixtures extends android.support.v4.app.Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         public void onFragmentInteraction(Uri uri);
     }
 

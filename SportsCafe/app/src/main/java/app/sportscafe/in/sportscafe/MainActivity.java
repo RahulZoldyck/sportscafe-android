@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener,Fixtures.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener
 {
     ArticlesFragment articlesFragment;
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         {
             if(position==1)
                 return articlesFragment.newInstance();
-            return Fixtures.newInstance();
+            return Fixture.newInstance();
         }
 
         @Override
