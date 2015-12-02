@@ -30,12 +30,14 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     {
         TextView textView_title;
         TextView textView_summary;
+        TextView textView_author;
         ImageView image;
         public ViewHolder(View V)
         {
             super(V);
             textView_title = (TextView)V.findViewById(R.id.title);
             textView_summary = (TextView)V.findViewById(R.id.summary);
+            textView_author = (TextView)V.findViewById(R.id.author);
             image = (ImageView)V.findViewById(R.id.imageView);
         }
 
@@ -52,7 +54,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public void onBindViewHolder(ArticleAdapter.ViewHolder holder, int position)
     {
         holder.textView_title.setText(articles.get(position).getTitle());
-        holder.textView_summary.setText(articles.get(position).getSummary());
+        //holder.textView_summary.setText(articles.get(position).getSummary());
+        holder.textView_author.setText(articles.get(position).getAuthor());
         Picasso.with(context)
                 .load(articles.get(position).getImage_URL())
                 .placeholder(R.drawable.sportscafe)
