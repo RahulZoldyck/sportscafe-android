@@ -23,7 +23,7 @@ import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
 
-public class FixerAdapter extends ArrayAdapter<Matches> {
+public class    FixerAdapter extends ArrayAdapter<Matches> {
     Context c;
     public FixerAdapter(Context context, Matches[] objects) {
         super(context, R.layout.fixture_layout, objects);
@@ -48,10 +48,12 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
         timeorscore.setTypeface(null, Typeface.BOLD);
         String url1=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId1()+".png";
         String url2=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId2()+".png";
-
-
-        Picasso.with(c).load(url1).placeholder(R.drawable.india).into(flag1);
-        Picasso.with(c).load(url2).placeholder(R.drawable.india).into(flag2);
+        Picasso.with(v.getContext())
+                .load("http://i.imgur.com/DvpvklR.png")
+                .placeholder(R.drawable.india)
+                .into(flag1);
+        Picasso.with(c).setIndicatorsEnabled(true);
+        Picasso.with(c).load(url2).error(R.drawable.india).into(flag2);
         matcht.setTypeface(null,Typeface.BOLD_ITALIC);
         Log.d("sportscafe",url1);
 
