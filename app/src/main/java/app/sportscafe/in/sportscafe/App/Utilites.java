@@ -9,6 +9,12 @@ public class Utilites
     private static String ArticlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
     private static String ArticlesImageURL = "https://sportscafe.in/img/es3";
     private static String FixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
+    private static String TeamImg=" https://sportscafe.in/img/es3-cfit-w300-h300/scweb/scapp/partials/images/sports";
+
+
+    public static String getTeamImg() {
+        return TeamImg;
+    }
 
     public static String getFixtureURL() {
         return FixturesURL;

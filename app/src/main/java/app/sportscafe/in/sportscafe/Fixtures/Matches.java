@@ -2,8 +2,32 @@ package app.sportscafe.in.sportscafe.Fixtures;
 
 
 public class Matches {
-   private String game,tournament,link,status,date,score,venue,id;
-   private  String team1,team2;
+   private String game,tournament,link,status,date,score,venue,id,tournamentId;
+   private  String team1,teamId1,teamId2,team2;
+
+    public String getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(String tournamentId) {
+        this.tournamentId = tournamentId;
+    }
+
+    public String getTeamId1() {
+        return teamId1;
+    }
+
+    public void setTeamId1(String teamId1) {
+        this.teamId1 = teamId1;
+    }
+
+    public String getTeamId2() {
+        return teamId2;
+    }
+
+    public void setTeamId2(String teamId2) {
+        this.teamId2 = teamId2;
+    }
 
     public String getId() {
         return id;

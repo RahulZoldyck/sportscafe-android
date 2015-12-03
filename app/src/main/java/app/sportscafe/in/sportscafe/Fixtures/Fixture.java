@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.Fixtures;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import app.sportscafe.in.sportscafe.App.Utilites;
 public class Fixture extends android.support.v4.app.Fragment {
     RecyclerView mRecyclerView;
     View vh;
+    Context c;
     SwipeRefreshLayout layout;
     ListView lv;
     public static final String[] games={"football","hockey","cricket","badminton"};
@@ -245,6 +247,9 @@ public class Fixture extends android.support.v4.app.Fragment {
                         JSONObject venue=mat.getJSONObject("matchVenue");
                         matches.setVenue(venue.getString("city"));
                         JSONArray teamid=mat.getJSONArray("teamIds");
+                        matches.setTeamId1(teamid.getString(0));
+                        matches.setTeamId2(teamid.getString(1));
+                        matches.setTournamentId(gms.getString("tournamentId"));
                         matches.setTeam1(map.get(teamid.getString(0)));
                         matches.setTeam2(map.get(teamid.getString(1)));
                         list.add(matches);
