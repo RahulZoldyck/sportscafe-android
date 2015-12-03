@@ -48,10 +48,9 @@ public class    FixerAdapter extends ArrayAdapter<Matches> {
         String url1=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId1()+".png";
         String url2=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId2()+".png";
         Picasso.with(v.getContext())
-                .load("http://i.imgur.com/DvpvklR.png")
+                .load(url1)
                 .placeholder(R.drawable.india)
                 .into(flag1);
-        Picasso.with(c).setIndicatorsEnabled(true);
         Picasso.with(c).load(url2).error(R.drawable.india).into(flag2);
         matcht.setTypeface(null,Typeface.BOLD_ITALIC);
         Log.d("sportscafe",url1);
