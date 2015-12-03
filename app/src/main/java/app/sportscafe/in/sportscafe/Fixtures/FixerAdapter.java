@@ -32,11 +32,13 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
         TextView team1=(TextView)v.findViewById(R.id.cardteam1);
         TextView team2=(TextView)v.findViewById(R.id.cardteam2);
         TextView matcht=(TextView)v.findViewById(R.id.cardmatch);
+        TextView sport=(TextView)v.findViewById(R.id.cardsport);
         TextView timeorscore=(TextView)v.findViewById(R.id.cardtimeorscore);
         timeorscore.setTypeface(null, Typeface.BOLD);
         matcht.setTypeface(null,Typeface.BOLD_ITALIC);
         Matches match=getItem(position);
-        title.setText(match.getGame().toUpperCase()+" /"+match.getTournament());
+        sport.setText(match.getGame().toUpperCase());
+        title.setText(match.getTournament());
         team1.setText(match.getTeam1());
         team2.setText(match.getTeam2());
         try {
