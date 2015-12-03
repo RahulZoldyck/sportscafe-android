@@ -4,4 +4,3 @@ build/
 local.properties
 bin/
 gen/
-*.iml/
