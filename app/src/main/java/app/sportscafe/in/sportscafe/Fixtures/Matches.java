@@ -2,8 +2,16 @@ package app.sportscafe.in.sportscafe.Fixtures;
 
 
 public class Matches {
-   private String game,tournament,link,status,date,score,venue,id,tournamentId;
+   private String game,tournament,link,status,date,score,venue,id,tournamentId,country;
    private  String team1,teamId1,teamId2,team2;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
     public String getTournamentId() {
         return tournamentId;
