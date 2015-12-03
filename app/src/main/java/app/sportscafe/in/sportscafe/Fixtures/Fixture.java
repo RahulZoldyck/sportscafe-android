@@ -118,7 +118,7 @@ public class Fixture extends android.support.v4.app.Fragment {
            String rawjson="{\"msg\": {"+
                 "\"$redact\": {"+
                 "\"$cond\": {"+
-                    "\"if\": {"+
+                        "\"if\": {"+
                         "\"$or\": [{"+
                             "\"$and\": [{"+
                                 "\"$gte\": [\""+ISOyes+"\", \"$tournamentStartDate\"]"+

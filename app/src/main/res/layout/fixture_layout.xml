@@ -39,6 +39,7 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/ll"
                 android:orientation="vertical"
+                android:padding="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#3f85f4"
@@ -47,6 +48,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true">
+                <TextView
+                    android:id="@+id/cardsport"
+                    android:layout_margin="2dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Medium Text"
+                    android:textColor="#ffffff"
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/cardtitle"
@@ -58,6 +69,8 @@
                     android:layout_margin="10dp"
                     android:textColor="#ffffff" />
             </android.support.v7.widget.CardView>
+
+
 
             <LinearLayout
                 android:id="@+id/ll2"
