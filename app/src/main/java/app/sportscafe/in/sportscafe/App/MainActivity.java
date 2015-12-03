@@ -24,8 +24,6 @@ import app.sportscafe.in.sportscafe.R;
 
 public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener
 {
-    ArticlesFragment articlesFragment;
-
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
@@ -37,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        articlesFragment = new ArticlesFragment();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -123,15 +119,21 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         @Override
         public Fragment getItem(int position)
         {
-            if(position==1)
-                return articlesFragment.newInstance();
-            return Fixture.newInstance();
+
+            if(position==0)
+                return ArticlesFragment.newInstance("news");
+            else if(position==1)
+                return ArticlesFragment.newInstance("match report");
+            else if(position==3)
+                return Fixture.newInstance();
+            else
+                return PlaceholderFragment.newInstance(position+1);
         }
 
         @Override
         public int getCount()
         {
-            return 2;
+            return 6;
         }
 
         @Override
@@ -140,9 +142,17 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
             switch (position)
             {
                 case 0:
-                    return "FIXTURES";
+                    return getResources().getString(R.string.section1);
                 case 1:
-                    return "ARTICLES";
+                    return getResources().getString(R.string.section2);
+                case 2:
+                    return getResources().getString(R.string.section3);
+                case 3:
+                    return getResources().getString(R.string.section4);
+                case 4:
+                    return getResources().getString(R.string.section5);
+                case 5:
+                    return getResources().getString(R.string.section6);
             }
             return null;
         }

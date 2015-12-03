@@ -2,7 +2,6 @@ package app.sportscafe.in.sportscafe.Fixtures;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;

@@ -38,7 +38,7 @@ public class ArticlesFragment extends Fragment
     ArticleAdapter adapter;
     AsyncArticlesTask task_articles;
 
-
+    public String articleType;
     public static String LOGGING = "LOGGING";
 
     String image_width="600";
@@ -51,9 +51,12 @@ public class ArticlesFragment extends Fragment
 
     }
 
-    public static ArticlesFragment newInstance()
+    public static ArticlesFragment newInstance(String articletype)
     {
         ArticlesFragment fragment = new ArticlesFragment();
+        Bundle args = new Bundle();
+        args.putString("articleType", articletype);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -61,6 +64,8 @@ public class ArticlesFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        this.articleType = getArguments().getString("articleType", "default");
+
     }
 
     @Override
@@ -121,7 +126,8 @@ public class ArticlesFragment extends Fragment
             {
                 JSONObject conditions = new JSONObject();
                 conditions.accumulate("published",true);
-                conditions.accumulate("classifications.sections.articleType","match report");
+                Log.d(LOGGING,articleType);
+                conditions.accumulate("classifications.sections.articleType",articleType);
                 JSONObject projection = new JSONObject();
                 projection.accumulate("content",0);
                 JSONObject options = new JSONObject();
@@ -152,6 +158,7 @@ public class ArticlesFragment extends Fragment
                     String result="";
                     while((line = reader.readLine())!=null)
                         result = result+line;
+                    Log.d(LOGGING,result);
                     JSONArray jsonArray = new JSONArray(result);
                     Integer length = jsonArray.length();
                     for(int i=0;i<length;i++)
