@@ -32,9 +32,9 @@ public class ArticlesFragment extends Fragment
     public RecyclerView.LayoutManager layoutManager;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    Utilites util = new Utilites();
     ArticleAdapter adapter;
-    getArticlesTask task_articles;
+    AsyncArticlesTask task_articles;
+
 
     public static String LOGGING = "LOGGING";
 
@@ -78,7 +78,7 @@ public class ArticlesFragment extends Fragment
             @Override
             public void onRefresh()
             {
-                task_articles = new getArticlesTask();
+                task_articles = new AsyncArticlesTask();
                 task_articles.execute();
                 adapter.notifyDataSetChanged();
 
@@ -94,7 +94,7 @@ public class ArticlesFragment extends Fragment
             mListener.onFragmentInteraction(uri);
         }
     }
-    public class getAuthorByID extends AsyncTask<String,Void,String>
+    public class AsyncAuthorByID extends AsyncTask<String,Void,String>
     {
 
         @Override
@@ -103,7 +103,7 @@ public class ArticlesFragment extends Fragment
             return null;
         }
     }
-    public class getArticlesTask extends AsyncTask<Void,Void,Void>
+    public class AsyncArticlesTask extends AsyncTask<Void,Void,Void>
     {
         ArrayList<Article> articles = new ArrayList<>();
 
@@ -111,8 +111,8 @@ public class ArticlesFragment extends Fragment
         protected Void doInBackground(Void... params)
         {
 
-            String link = util.ret_getArticlesWithConditionsURL();
-            String link_image = util.ret_ImageURL();
+            String link = Utilites.getArticlesWithConditionsURL();
+            String link_image = Utilites.getArticlesImageURL();
             JSONObject msg = new JSONObject();
             try
             {

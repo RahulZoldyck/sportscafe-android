@@ -5,20 +5,20 @@ package app.sportscafe.in.sportscafe;
  */
 public class Utilites
 {
-    private String getArticlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
-    private String getArticlesImageURL = "https://sportscafe.in/img/es3";
-    private String getFixtures="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
+    private static String ArticlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
+    private static String ArticlesImageURL = "https://sportscafe.in/img/es3";
+    private static String FixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
 
-    public String getFixtureURL() {
-        return getFixtures;
+    public static String getFixtureURL() {
+        return FixturesURL;
     }
 
-    public String ret_getArticlesWithConditionsURL()
+    public static String getArticlesWithConditionsURL()
     {
-        return getArticlesWithConditionsURL;
+        return ArticlesWithConditionsURL;
     }
-    public String ret_ImageURL()
+    public static String getArticlesImageURL()
     {
-        return getArticlesImageURL;
+        return ArticlesImageURL;
     }
 }
