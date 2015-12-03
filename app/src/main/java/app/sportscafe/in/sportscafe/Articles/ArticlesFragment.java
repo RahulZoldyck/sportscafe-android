@@ -79,7 +79,7 @@ public class ArticlesFragment extends Fragment
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ArticleAdapter(new ArrayList<Article>(),context);
+        adapter = new ArticleAdapter(new ArrayList<Article>(),context,articleType);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -209,7 +209,7 @@ public class ArticlesFragment extends Fragment
                         article_temp.setAuthor(authorId);
                         articles.add(article_temp);
                     }
-                    adapter = new ArticleAdapter(articles,context);
+                    adapter = new ArticleAdapter(articles,context,articleType);
                     adapter.notifyDataSetChanged();
 
                 } catch (Exception e)
