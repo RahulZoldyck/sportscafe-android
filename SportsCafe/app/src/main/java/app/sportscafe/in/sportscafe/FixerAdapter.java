@@ -2,6 +2,7 @@ package app.sportscafe.in.sportscafe;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-/**
- * Created by rahul on 12/1/15.
- */
+
 public class FixerAdapter extends ArrayAdapter<Matches> {
     public FixerAdapter(Context context, Matches[] objects) {
         super(context, R.layout.fixture_layout, objects);
@@ -27,7 +26,7 @@ public class FixerAdapter extends ArrayAdapter<Matches> {
 
         LayoutInflater r = LayoutInflater.from(getContext());
         View v = r.inflate(R.layout.fixture_layout, parent, false);
-        LinearLayout ll=(LinearLayout)v.findViewById(R.id.ll);
+        CardView ll=(CardView) v.findViewById(R.id.ll);
         TextView title=(TextView)v.findViewById(R.id.cardtitle);
         TextView team1=(TextView)v.findViewById(R.id.cardteam1);
         TextView team2=(TextView)v.findViewById(R.id.cardteam2);

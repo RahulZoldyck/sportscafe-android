@@ -49,6 +49,7 @@ public class FixtureAdaptor extends RecyclerView.Adapter<FixtureAdaptor.ViewHold
     }
 
     @Override
+
     public int getItemCount() {
         return matches.length;
     }
