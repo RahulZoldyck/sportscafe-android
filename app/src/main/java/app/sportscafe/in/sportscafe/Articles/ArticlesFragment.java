@@ -192,6 +192,7 @@ public class ArticlesFragment extends Fragment
                         {
                             authorId = "Sportscafe Editor";
                         }
+                        String id = json_article.getString("_id");
                         String summary = json_article.getString("contentSummary");
                         JSONObject images = json_article.getJSONObject("images");
                         JSONObject featured = images.getJSONObject("featured");
@@ -201,6 +202,7 @@ public class ArticlesFragment extends Fragment
                         String articleType = sections.getString("articleType");
                         String sport = sections.getString("sport");
                         Article article_temp = new Article();
+                        article_temp.setId(id);
                         article_temp.setTitle(title);
                         article_temp.setSummary(summary);
                         article_temp.setImage_URL(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
