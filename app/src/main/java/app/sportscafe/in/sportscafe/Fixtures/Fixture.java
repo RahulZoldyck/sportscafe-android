@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.Fixtures;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import app.sportscafe.in.sportscafe.App.Utilites;
 public class Fixture extends android.support.v4.app.Fragment {
     RecyclerView mRecyclerView;
     View vh;
+    Context c;
     SwipeRefreshLayout layout;
     ListView lv;
     public static final String[] games={"football","hockey","cricket","badminton"};
@@ -193,6 +195,7 @@ public class Fixture extends android.support.v4.app.Fragment {
     }
 
     private void manifest(JSONObject jsonObject) {
+
         List<Matches> list=new ArrayList<>();
 
         Matches matches=new Matches();
@@ -215,8 +218,32 @@ public class Fixture extends android.support.v4.app.Fragment {
                     teams = gms.getJSONArray("teams");
                     for(int j=0;j<teams.length();j++){
                         JSONObject team = new JSONObject();
-                        team=teams.getJSONObject(j);
-                        map.put(team.getString("teamId"),team.getString("teamDisplayNameShort"));
+                        team = teams.getJSONObject(j);
+                        boolean tryit=false;
+                        try{
+                             tryit=gms.getString("gameType")!=null;
+
+                        }catch (Exception e){
+                            tryit=false;
+                        }
+                        if(tryit){
+                            if(gms.getString("gameType").equals("individuals")){
+                            JSONObject player=new JSONObject();
+                            player=team.getJSONObject("playerA");
+                            matches.setCountry(player.getString("country"));
+                            map.put(player.getString("playerId"),player.getString("playerNameShort"));
+
+
+                        }
+                            else {
+
+                                map.put(team.getString("teamId"), team.getString("teamDisplayNameShort"));
+                            }
+                        }
+                        else {
+
+                            map.put(team.getString("teamId"), team.getString("teamDisplayNameShort"));
+                        }
                     }
 
                     matchs = gms.getJSONArray("matches");
@@ -224,15 +251,52 @@ public class Fixture extends android.support.v4.app.Fragment {
                         JSONObject mat=matchs.getJSONObject(k);
                         matches=new Matches();
                         matches.setGame(game);
-                        matches.setTournament(gms.getString("tournamentName"));
                         String link=mat.getString("matchReportOrPreviewLink");
                         if(link!=null)
                             matches.setLink(link);
                         else
                             matches.setLink("-1");
                         matches.setStatus(mat.getString("matchStatus"));
-                        matches.setDate(mat.getString("matchStartDate"));
-                        matches.setId(String.valueOf(mat.getInt("matchId")));
+                        if(gms.getString("gameType").equals("individuals")){
+                            matches.setTournament(gms.getString("tournamentSuperName"));
+                            matches.setDate(mat.getString("matchDate"));
+                            matches.setId("");
+                            JSONObject venue=gms.getJSONObject("tournamentVenue");
+                            matches.setVenue(venue.getString("city")+","+venue.getString("country"));
+                            JSONArray team=new JSONArray();
+                            List<String> play=new ArrayList<>();
+                            for(int r=0;r<team.length();r++){
+                                JSONObject teamObject=new JSONObject();
+                                teamObject=team.getJSONObject(r);
+                                JSONObject teamA=new JSONObject();
+                                teamA=teamObject.getJSONObject("playerA");
+                                play.add(teamA.getString("playerId"));
+
+                            }
+                            String[] players=new String[play.size()];
+                            players=play.toArray(players);
+                            matches.setTeamId1(players[0]);
+                            matches.setTeamId2(players[1]);
+                            matches.setTeam1(map.get(players[0]));
+                            matches.setTeam2(map.get(players[1]));
+
+
+                        }
+                        else{
+                            matches.setTournament(gms.getString("tournamentName"));
+                            matches.setDate(mat.getString("matchStartDate"));
+                            matches.setId(String.valueOf(mat.getInt("matchId")));
+                            JSONObject venue=mat.getJSONObject("matchVenue");
+                            matches.setVenue(venue.getString("city"));
+                            JSONArray teamid=mat.getJSONArray("teamIds");
+                            matches.setTeamId1(teamid.getString(0));
+                            matches.setTeamId2(teamid.getString(1));
+                            matches.setTournamentId(gms.getString("tournamentId"));
+                            matches.setTeam1(map.get(teamid.getString(0)));
+                            matches.setTeam2(map.get(teamid.getString(1)));
+                        }
+
+                        // TODO :check what happens to individual
                         JSONObject result=mat.getJSONObject("matchResult");
                         JSONArray scores=result.getJSONArray("matchFinalScore");
                         if(scores.length()!=0){
@@ -241,12 +305,6 @@ public class Fixture extends android.support.v4.app.Fragment {
                         }
                         else
                             matches.setScore("-1");
-
-                        JSONObject venue=mat.getJSONObject("matchVenue");
-                        matches.setVenue(venue.getString("city"));
-                        JSONArray teamid=mat.getJSONArray("teamIds");
-                        matches.setTeam1(map.get(teamid.getString(0)));
-                        matches.setTeam2(map.get(teamid.getString(1)));
                         list.add(matches);
 
                     }

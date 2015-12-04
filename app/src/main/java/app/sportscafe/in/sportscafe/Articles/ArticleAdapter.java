@@ -21,11 +21,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 {
     Context context;
     ArrayList<Article> articles = new ArrayList<>();
+    String articleType;
     public static String LOGGING="LOGGING";
-    public ArticleAdapter(ArrayList<Article> articles_array,Context context)
+    public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
         this.articles = articles_array;
         this.context = context;
+        this.articleType=articleType;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -49,7 +51,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view,parent,false);
+        View view;
+        if(articleType.equals("match report"))
+        {
+             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view,parent,false);
+        }
+        else
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_news,parent,false);
+        }
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -59,8 +69,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     {
         holder.textView_title.setText(articles.get(position).getTitle());
         //holder.textView_summary.setText(articles.get(position).getSummary());
-        holder.textView_author.setText(articles.get(position).getAuthor());
-        holder.textView_sport.setText(articles.get(position).getSport().toUpperCase());
+        if(articleType.equals("match report"))
+        {
+            holder.textView_author.setText(articles.get(position).getAuthor());
+            holder.textView_sport.setText(articles.get(position).getSport().toUpperCase());
+        }
         Picasso.with(context)
                 .load(articles.get(position).getImage_URL())
                 .placeholder(R.drawable.sportscafe)
