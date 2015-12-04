@@ -13,6 +13,11 @@ public class Utilites
     private static String ArticleContentURL = "https://sportscafe.in/api/articles/getArticleById/";
     private static final String STATE_ARTICLES = "state_articles";
     private static final String TAG = "LOGGING";
+    private static String MVImgURL="https://sportscafe.in/img/es3-cfill-w300-h300/";
+
+    public static String getMVImgURL() {
+        return MVImgURL;
+    }
 
     public static String getTeamImg() {
         return TeamImg;

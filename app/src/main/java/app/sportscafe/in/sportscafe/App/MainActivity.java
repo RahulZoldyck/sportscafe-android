@@ -2,8 +2,6 @@ package app.sportscafe.in.sportscafe.App;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,9 +18,11 @@ import android.widget.TextView;
 
 import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
 import app.sportscafe.in.sportscafe.Fixtures.Fixture;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewed;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
 {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -40,16 +40,6 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
 
@@ -126,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
                 return ArticlesFragment.newInstance("match report");
             else if(position==3)
                 return Fixture.newInstance();
+            else if(position==5)
+                return MostViewed.newInstance();
             else
                 return PlaceholderFragment.newInstance(position+1);
         }
