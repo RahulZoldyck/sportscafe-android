@@ -1,17 +1,20 @@
 package app.sportscafe.in.sportscafe.Articles;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
 /**
@@ -22,7 +25,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     Context context;
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
-    public static String LOGGING="LOGGING";
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
         this.articles = articles_array;
@@ -30,12 +32,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         this.articleType=articleType;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         TextView textView_title;
         TextView textView_summary;
         TextView textView_author;
         TextView textView_sport;
+        LinearLayout layout;
         ImageView image;
         public ViewHolder(View V)
         {
@@ -45,8 +48,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             textView_author = (TextView)V.findViewById(R.id.author);
             textView_sport = (TextView)V.findViewById(R.id.sport);
             image = (ImageView)V.findViewById(R.id.imageView);
+            layout = (LinearLayout) V.findViewById(R.id.layout);
+            V.setOnClickListener(this);
+
         }
 
+        @Override
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(context,ArticleContentActivity.class);
+            intent.putParcelableArrayListExtra(Utilites.getStateArticles(),articles);
+            intent.putExtra(context.getResources().getString(R.string.extra_position),getAdapterPosition());
+            context.startActivity(intent);
+        }
     }
     @Override
     public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
@@ -65,7 +79,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ArticleAdapter.ViewHolder holder, int position)
+    public void onBindViewHolder(ArticleAdapter.ViewHolder holder, final int position)
     {
         holder.textView_title.setText(articles.get(position).getTitle());
         //holder.textView_summary.setText(articles.get(position).getSummary());

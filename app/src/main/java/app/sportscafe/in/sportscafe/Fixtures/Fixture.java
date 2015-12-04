@@ -158,7 +158,7 @@ public class Fixture extends android.support.v4.app.Fragment {
                 String params=js.toString();
                 byte[] bytes=params.getBytes();
 
-                URL url= new URL(Utilites.getFixtureURL());
+                URL url= new URL(Utilites.getFixturesURL());
                 HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
