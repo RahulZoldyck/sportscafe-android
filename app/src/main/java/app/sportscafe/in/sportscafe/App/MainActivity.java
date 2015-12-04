@@ -20,9 +20,11 @@ import android.widget.TextView;
 
 import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
 import app.sportscafe.in.sportscafe.Fixtures.Fixture;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewed;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
 {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -126,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
                 return ArticlesFragment.newInstance("match report");
             else if(position==3)
                 return Fixture.newInstance();
+            else if(position==5)
+                return MostViewed.newInstance();
             else
                 return PlaceholderFragment.newInstance(position+1);
         }

@@ -10,7 +10,11 @@ public class Utilites
     private static String ArticlesImageURL = "https://sportscafe.in/img/es3";
     private static String FixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
     private static String TeamImg="https://sportscafe.in/img/es3-cfit-w300-h300/scweb/scapp/partials/images/sports";
+    private static String MVImgURL="https://sportscafe.in/img/es3-cfill-w300-h300/";
 
+    public static String getMVImgURL() {
+        return MVImgURL;
+    }
 
     public static String getTeamImg() {
         return TeamImg;
