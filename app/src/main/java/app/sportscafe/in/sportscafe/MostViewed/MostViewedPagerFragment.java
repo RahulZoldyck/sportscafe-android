@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.MostViewed;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -78,7 +79,8 @@ public class MostViewedPagerFragment extends Fragment {
         TextView tag=(TextView)v.findViewById(R.id.MVtag);
         Picasso.with(v.getContext()).load(imgURL).resize(300,300).into(img);
         title.setText(titles);
-        tag.setText(tags);
+        tag.setTextColor(Color.parseColor("#3f85f4"));
+        tag.setText(tags.toUpperCase());
         return v ;
     }
 
