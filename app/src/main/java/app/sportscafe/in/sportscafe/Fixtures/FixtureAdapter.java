@@ -65,7 +65,7 @@ public class FixtureAdapter extends ArrayAdapter<Matches> {
             e.printStackTrace();
         }
 
-        if(match.getStatus().equals("Completed")){
+        if(match.getStatus().equals(getContext().getResources().getString(R.string.completed))){
             timeorscore.setText(match.getScore());
             ll.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
         }
