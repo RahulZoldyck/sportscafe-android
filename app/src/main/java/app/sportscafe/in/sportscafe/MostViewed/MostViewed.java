@@ -35,6 +35,7 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
 
     MVItem[] dayitems,weekitems,monthitems;
     ViewPager day,week,month;
+    SwipeRefreshLayout sr;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,7 +63,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
          day=(ViewPager) v.findViewById(R.id.pagerday);
          week=(ViewPager) v.findViewById(R.id.pagerweek);
          month=(ViewPager) v.findViewById(R.id.pagermonth);
-        SwipeRefreshLayout sr=(SwipeRefreshLayout)v.findViewById(R.id.mvRefresh);
+        AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
+        asyncMostViewed.execute();
+         sr=(SwipeRefreshLayout)v.findViewById(R.id.mvRefresh);
         sr.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -72,6 +75,7 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
                     }
                 }
         );
+
 
         return v;
     }
@@ -156,6 +160,7 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         day.setAdapter(dayAdapter);
         week.setAdapter(weekAdapter);
         month.setAdapter(monthAdapter);
+        sr.setRefreshing(false);
 
 
     }

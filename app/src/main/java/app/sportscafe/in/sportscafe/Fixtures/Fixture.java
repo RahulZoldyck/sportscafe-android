@@ -71,6 +71,8 @@ public class Fixture extends android.support.v4.app.Fragment {
         lv=(ListView)v.findViewById(R.id.listview007);
         lv.setDivider(null);
         lv.setDividerHeight(0);
+        AsyncFixtures get=new AsyncFixtures();
+        get.execute();
         lv.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
