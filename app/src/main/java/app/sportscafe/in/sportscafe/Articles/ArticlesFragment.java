@@ -36,10 +36,9 @@ public class ArticlesFragment extends Fragment
     SwipeRefreshLayout swipeRefreshLayout;
 
     ArticleAdapter adapter;
-    AsyncArticlesTask task_articles;
+    AsyncArticlesTask asyncArticlesTask;
 
     public String articleType;
-    public static String LOGGING = "LOGGING";
 
     String image_width="600";
     String image_height="300";
@@ -65,7 +64,6 @@ public class ArticlesFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         this.articleType = getArguments().getString("articleType", "default");
-
     }
 
     @Override
@@ -86,8 +84,8 @@ public class ArticlesFragment extends Fragment
             @Override
             public void onRefresh()
             {
-                task_articles = new AsyncArticlesTask();
-                task_articles.execute();
+                asyncArticlesTask = new AsyncArticlesTask();
+                asyncArticlesTask.execute();
                 adapter.notifyDataSetChanged();
 
             }
@@ -126,7 +124,7 @@ public class ArticlesFragment extends Fragment
             {
                 JSONObject conditions = new JSONObject();
                 conditions.accumulate("published",true);
-                Log.d(LOGGING,articleType);
+                Log.d(Utilites.getTAG(),articleType);
                 conditions.accumulate("classifications.sections.articleType",articleType);
                 JSONObject projection = new JSONObject();
                 projection.accumulate("content",0);
@@ -158,7 +156,7 @@ public class ArticlesFragment extends Fragment
                     String result="";
                     while((line = reader.readLine())!=null)
                         result = result+line;
-                    Log.d(LOGGING,result);
+                    Log.d(Utilites.getTAG(),result);
                     JSONArray jsonArray = new JSONArray(result);
                     Integer length = jsonArray.length();
                     for(int i=0;i<length;i++)
@@ -205,7 +203,7 @@ public class ArticlesFragment extends Fragment
                         article_temp.setId(id);
                         article_temp.setTitle(title);
                         article_temp.setSummary(summary);
-                        article_temp.setImage_URL(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
+                        article_temp.setImageUrl(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorId);
@@ -216,12 +214,12 @@ public class ArticlesFragment extends Fragment
 
                 } catch (Exception e)
                 {
-                    Log.d(LOGGING,"Error in Connecting : "+e);
+                    Log.d(Utilites.getTAG(),"Error in Connecting : "+e);
                 }
 
             } catch (JSONException e)
             {
-                Log.d(LOGGING,"Error in JSONAccum : "+e);
+                Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
             }
 
             return null;

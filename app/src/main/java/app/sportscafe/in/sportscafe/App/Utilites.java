@@ -11,7 +11,7 @@ public class Utilites
     private static String FixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
     private static String TeamImg="https://sportscafe.in/img/es3-cfit-w300-h300/scweb/scapp/partials/images/sports";
     private static String ArticleContentURL = "https://sportscafe.in/api/articles/getArticleById/";
-    private static final String STATE_ARTICLES = "state_articles";
+    private static final String stateArticles = "state_articles";
     private static final String TAG = "LOGGING";
     private static String MVImgURL="https://sportscafe.in/img/es3-cfill-w300-h300/";
 
@@ -44,7 +44,7 @@ public class Utilites
 
     public static String getStateArticles()
     {
-        return STATE_ARTICLES;
+        return stateArticles;
     }
 
     public static String getTAG()

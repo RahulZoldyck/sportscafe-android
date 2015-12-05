@@ -12,7 +12,7 @@ public class Article implements Parcelable
     private String title;
     private String summary;
     private String content;
-    private String image_URL;
+    private String imageUrl;
     private String author;
     private String sport;
     private String date;
@@ -29,7 +29,7 @@ public class Article implements Parcelable
         title = parcel.readString();
         summary = parcel.readString();
         content = parcel.readString();
-        image_URL = parcel.readString();
+        imageUrl = parcel.readString();
         author = parcel.readString();
         sport = parcel.readString();
         date = parcel.readString();
@@ -55,9 +55,9 @@ public class Article implements Parcelable
     {
         this.summary = summary;
     }
-    public void setImage_URL(String image_url)
+    public void setImageUrl(String image_url)
     {
-        this.image_URL = image_url;
+        this.imageUrl = image_url;
     }
 
     public String getTitle()
@@ -70,9 +70,9 @@ public class Article implements Parcelable
         return summary;
     }
 
-    public String getImage_URL()
+    public String getImageUrl()
     {
-        return image_URL;
+        return imageUrl;
     }
 
     public String getAuthor()
@@ -148,7 +148,7 @@ public class Article implements Parcelable
         dest.writeString(title);
         dest.writeString(summary);
         dest.writeString(content);
-        dest.writeString(image_URL);
+        dest.writeString(imageUrl);
         dest.writeString(author);
         dest.writeString(sport);
         dest.writeString(date);
