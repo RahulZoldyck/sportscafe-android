@@ -22,4 +22,5 @@
     <string name="title_activity_article_content">ArticleContentActivity</string>
     <string name="extra_position">position</string>
     <string name="string_sportscafe_editor">SportsCafe Editor</string>
+    <string name="action_share">search</string>
 </resources>

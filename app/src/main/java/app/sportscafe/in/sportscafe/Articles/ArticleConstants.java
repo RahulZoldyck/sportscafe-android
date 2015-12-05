@@ -2,6 +2,7 @@ package app.sportscafe.in.sportscafe.Articles;
 
 /**
  * Created by rb on 5/12/15.
+ * Contains references for all JSON keys used in articles
  */
 public class ArticleConstants
 {

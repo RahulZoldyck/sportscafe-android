@@ -64,7 +64,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View view;
-        if(articleType.equals("match report"))
+        if(articleType.equals("match report"))      //Inflate different view for news and match report
         {
              view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view,parent,false);
         }
