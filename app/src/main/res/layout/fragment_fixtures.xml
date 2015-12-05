@@ -6,7 +6,7 @@
 
 
     <ListView
-        android:id="@+id/listview007"
+        android:id="@+id/fixtureListView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:focusable="false"

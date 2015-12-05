@@ -34,7 +34,7 @@ import app.sportscafe.in.sportscafe.R;
 public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFragmentInteractionListener{
 
     MVItem[] dayitems,weekitems,monthitems;
-    ViewPager day,week,month;
+    ViewPager dayPager,weekPager,monthPager;
     SwipeRefreshLayout sr;
 
     private OnFragmentInteractionListener mListener;
@@ -60,9 +60,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
-         day=(ViewPager) v.findViewById(R.id.pagerday);
-         week=(ViewPager) v.findViewById(R.id.pagerweek);
-         month=(ViewPager) v.findViewById(R.id.pagermonth);
+         dayPager=(ViewPager) v.findViewById(R.id.pagerday);
+         weekPager=(ViewPager) v.findViewById(R.id.pagerweek);
+         monthPager=(ViewPager) v.findViewById(R.id.pagermonth);
         AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
         asyncMostViewed.execute();
          sr=(SwipeRefreshLayout)v.findViewById(R.id.mvRefresh);
@@ -81,9 +81,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     }
 
     class AsyncMostViewed extends AsyncTask<Void,Void,JSONObject>{
-        JSONArray day=new JSONArray();
-        JSONArray week=new JSONArray();
-        JSONArray month =new JSONArray();
+        JSONArray dayArray=new JSONArray();
+        JSONArray weekArray=new JSONArray();
+        JSONArray monthArray =new JSONArray();
 
 
         public JSONArray fetchRESTAPI(String query) throws JSONException, IOException {
@@ -122,13 +122,13 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
             String queryMonth="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvmonth\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
 
             try {
-                day=fetchRESTAPI(queryDay);
-                week=fetchRESTAPI(queryWeek);
-                month=fetchRESTAPI(queryMonth);
+                dayArray=fetchRESTAPI(queryDay);
+                weekArray=fetchRESTAPI(queryWeek);
+                monthArray=fetchRESTAPI(queryMonth);
 
-                data.put("day",day);
-                data.put("week",week);
-                data.put("month",month);
+                data.put("day",dayArray);
+                data.put("week",weekArray);
+                data.put("month",monthArray);
             } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
@@ -157,9 +157,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         MostViewedPagerAdapter dayAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),dayitems);
         MostViewedPagerAdapter weekAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),weekitems);
         MostViewedPagerAdapter monthAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),monthitems);
-        day.setAdapter(dayAdapter);
-        week.setAdapter(weekAdapter);
-        month.setAdapter(monthAdapter);
+        dayPager.setAdapter(dayAdapter);
+        weekPager.setAdapter(weekAdapter);
+        monthPager.setAdapter(monthAdapter);
         sr.setRefreshing(false);
 
 
