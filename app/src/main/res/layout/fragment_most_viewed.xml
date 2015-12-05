@@ -15,7 +15,7 @@
             android:background="@drawable/sportbackground_9patch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DAY"/>
+            android:text="@string/day"/>
         <LinearLayout
             android:id="@+id/daycard"
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
                 android:background="@drawable/sportbackground_9patch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WEEK"/>
+                android:text="@string/week"/>
             <android.support.v4.view.ViewPager
                 android:id="@+id/pagerweek"
                 android:layout_width="fill_parent"
@@ -54,7 +54,7 @@
                 android:background="@drawable/sportbackground_9patch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MONTH"/>
+                android:text="@string/month"/>
             <android.support.v4.view.ViewPager
                 android:id="@+id/pagermonth"
                 android:layout_width="fill_parent"
