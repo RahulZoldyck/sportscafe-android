@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -33,15 +34,19 @@ public class ArticleContentActivity extends AppCompatActivity
     ArrayList<Article> articles = new ArrayList<>();
     ArrayAdapter<CharSequence> adapter;
     Integer position;
-    TextView textview_title;
-    TextView textview_summary;
-    ListView listview_content;
-    ImageView imageView;
+    TextView textviewTitle;
+    TextView textviewSummary;
+    TextView textViewAuthor;
+    ListView listviewContent;
+    ImageView imageViewFullArticle;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_content);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         try
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -50,26 +55,28 @@ public class ArticleContentActivity extends AppCompatActivity
         {
             Log.d(Utilites.getTAG(),e.toString());
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
 
         articles = bundle.getParcelableArrayList(Utilites.getStateArticles());
         position = bundle.getInt(getResources().getString(R.string.extra_position));
 
+        getSupportActionBar().setTitle(articles.get(position).getTitle());
+
         new AsyncArticleContent().execute(articles.get(position).getId());
 
-        textview_title = (TextView)findViewById(R.id.article_title);
-        textview_summary = (TextView)findViewById(R.id.article_summary);
-        listview_content = (ListView)findViewById(R.id.article_content);
-        imageView = (ImageView)findViewById(R.id.article_image);
+        textviewTitle = (TextView)findViewById(R.id.article_title);
+        textviewSummary = (TextView)findViewById(R.id.article_summary);
+        textViewAuthor = (TextView)findViewById(R.id.article_author);
+        listviewContent = (ListView)findViewById(R.id.article_content);
+        imageViewFullArticle = (ImageView)findViewById(R.id.article_image);
 
-        textview_title.setText(articles.get(position).getTitle());
-        textview_summary.setText(articles.get(position).getSummary());
+        textviewTitle.setText(articles.get(position).getTitle());
+        textviewSummary.setText(articles.get(position).getSummary());
+        textViewAuthor.setText(articles.get(position).getAuthor());
         Picasso.with(getApplicationContext())
-                .load(articles.get(position).getImage_URL())
+                .load(articles.get(position).getImageUrl())
                 .placeholder(R.drawable.sportscafe)
-                .into(imageView);
+                .into(imageViewFullArticle);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -81,6 +88,13 @@ public class ArticleContentActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_article_content,menu);
+        return true;
     }
 
     public class AsyncArticleContent extends AsyncTask<String,Void,Void>
@@ -112,12 +126,12 @@ public class ArticleContentActivity extends AppCompatActivity
             try
             {
                 JSONObject jsonResult = new JSONObject(result);
-                JSONObject contentJSON = jsonResult.getJSONObject("data");
-                String content = contentJSON.getString("content");
+                JSONObject dataJSON = jsonResult.getJSONObject("data");
+                String content = dataJSON.getString("content");
                 articles.get(position).setContent(content);
                 CharSequence[] content_sequence = {Html.fromHtml(articles.get(position).getContent())};
                 adapter = new ArrayAdapter<CharSequence>(getApplicationContext(),android.R.layout.simple_list_item_1,content_sequence);
-                listview_content.setAdapter(adapter);
+                listviewContent.setAdapter(adapter);
             } catch (JSONException e)
             {
                 Log.d(Utilites.getTAG(),e+"");

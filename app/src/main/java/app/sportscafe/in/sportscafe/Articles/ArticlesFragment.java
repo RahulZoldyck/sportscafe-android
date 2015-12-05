@@ -36,10 +36,9 @@ public class ArticlesFragment extends Fragment
     SwipeRefreshLayout swipeRefreshLayout;
 
     ArticleAdapter adapter;
-    AsyncArticlesTask task_articles;
+    AsyncArticlesTask asyncArticlesTask;
 
     public String articleType;
-    public static String LOGGING = "LOGGING";
 
     String image_width="600";
     String image_height="300";
@@ -65,7 +64,6 @@ public class ArticlesFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         this.articleType = getArguments().getString("articleType", "default");
-
     }
 
     @Override
@@ -86,8 +84,8 @@ public class ArticlesFragment extends Fragment
             @Override
             public void onRefresh()
             {
-                task_articles = new AsyncArticlesTask();
-                task_articles.execute();
+                asyncArticlesTask = new AsyncArticlesTask();
+                asyncArticlesTask.execute();
                 adapter.notifyDataSetChanged();
 
             }
@@ -125,21 +123,21 @@ public class ArticlesFragment extends Fragment
             try
             {
                 JSONObject conditions = new JSONObject();
-                conditions.accumulate("published",true);
-                Log.d(LOGGING,articleType);
-                conditions.accumulate("classifications.sections.articleType",articleType);
+                conditions.accumulate(ArticleConstants.PUBLISHED,true);
+                Log.d(Utilites.getTAG(),articleType);
+                conditions.accumulate(ArticleConstants.CLASSIFICATIONS_SECTIONS_ARTICLETYPE,articleType);
                 JSONObject projection = new JSONObject();
-                projection.accumulate("content",0);
+                projection.accumulate(ArticleConstants.CONTENT,0);
                 JSONObject options = new JSONObject();
                 JSONObject sort = new JSONObject();
-                sort.accumulate("publishDate",-1);
-                options.accumulate("sort",sort);
-                options.accumulate("limit",50);
-                msg.accumulate("conditions",conditions);
-                msg.accumulate("projection",projection);
-                msg.accumulate("options",options);
+                sort.accumulate(ArticleConstants.PUBLISH_DATE,-1);
+                options.accumulate(ArticleConstants.SORT,sort);
+                options.accumulate(ArticleConstants.LIMIT,50);
+                msg.accumulate(ArticleConstants.CONDITIONS,conditions);
+                msg.accumulate(ArticleConstants.PROJECTION,projection);
+                msg.accumulate(ArticleConstants.OPTIONS,options);
                 JSONObject object = new JSONObject();
-                object.accumulate("msg",msg);
+                object.accumulate(ArticleConstants.MSG,msg);
                 try
                 {
                     URL url = new URL(link);
@@ -158,18 +156,18 @@ public class ArticlesFragment extends Fragment
                     String result="";
                     while((line = reader.readLine())!=null)
                         result = result+line;
-                    Log.d(LOGGING,result);
+                    Log.d(Utilites.getTAG(),result);
                     JSONArray jsonArray = new JSONArray(result);
                     Integer length = jsonArray.length();
                     for(int i=0;i<length;i++)
                     {
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
-                        String title = json_article.getString("title");
+                        String title = json_article.getString(ArticleConstants.TITLE);
                         String authorId;
                         try
                         {
-                            authorId = json_article.getString("authorId");
+                            authorId = json_article.getString(ArticleConstants.AUTHOR_ID);
                             if(authorId.equals(""))
                                 authorId = "Sportscafe Editor";
                             else
@@ -192,20 +190,20 @@ public class ArticlesFragment extends Fragment
                         {
                             authorId = "Sportscafe Editor";
                         }
-                        String id = json_article.getString("_id");
-                        String summary = json_article.getString("contentSummary");
-                        JSONObject images = json_article.getJSONObject("images");
-                        JSONObject featured = images.getJSONObject("featured");
-                        String imageURL = featured.getString("path");
-                        JSONObject classifications = json_article.getJSONObject("classifications");
-                        JSONObject sections = classifications.getJSONObject("sections");
-                        String articleType = sections.getString("articleType");
-                        String sport = sections.getString("sport");
+                        String id = json_article.getString(ArticleConstants.ID);
+                        String summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
+                        JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
+                        JSONObject featured = images.getJSONObject(ArticleConstants.FEATURED);
+                        String imageURL = featured.getString(ArticleConstants.PATH);
+                        JSONObject classifications = json_article.getJSONObject(ArticleConstants.CLASSIFICATIONS);
+                        JSONObject sections = classifications.getJSONObject(ArticleConstants.SECTIONS);
+                        String articleType = sections.getString(ArticleConstants.ARTICLE_TYPE);
+                        String sport = sections.getString(ArticleConstants.SPORT);
                         Article article_temp = new Article();
                         article_temp.setId(id);
                         article_temp.setTitle(title);
                         article_temp.setSummary(summary);
-                        article_temp.setImage_URL(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
+                        article_temp.setImageUrl(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorId);
@@ -216,12 +214,12 @@ public class ArticlesFragment extends Fragment
 
                 } catch (Exception e)
                 {
-                    Log.d(LOGGING,"Error in Connecting : "+e);
+                    Log.d(Utilites.getTAG(),"Error in Connecting : "+e);
                 }
 
             } catch (JSONException e)
             {
-                Log.d(LOGGING,"Error in JSONAccum : "+e);
+                Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
             }
 
             return null;

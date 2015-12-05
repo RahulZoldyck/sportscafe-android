@@ -21,6 +21,8 @@
     <string name="section6">MOST VIEWED</string>
     <string name="title_activity_article_content">ArticleContentActivity</string>
     <string name="extra_position">position</string>
+    <string name="string_sportscafe_editor">SportsCafe Editor</string>
+    <string name="action_share">search</string>
     <string name="month">MONTH</string>
     <string name="week">WEEK</string>
     <string name="day">DAY</string>

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -25,6 +24,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     Context context;
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
+
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
         this.articles = articles_array;
@@ -34,21 +34,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        TextView textView_title;
-        TextView textView_summary;
-        TextView textView_author;
-        TextView textView_sport;
-        LinearLayout layout;
+        TextView textViewTitle;
+        TextView textViewSummary;
+        TextView textViewAuthor;
+        TextView textViewSport;
         ImageView image;
         public ViewHolder(View V)
         {
             super(V);
-            textView_title = (TextView)V.findViewById(R.id.title);
-            textView_summary = (TextView)V.findViewById(R.id.summary);
-            textView_author = (TextView)V.findViewById(R.id.author);
-            textView_sport = (TextView)V.findViewById(R.id.sport);
+            textViewTitle = (TextView)V.findViewById(R.id.title);
+            textViewSummary = (TextView)V.findViewById(R.id.summary);
+            textViewAuthor = (TextView)V.findViewById(R.id.author);
+            textViewSport = (TextView)V.findViewById(R.id.sport);
             image = (ImageView)V.findViewById(R.id.imageView);
-            layout = (LinearLayout) V.findViewById(R.id.layout);
             V.setOnClickListener(this);
 
         }
@@ -66,7 +64,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View view;
-        if(articleType.equals("match report"))
+        if(articleType.equals("match report"))      //Inflate different view for news and match report
         {
              view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view,parent,false);
         }
@@ -81,15 +79,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public void onBindViewHolder(ArticleAdapter.ViewHolder holder, final int position)
     {
-        holder.textView_title.setText(articles.get(position).getTitle());
-        //holder.textView_summary.setText(articles.get(position).getSummary());
+        holder.textViewTitle.setText(articles.get(position).getTitle());
+        //holder.textViewSummary.setText(articles.get(position).getSummary());
         if(articleType.equals("match report"))
         {
-            holder.textView_author.setText(articles.get(position).getAuthor());
-            holder.textView_sport.setText(articles.get(position).getSport().toUpperCase());
+            holder.textViewAuthor.setText(articles.get(position).getAuthor());
+            holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
         }
         Picasso.with(context)
-                .load(articles.get(position).getImage_URL())
+                .load(articles.get(position).getImageUrl())
                 .placeholder(R.drawable.sportscafe)
                 .into(holder.image);
     }
