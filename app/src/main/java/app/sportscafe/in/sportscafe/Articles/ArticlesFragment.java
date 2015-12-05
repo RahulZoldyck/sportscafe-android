@@ -54,7 +54,7 @@ public class ArticlesFragment extends Fragment
     {
         ArticlesFragment fragment = new ArticlesFragment();
         Bundle args = new Bundle();
-        args.putString("articleType", articletype);
+        args.putString(ArticleConstants.ARTICLE_TYPE, articletype);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,7 +63,7 @@ public class ArticlesFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        this.articleType = getArguments().getString("articleType", "default");
+        this.articleType = getArguments().getString(ArticleConstants.ARTICLE_TYPE, "default");
     }
 
     @Override
@@ -169,7 +169,7 @@ public class ArticlesFragment extends Fragment
                         {
                             authorId = json_article.getString(ArticleConstants.AUTHOR_ID);
                             if(authorId.equals(""))
-                                authorId = "Sportscafe Editor";
+                                authorId = getResources().getString(R.string.string_sportscafe_editor);
                             else
                             {
                                 int pos=-1;
