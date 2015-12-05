@@ -123,21 +123,21 @@ public class ArticlesFragment extends Fragment
             try
             {
                 JSONObject conditions = new JSONObject();
-                conditions.accumulate("published",true);
+                conditions.accumulate(ArticleConstants.PUBLISHED,true);
                 Log.d(Utilites.getTAG(),articleType);
-                conditions.accumulate("classifications.sections.articleType",articleType);
+                conditions.accumulate(ArticleConstants.CLASSIFICATIONS_SECTIONS_ARTICLETYPE,articleType);
                 JSONObject projection = new JSONObject();
-                projection.accumulate("content",0);
+                projection.accumulate(ArticleConstants.CONTENT,0);
                 JSONObject options = new JSONObject();
                 JSONObject sort = new JSONObject();
-                sort.accumulate("publishDate",-1);
-                options.accumulate("sort",sort);
-                options.accumulate("limit",50);
-                msg.accumulate("conditions",conditions);
-                msg.accumulate("projection",projection);
-                msg.accumulate("options",options);
+                sort.accumulate(ArticleConstants.PUBLISH_DATE,-1);
+                options.accumulate(ArticleConstants.SORT,sort);
+                options.accumulate(ArticleConstants.LIMIT,50);
+                msg.accumulate(ArticleConstants.CONDITIONS,conditions);
+                msg.accumulate(ArticleConstants.PROJECTION,projection);
+                msg.accumulate(ArticleConstants.OPTIONS,options);
                 JSONObject object = new JSONObject();
-                object.accumulate("msg",msg);
+                object.accumulate(ArticleConstants.MSG,msg);
                 try
                 {
                     URL url = new URL(link);
@@ -163,11 +163,11 @@ public class ArticlesFragment extends Fragment
                     {
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
-                        String title = json_article.getString("title");
+                        String title = json_article.getString(ArticleConstants.TITLE);
                         String authorId;
                         try
                         {
-                            authorId = json_article.getString("authorId");
+                            authorId = json_article.getString(ArticleConstants.AUTHOR_ID);
                             if(authorId.equals(""))
                                 authorId = "Sportscafe Editor";
                             else
@@ -190,15 +190,15 @@ public class ArticlesFragment extends Fragment
                         {
                             authorId = "Sportscafe Editor";
                         }
-                        String id = json_article.getString("_id");
-                        String summary = json_article.getString("contentSummary");
-                        JSONObject images = json_article.getJSONObject("images");
-                        JSONObject featured = images.getJSONObject("featured");
-                        String imageURL = featured.getString("path");
-                        JSONObject classifications = json_article.getJSONObject("classifications");
-                        JSONObject sections = classifications.getJSONObject("sections");
-                        String articleType = sections.getString("articleType");
-                        String sport = sections.getString("sport");
+                        String id = json_article.getString(ArticleConstants.ID);
+                        String summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
+                        JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
+                        JSONObject featured = images.getJSONObject(ArticleConstants.FEATURED);
+                        String imageURL = featured.getString(ArticleConstants.PATH);
+                        JSONObject classifications = json_article.getJSONObject(ArticleConstants.CLASSIFICATIONS);
+                        JSONObject sections = classifications.getJSONObject(ArticleConstants.SECTIONS);
+                        String articleType = sections.getString(ArticleConstants.ARTICLE_TYPE);
+                        String sport = sections.getString(ArticleConstants.SPORT);
                         Article article_temp = new Article();
                         article_temp.setId(id);
                         article_temp.setTitle(title);
