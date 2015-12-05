@@ -38,7 +38,6 @@ public class Fixture extends android.support.v4.app.Fragment {
     View vh;
     SwipeRefreshLayout layout;
     ListView lv;
-    public static final String[] games={"football","hockey","cricket","badminton"};
     public  HashMap<String,String> mapIdtoTeam =new HashMap<>();
 
     private OnFragmentInteractionListener mListener;
@@ -113,46 +112,10 @@ public class Fixture extends android.support.v4.app.Fragment {
             String ISOtomo=df.format(tomorrow)+getResources().getString(R.string.formatModification);
             String ISOyes=df.format(yesterday)+getResources().getString(R.string.formatModification);
 
-
-
-           String rawjson="{\"msg\": {"+
-                "\"$redact\": {"+
-                "\"$cond\": {"+
-                        "\"if\": {"+
-                        "\"$or\": [{"+
-                            "\"$and\": [{"+
-                                "\"$gte\": [\""+ISOyes+"\", \"$tournamentStartDate\"]"+
-                            "}, {"+
-                                "\"$lt\": [\""+ISOtomo+"\", \"$tournamentEndDate\"]"+
-                            "}]"+
-                       " }, {"+
-                            "\"$and\": [{"+
-                                "\"$gte\": [\"$matchStartDate\", \""+ISOyes+"\"]"+
-                            "}, {"+
-                                "\"$lt\": [\"$matchStartDate\", \""+ISOtomo+"\"]"+
-                            "}]"+
-                       " }, {"+
-                            "\"$and\": [{"+
-                                "\"$not\": {"+
-                                    "\"$ifNull\": [\"$tournamentStartDate\", false]"+
-                                "}"+
-                            "}, {"+
-                                "\"$not\": {"+
-                                    "\"$ifNull\": [\"$matchStartDate\", false]"+
-                                "}"+
-                            "}]"+
-                        "}]"+
-                    "},"+
-                    "\"then\": \"$$DESCEND\","+
-                            "\"else\": \"$$PRUNE\""+
-                "}"+
-            "}}"+
-            "}\"";
-
             // getting from REST API
             try {
 
-                JSONObject js=new JSONObject(rawjson);
+                JSONObject js=new JSONObject(FixtureConstants.getQuery(ISOyes,ISOtomo));
                 String params=js.toString();
                 byte[] bytes=params.getBytes();
 
@@ -175,7 +138,7 @@ public class Fixture extends android.support.v4.app.Fragment {
                     result=result+line;
                 }
                 JSONObject res=new JSONObject(result);
-                data=res.getJSONObject("data");
+                data=res.getJSONObject(FixtureConstants.DATA);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -204,7 +167,7 @@ public class Fixture extends android.support.v4.app.Fragment {
         JSONArray matchesArray=new JSONArray();
         JSONObject tournamentObject=new JSONObject();
         try {
-            for(String game : games) {
+            for(String game : FixtureConstants.GAMES) {
                 try {
                     gameArray=jsonObject.getJSONArray(game);
                 }catch (Exception e){
@@ -213,62 +176,62 @@ public class Fixture extends android.support.v4.app.Fragment {
 
                 for (int i=0;i<gameArray.length();i++) {
                     tournamentObject=gameArray.getJSONObject(i);
-                    teams = tournamentObject.getJSONArray("teams");
+                    teams = tournamentObject.getJSONArray(FixtureConstants.TEAMS);
                     for(int j=0;j<teams.length();j++){
                         JSONObject team = new JSONObject();
                         team = teams.getJSONObject(j);
                         boolean tryit=false;
                         try{
-                             tryit=tournamentObject.getString("gameType")!=null;
+                             tryit=tournamentObject.getString(FixtureConstants.GAME_TYPE)!=null;
 
                         }catch (Exception e){
                             tryit=false;
                         }
                         if(tryit){
-                            if(tournamentObject.getString("gameType").equals("individuals")){
+                            if(tournamentObject.getString(FixtureConstants.GAME_TYPE).equals(FixtureConstants.INDIVIDUALS)){
                             JSONObject player=new JSONObject();
-                            player=team.getJSONObject("playerA");
-                            matches.setCountry(player.getString("country"));
-                            mapIdtoTeam.put(player.getString("playerId"),player.getString("playerNameShort"));
+                            player=team.getJSONObject(FixtureConstants.PLAYER_A);
+                            matches.setCountry(player.getString(FixtureConstants.COUNTRY));
+                            mapIdtoTeam.put(player.getString(FixtureConstants.PLAYER_ID),player.getString(FixtureConstants.PLAYER_NAME_SHORT));
 
 
                         }
                             else {
 
-                                mapIdtoTeam.put(team.getString("teamId"), team.getString("teamDisplayNameShort"));
+                                mapIdtoTeam.put(team.getString(FixtureConstants.TEAM_ID), team.getString(FixtureConstants.TEAM_DISPLAY_NAME_SHORT));
                             }
                         }
                         else {
 
-                            mapIdtoTeam.put(team.getString("teamId"), team.getString("teamDisplayNameShort"));
+                            mapIdtoTeam.put(team.getString(FixtureConstants.TEAM_ID), team.getString(FixtureConstants.TEAM_DISPLAY_NAME_SHORT));
                         }
                     }
 
-                    matchesArray = tournamentObject.getJSONArray("matches");
+                    matchesArray = tournamentObject.getJSONArray(FixtureConstants.MATCHES);
                     for(int k=0;k<matchesArray.length();k++){
                         JSONObject matchObject=matchesArray.getJSONObject(k);
                         matches=new Matches();
                         matches.setGame(game);
-                        String link=matchObject.getString("matchReportOrPreviewLink");
+                        String link=matchObject.getString(FixtureConstants.MATCH_REPORT_OR_PREVIEW_LINK);
                         if(link!=null)
                             matches.setLink(link);
                         else
                             matches.setLink("-1");
-                        matches.setStatus(matchObject.getString("matchStatus"));
-                        if(tournamentObject.getString("gameType").equals("individuals")){
-                            matches.setTournament(tournamentObject.getString("tournamentSuperName"));
-                            matches.setDate(matchObject.getString("matchDate"));
+                        matches.setStatus(matchObject.getString(FixtureConstants.MATCH_STATUS));
+                        if(tournamentObject.getString(FixtureConstants.GAME_TYPE).equals(FixtureConstants.INDIVIDUALS)){
+                            matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_SUPER_NAME));
+                            matches.setDate(matchObject.getString(FixtureConstants.MATCH_DATE));
                             matches.setId("");
-                            JSONObject venue=tournamentObject.getJSONObject("tournamentVenue");
-                            matches.setVenue(venue.getString("city")+","+venue.getString("country"));
+                            JSONObject venue=tournamentObject.getJSONObject(FixtureConstants.TOURNAMENT_VENUE);
+                            matches.setVenue(venue.getString(FixtureConstants.CITY)+","+venue.getString(FixtureConstants.COUNTRY));
                             JSONArray team=new JSONArray();
                             List<String> play=new ArrayList<>();
                             for(int r=0;r<team.length();r++){
                                 JSONObject teamObject=new JSONObject();
                                 teamObject=team.getJSONObject(r);
                                 JSONObject teamA=new JSONObject();
-                                teamA=teamObject.getJSONObject("playerA");
-                                play.add(teamA.getString("playerId"));
+                                teamA=teamObject.getJSONObject(FixtureConstants.PLAYER_A);
+                                play.add(teamA.getString(FixtureConstants.PLAYER_ID));
 
                             }
                             String[] players=new String[play.size()];
@@ -281,22 +244,22 @@ public class Fixture extends android.support.v4.app.Fragment {
 
                         }
                         else{
-                            matches.setTournament(tournamentObject.getString("tournamentName"));
-                            matches.setDate(matchObject.getString("matchStartDate"));
-                            matches.setId(String.valueOf(matchObject.getInt("matchId")));
-                            JSONObject venue=matchObject.getJSONObject("matchVenue");
-                            matches.setVenue(venue.getString("city"));
-                            JSONArray teamid=matchObject.getJSONArray("teamIds");
+                            matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_NAME));
+                            matches.setDate(matchObject.getString(FixtureConstants.MATCH_START_DATE));
+                            matches.setId(String.valueOf(matchObject.getInt(FixtureConstants.MATCH_ID)));
+                            JSONObject venue=matchObject.getJSONObject(FixtureConstants.MATCH_VENUE);
+                            matches.setVenue(venue.getString(FixtureConstants.CITY));
+                            JSONArray teamid=matchObject.getJSONArray(FixtureConstants.TEAM_IDS);
                             matches.setTeamId1(teamid.getString(0));
                             matches.setTeamId2(teamid.getString(1));
-                            matches.setTournamentId(tournamentObject.getString("tournamentId"));
+                            matches.setTournamentId(tournamentObject.getString(FixtureConstants.TOURNAMENT_ID));
                             matches.setTeam1(mapIdtoTeam.get(teamid.getString(0)));
                             matches.setTeam2(mapIdtoTeam.get(teamid.getString(1)));
                         }
 
                         // TODO :check what happens to individual
-                        JSONObject result=matchObject.getJSONObject("matchResult");
-                        JSONArray scores=result.getJSONArray("matchFinalScore");
+                        JSONObject result=matchObject.getJSONObject(FixtureConstants.MATCH_RESULT);
+                        JSONArray scores=result.getJSONArray(FixtureConstants.MATCH_FINAL_SCORE);
                         if(scores.length()!=0){
                             String score= String.valueOf(scores.getInt(0))+" - "+String.valueOf(scores.getInt(1));
                             matches.setScore(score);
@@ -317,12 +280,12 @@ public class Fixture extends android.support.v4.app.Fragment {
         matchArray=list.toArray(matchArray);
         list=new ArrayList<>();
         for (Matches i :matchArray){
-            if(i.getStatus().equals("Completed"))
+            if(i.getStatus().equals(getResources().getString(R.string.completed)))
                 list.add(i);
 
         }
         for (Matches i :matchArray){
-            if(i.getStatus().equals("Upcoming"))
+            if(i.getStatus().equals(getResources().getString(R.string.upcoming)))
                 list.add(i);
 
         }

@@ -117,18 +117,15 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         @Override
         protected JSONObject doInBackground(Void... params) {
             JSONObject data=new JSONObject();
-            String queryDay="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvday\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
-            String queryWeek="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvweek\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
-            String queryMonth="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvmonth\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
 
             try {
-                dayArray=fetchRESTAPI(queryDay);
-                weekArray=fetchRESTAPI(queryWeek);
-                monthArray=fetchRESTAPI(queryMonth);
+                dayArray=fetchRESTAPI(MostViewedConstants.QUERY_DAY);
+                weekArray=fetchRESTAPI(MostViewedConstants.QUERY_WEEK);
+                monthArray=fetchRESTAPI(MostViewedConstants.QUERY_MONTH);
 
-                data.put("day",dayArray);
-                data.put("week",weekArray);
-                data.put("month",monthArray);
+                data.put(MostViewedConstants.DAY,dayArray);
+                data.put(MostViewedConstants.WEEK,weekArray);
+                data.put(MostViewedConstants.MONTH,monthArray);
             } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
@@ -148,9 +145,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     }
 
     private void parseJSON(JSONObject jsonObject) throws JSONException {
-        JSONArray dayJSON=jsonObject.getJSONArray("day");
-        JSONArray weekJSON=jsonObject.getJSONArray("week");
-        JSONArray monthJSON=jsonObject.getJSONArray("month");
+        JSONArray dayJSON=jsonObject.getJSONArray(MostViewedConstants.DAY);
+        JSONArray weekJSON=jsonObject.getJSONArray(MostViewedConstants.WEEK);
+        JSONArray monthJSON=jsonObject.getJSONArray(MostViewedConstants.MONTH);
         dayitems=getArrayFromJSON(dayJSON);
         monthitems=getArrayFromJSON(monthJSON);
         weekitems=getArrayFromJSON(weekJSON);
@@ -174,13 +171,13 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
             item=new MVItem();
             article=new JSONObject();
             article=jsonArray.getJSONObject(i);
-            item.setTitle(article.getString("title"));
-            JSONObject images=article.getJSONObject("images");
-            JSONObject feature=images.getJSONObject("featured");
-            item.setImg(Utilites.getMVImgURL()+feature.getString("path"));
-            JSONObject classification=article.getJSONObject("classifications");
-            JSONObject sections=classification.getJSONObject("sections");
-            item.setTag(sections.getString("sport"));
+            item.setTitle(article.getString(MostViewedConstants.TITLE));
+            JSONObject images=article.getJSONObject(MostViewedConstants.IMAGES);
+            JSONObject feature=images.getJSONObject(MostViewedConstants.FEATURED);
+            item.setImg(Utilites.getMVImgURL()+feature.getString(MostViewedConstants.PATH));
+            JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
+            JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
+            item.setTag(sections.getString(MostViewedConstants.SPORT));
             mvList.add(item);
         }
         mvItemsArray=new MVItem[mvList.size()];

@@ -23,4 +23,9 @@
     <string name="extra_position">position</string>
     <string name="string_sportscafe_editor">SportsCafe Editor</string>
     <string name="action_share">search</string>
+    <string name="month">MONTH</string>
+    <string name="week">WEEK</string>
+    <string name="day">DAY</string>
+    <string name="completed">Completed</string>
+    <string name="upcoming">Upcoming</string>
 </resources>
