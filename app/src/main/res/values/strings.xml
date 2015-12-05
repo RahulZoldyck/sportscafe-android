@@ -19,4 +19,6 @@
     <string name="section4">FIXTURES</string>
     <string name="section5">MY FEED</string>
     <string name="section6">MOST VIEWED</string>
+    <string name="title_activity_article_content">ArticleContentActivity</string>
+    <string name="extra_position">position</string>
 </resources>
