@@ -22,9 +22,9 @@ import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
 
-public class    FixerAdapter extends ArrayAdapter<Matches> {
+public class FixtureAdapter extends ArrayAdapter<Matches> {
     Context c;
-    public FixerAdapter(Context context, Matches[] objects) {
+    public FixtureAdapter(Context context, Matches[] objects) {
         super(context, R.layout.fixture_layout, objects);
         c=context;
     }
@@ -39,28 +39,28 @@ public class    FixerAdapter extends ArrayAdapter<Matches> {
         TextView title=(TextView)v.findViewById(R.id.cardtitle);
         TextView team1=(TextView)v.findViewById(R.id.cardteam1);
         TextView team2=(TextView)v.findViewById(R.id.cardteam2);
-        TextView matcht=(TextView)v.findViewById(R.id.cardmatch);
+        TextView matchTextView=(TextView)v.findViewById(R.id.cardmatch);
         TextView sport=(TextView)v.findViewById(R.id.cardsport);
-        ImageView flag1=(ImageView)v.findViewById(R.id.cardimg1);
-        ImageView flag2=(ImageView)v.findViewById(R.id.cardimg2);
+        ImageView teamflag1=(ImageView)v.findViewById(R.id.cardTeamimg1);
+        ImageView teamflag2=(ImageView)v.findViewById(R.id.cardTeamimg2);
         TextView timeorscore=(TextView)v.findViewById(R.id.cardtimeorscore);
         timeorscore.setTypeface(null, Typeface.BOLD);
-        String url1=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId1()+".png";
-        String url2=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId2()+".png";
+        String teamFlagurl1=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId1()+".png";
+        String teamFlagurl2=Utilites.getTeamImg()+"/"+match.getGame()+"/"+match.getTournamentId()+"/"+match.getTeamId2()+".png";
         Picasso.with(v.getContext())
-                .load(url1)
-                .placeholder(R.drawable.india)
-                .into(flag1);
-        Picasso.with(c).load(url2).error(R.drawable.india).into(flag2);
-        matcht.setTypeface(null,Typeface.BOLD_ITALIC);
-        Log.d("sportscafe",url1);
+                .load(teamFlagurl1)
+                .placeholder(R.mipmap.logo)
+                .into(teamflag1);
+        Picasso.with(c).load(teamFlagurl2).placeholder(R.mipmap.logo).into(teamflag2);
+        matchTextView.setTypeface(null,Typeface.BOLD_ITALIC);
+        Log.d("sportscafe",teamFlagurl1);
 
         sport.setText(match.getGame().toUpperCase());
         title.setText(match.getTournament());
         team1.setText(match.getTeam1());
         team2.setText(match.getTeam2());
         try {
-            matcht.setText("Match "+match.getId()+"-"+getDate(match.getDate()));
+            matchTextView.setText("Match "+match.getId()+"-"+getDate(match.getDate()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public class    FixerAdapter extends ArrayAdapter<Matches> {
     private String getDate(String date) throws ParseException {
 
         java.text.DateFormat format=new SimpleDateFormat(getContext().getResources().getString(R.string.parseISO));
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        format.setTimeZone(TimeZone.getTimeZone(getContext().getResources().getString(R.string.gmt)));
         Date dates=format.parse(date);
         java.text.DateFormat getformat=new SimpleDateFormat(getContext().getResources().getString(R.string.dateFormat));
 

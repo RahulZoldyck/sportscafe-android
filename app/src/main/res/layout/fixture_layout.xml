@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <ImageView
-                        android:id="@+id/cardimg1"
+                        android:id="@+id/cardTeamimg1"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_weight="0"
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <ImageView
-                        android:id="@+id/cardimg2"
+                        android:id="@+id/cardTeamimg2"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_weight="0"
