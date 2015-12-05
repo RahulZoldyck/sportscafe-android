@@ -119,9 +119,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
             JSONObject data=new JSONObject();
 
             try {
-                dayArray=fetchRESTAPI(MostViewedConstants.QUERYDAY);
-                weekArray=fetchRESTAPI(MostViewedConstants.QUERYWEEK);
-                monthArray=fetchRESTAPI(MostViewedConstants.QUERYMONTH);
+                dayArray=fetchRESTAPI(MostViewedConstants.QUERY_DAY);
+                weekArray=fetchRESTAPI(MostViewedConstants.QUERY_WEEK);
+                monthArray=fetchRESTAPI(MostViewedConstants.QUERY_MONTH);
 
                 data.put(MostViewedConstants.DAY,dayArray);
                 data.put(MostViewedConstants.WEEK,weekArray);
