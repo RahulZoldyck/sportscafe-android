@@ -77,9 +77,9 @@ public class MostViewedPagerFragment extends Fragment {
         ImageView img=(ImageView)v.findViewById(R.id.MVimage);
         TextView title=(TextView)v.findViewById(R.id.MVtitle);
         TextView tag=(TextView)v.findViewById(R.id.MVtag);
-        Picasso.with(v.getContext()).load(imgURL).resize(300,300).into(img);
+        Picasso.with(v.getContext()).load(imgURL).placeholder(R.mipmap.logo).resize(300,300).into(img);
         title.setText(titles);
-        tag.setTextColor(Color.parseColor("#3f85f4"));
+        tag.setTextColor(getResources().getColor(R.color.googleBlue));
         tag.setText(tags.toUpperCase());
         return v ;
     }
