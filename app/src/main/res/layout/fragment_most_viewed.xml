@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
+            android:visibility="gone"
             android:textColor="#fff"
             android:background="@drawable/sportbackground_9patch"
             android:layout_width="wrap_content"
@@ -33,6 +34,7 @@
             android:orientation="vertical"
             android:layout_weight="1">
             <TextView
+                android:visibility="gone"
                 android:textColor="#fff"
                 android:background="@drawable/sportbackground_9patch"
                 android:layout_width="wrap_content"
@@ -50,6 +52,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
             <TextView
+                android:visibility="gone"
                 android:textColor="#fff"
                 android:background="@drawable/sportbackground_9patch"
                 android:layout_width="wrap_content"
