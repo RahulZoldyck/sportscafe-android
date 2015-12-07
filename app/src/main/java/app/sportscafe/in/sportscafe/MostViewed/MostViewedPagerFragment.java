@@ -1,18 +1,23 @@
 package app.sportscafe.in.sportscafe.MostViewed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
 /**
@@ -26,14 +31,15 @@ import app.sportscafe.in.sportscafe.R;
 public class MostViewedPagerFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_IMG = "img";
-    private static final String ARG_TAG = "tag";
-    private static final String ARG_TITLE = "title";
-
+    public static final String ARG_IMG = "img";
+    public static final String ARG_TAG = "tag";
+    public static final String ARG_TITLE = "title";
+    public static final String ARG_ID="id";
 
     private String imgURL;
     private String tags;
     private String titles;
+    private String id;
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,6 +61,7 @@ public class MostViewedPagerFragment extends Fragment {
         args.putString(ARG_IMG, item.getImg());
         args.putString(ARG_TAG, item.getTag());
         args.putString(ARG_TITLE,item.getTitle());
+        args.putString(ARG_ID,item.get_id());
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,6 +73,7 @@ public class MostViewedPagerFragment extends Fragment {
             imgURL = getArguments().getString(ARG_IMG);
             tags = getArguments().getString(ARG_TAG);
             titles=getArguments().getString(ARG_TITLE);
+            id=getArguments().getString(ARG_ID);
         }
     }
 
@@ -74,10 +82,24 @@ public class MostViewedPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_most_viewed_pager, container, false);
+        CardView mvCard=(CardView)v.findViewById(R.id.mvCard);
         ImageView img=(ImageView)v.findViewById(R.id.MVimage);
         TextView title=(TextView)v.findViewById(R.id.MVtitle);
         TextView tag=(TextView)v.findViewById(R.id.MVtag);
-        Picasso.with(v.getContext()).load(imgURL).placeholder(R.mipmap.logo).resize(300,300).into(img);
+        mvCard.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i= new Intent(getContext(),MostViewedContentActivity.class);
+                        i.putExtra(ARG_IMG,imgURL);
+                        i.putExtra(ARG_TAG,tags);
+                        i.putExtra(ARG_TITLE,titles);
+                        i.putExtra(ARG_ID,id);
+                        getContext().startActivity(i);
+                    }
+                }
+        );
+        Picasso.with(v.getContext()).load(Utilites.getMVImgURL(0)+imgURL).placeholder(R.mipmap.logo).resize(300,300).into(img);
         title.setText(titles);
         tag.setTextColor(getResources().getColor(R.color.googleBlue));
         tag.setText(tags.toUpperCase());

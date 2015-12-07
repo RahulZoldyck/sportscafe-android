@@ -2,7 +2,15 @@ package app.sportscafe.in.sportscafe.MostViewed;
 
 
 public class MVItem {
-    private String title,tag,img;
+    private String title,tag,img,_id;
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
     public String getTitle() {
         return title;
