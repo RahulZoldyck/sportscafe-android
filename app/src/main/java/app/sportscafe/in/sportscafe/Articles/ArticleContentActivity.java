@@ -31,9 +31,7 @@ public class ArticleContentActivity extends AppCompatActivity
     ArrayList<Article> articles = new ArrayList<>();
     ArrayAdapter<CharSequence> adapter;
     Integer position;
-    TextView textviewTitle;
-    TextView textviewSummary;
-    TextView textViewAuthor;
+    TextView textviewTitle, textviewSummary , textViewAuthor;
     ListView listviewContent;
     ImageView imageViewFullArticle;
     @Override
