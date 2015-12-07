@@ -14,7 +14,7 @@ public class Utilites
     private static final String stateArticles = "state_articles";
     private static final String TAG = "LOGGING";
     private static String MVImgURL="https://sportscafe.in/img/es3-cfill-w300-h300/";
-    private static String MVImgURL2="https://sportscafe.in/img/es3-cfit-w800-h300/";
+    private static String MVImgURL2="https://sportscafe.in/img/es3-cfit-w800-h600/";
 
     public static String getMVImgURL(int i) {
         switch (i){

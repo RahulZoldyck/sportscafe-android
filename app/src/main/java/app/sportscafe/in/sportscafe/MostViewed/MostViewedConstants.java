@@ -2,7 +2,9 @@ package app.sportscafe.in.sportscafe.MostViewed;
 
 
 public class MostViewedConstants {
-
+    public static final String CONTENT="content";
+    public static final String SUMMARY="contentSummary";
+    public static final String DATA="data";
     public static final String DAY="day";
     public static final String MONTH="month";
     public static final String WEEK="week";
