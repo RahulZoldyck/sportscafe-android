@@ -171,10 +171,11 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
             item=new MVItem();
             article=new JSONObject();
             article=jsonArray.getJSONObject(i);
+            item.set_id(article.getString(MostViewedConstants.ID));
             item.setTitle(article.getString(MostViewedConstants.TITLE));
             JSONObject images=article.getJSONObject(MostViewedConstants.IMAGES);
             JSONObject feature=images.getJSONObject(MostViewedConstants.FEATURED);
-            item.setImg(Utilites.getMVImgURL()+feature.getString(MostViewedConstants.PATH));
+            item.setImg(feature.getString(MostViewedConstants.PATH));
             JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
             JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
             item.setTag(sections.getString(MostViewedConstants.SPORT));

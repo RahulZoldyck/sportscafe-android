@@ -13,6 +13,7 @@ public class MostViewedConstants {
     public static final String CLASSIFICATION="classifications";
     public static final String SECTIONS="sections";
     public static final String SPORT="sport";
+    public static final String ID="_id";
     public static final String QUERY_DAY ="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvday\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
     public static final String QUERY_WEEK ="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvweek\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
     public static final String QUERY_MONTH ="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvmonth\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
