@@ -27,13 +27,14 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import app.sportscafe.in.sportscafe.App.Utilites;
+import app.sportscafe.in.sportscafe.Articles.Article;
 import app.sportscafe.in.sportscafe.R;
 
 
 
 public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFragmentInteractionListener{
 
-    MVItem[] dayitems,weekitems,monthitems;
+    Article[] dayitems,weekitems,monthitems;
     ViewPager dayPager,weekPager,monthPager;
     SwipeRefreshLayout sr;
 
@@ -162,26 +163,26 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
 
     }
 
-    private MVItem[] getArrayFromJSON(JSONArray jsonArray) throws JSONException {
-        MVItem[] mvItemsArray;
-        MVItem item;
+    private Article[] getArrayFromJSON(JSONArray jsonArray) throws JSONException {
+        Article[] mvItemsArray;
+        Article item;
         JSONObject article;
-        List<MVItem> mvList=new ArrayList<>();
+        List<Article> mvList=new ArrayList<>();
         for(int i =0; i< jsonArray.length();i++){
-            item=new MVItem();
+            item=new Article();
             article=new JSONObject();
             article=jsonArray.getJSONObject(i);
-            item.set_id(article.getString(MostViewedConstants.ID));
+            item.setId(article.getString(MostViewedConstants.ID));
             item.setTitle(article.getString(MostViewedConstants.TITLE));
             JSONObject images=article.getJSONObject(MostViewedConstants.IMAGES);
             JSONObject feature=images.getJSONObject(MostViewedConstants.FEATURED);
-            item.setImg(feature.getString(MostViewedConstants.PATH));
+            item.setImageUrl(feature.getString(MostViewedConstants.PATH));
             JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
             JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
-            item.setTag(sections.getString(MostViewedConstants.SPORT));
+            item.setSport(sections.getString(MostViewedConstants.SPORT));
             mvList.add(item);
         }
-        mvItemsArray=new MVItem[mvList.size()];
+        mvItemsArray=new Article[mvList.size()];
         mvItemsArray=mvList.toArray(mvItemsArray);
             return mvItemsArray;
     }
