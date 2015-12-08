@@ -1,10 +1,12 @@
 package app.sportscafe.in.sportscafe.Articles;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
@@ -39,7 +41,10 @@ public class ArticleContentActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_content);
-
+        if(Build.VERSION.SDK_INT>=21)
+        {
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_image_transition));
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try

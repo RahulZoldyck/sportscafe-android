@@ -16,6 +16,7 @@
         android:scaleType="fitStart"
         android:adjustViewBounds="true"
         android:src="@drawable/sportscafe"
+        android:transitionName="shared_articleimg_transition"
         />
     <TextView
         android:id="@+id/article_title"
