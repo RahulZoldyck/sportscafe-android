@@ -1,4 +1,4 @@
-package app.sportscafe.in.sportscafe.MostViewed;
+package app.sportscafe.in.sportscafe.App;
 
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,11 +24,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import app.sportscafe.in.sportscafe.App.Utilites;
-import app.sportscafe.in.sportscafe.Articles.Article;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedConstants;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
-public class MostViewedContentActivity extends AppCompatActivity {
+public class ContentActivity extends AppCompatActivity {
     Article article;
     String imgURL,title,tag,id;
     TextView content,header,summary;
@@ -60,7 +60,7 @@ public class MostViewedContentActivity extends AppCompatActivity {
             content = (TextView) findViewById(R.id.mvcontent);
             summary = (TextView) findViewById(R.id.mvsummary);
             contentImage = (ImageView) findViewById(R.id.mvContentImage);
-            Picasso.with(this).load(Utilites.getMVImgURL(1) + imgURL).into(contentImage);
+            Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width,Utilites.image_height,imgURL)).into(contentImage);
             header = (TextView) findViewById(R.id.mvContentTitle);
             header.setText(title);
 

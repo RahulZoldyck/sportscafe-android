@@ -25,8 +25,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import app.sportscafe.in.sportscafe.R;
+import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.Utilites;
+import app.sportscafe.in.sportscafe.R;
 
 public class ArticlesFragment extends Fragment
 {
@@ -118,7 +119,6 @@ public class ArticlesFragment extends Fragment
         {
 
             String link = Utilites.getArticlesWithConditionsURL();
-            String link_image = Utilites.getArticlesImageURL();
             JSONObject msg = new JSONObject();
             try
             {
@@ -203,7 +203,7 @@ public class ArticlesFragment extends Fragment
                         article_temp.setId(id);
                         article_temp.setTitle(title);
                         article_temp.setSummary(summary);
-                        article_temp.setImageUrl(link_image+"-cfill-w"+image_width+"-h"+image_height+"-gn/"+imageURL);
+                        article_temp.setImageUrl(imageURL);
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorId);
