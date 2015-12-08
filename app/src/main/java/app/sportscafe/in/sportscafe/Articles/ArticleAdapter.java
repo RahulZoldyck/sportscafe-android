@@ -1,7 +1,10 @@
 package app.sportscafe.in.sportscafe.Articles;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,13 +54,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         }
 
+        @SuppressLint("NewApi")
         @Override
-        public void onClick(View v)
+        public void onClick(View view)
         {
+            View v = view.findViewById(R.id.imageView);
+            v.setTransitionName("shared_articleimg_transition");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context,v,v.getTransitionName());
             Intent intent = new Intent(context,ArticleContentActivity.class);
             intent.putParcelableArrayListExtra(Utilites.getStateArticles(),articles);
             intent.putExtra(context.getResources().getString(R.string.extra_position),getAdapterPosition());
-            context.startActivity(intent);
+            context.startActivity(intent,options.toBundle());
         }
     }
     @Override

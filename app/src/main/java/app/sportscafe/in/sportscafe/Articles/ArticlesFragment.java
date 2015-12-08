@@ -79,13 +79,13 @@ public class ArticlesFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ArticleAdapter(new ArrayList<Article>(),context,articleType);
         recyclerView.setAdapter(adapter);
+        new AsyncArticlesTask().execute();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
             {
-                asyncArticlesTask = new AsyncArticlesTask();
-                asyncArticlesTask.execute();
+                new AsyncArticlesTask().execute();
                 adapter.notifyDataSetChanged();
 
             }

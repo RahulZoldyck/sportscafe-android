@@ -1,12 +1,14 @@
 package app.sportscafe.in.sportscafe.MostViewed;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,6 +35,10 @@ public class MostViewedContentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT>=21)
+        {
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_image_transition));
+        }
         Bundle b=getIntent().getExtras();
         if(b!=null){
             imgURL=b.getString(MostViewedPagerFragment.ARG_IMG);
@@ -43,6 +49,14 @@ public class MostViewedContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_most_viewed_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        try
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        catch (Exception e)
+        {
+            Log.d(Utilites.getTAG(),e.toString());
+        }
         content=(TextView)findViewById(R.id.mvcontent);
         summary=(TextView)findViewById(R.id.mvsummary);
         contentImage=(ImageView)findViewById(R.id.mvContentImage);
