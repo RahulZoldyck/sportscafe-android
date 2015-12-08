@@ -6,11 +6,11 @@ package app.sportscafe.in.sportscafe.App;
 public class Utilites
 {
 
-    private static String ArticlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
-    private static String ArticlesImageURL = "https://sportscafe.in/img/es3";
-    private static String FixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
-    private static String TeamImg="https://sportscafe.in/img/es3-cfit-w300-h300/scweb/scapp/partials/images/sports";
-    private static String ArticleContentURL = "https://sportscafe.in/api/articles/getArticleById/";
+    private static String articlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
+    private static String articlesImageURL = "https://sportscafe.in/img/es3";
+    private static String fixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
+    private static String teamImg ="https://sportscafe.in/img/es3-cfit-w300-h300/scweb/scapp/partials/images/sports";
+    private static String articleContentURL = "https://sportscafe.in/api/articles/getArticleById/";
     private static final String stateArticles = "state_articles";
     private static final String TAG = "LOGGING";
     private static String MVImgURL="https://sportscafe.in/img/es3-cfill-w300-h300/";
@@ -27,26 +27,26 @@ public class Utilites
     }
 
     public static String getTeamImg() {
-        return TeamImg;
+        return teamImg;
     }
 
     public static String getFixturesURL() {
-        return FixturesURL;
+        return fixturesURL;
     }
 
     public static String getArticlesWithConditionsURL()
     {
-        return ArticlesWithConditionsURL;
+        return articlesWithConditionsURL;
     }
 
     public static String getArticlesImageURL()
     {
-        return ArticlesImageURL;
+        return articlesImageURL;
     }
 
     public static String getArticleContentURL()
     {
-        return ArticleContentURL;
+        return articleContentURL;
     }
 
     public static String getStateArticles()
