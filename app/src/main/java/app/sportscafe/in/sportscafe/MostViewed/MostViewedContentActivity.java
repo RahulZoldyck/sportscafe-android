@@ -47,8 +47,8 @@ public class MostViewedContentActivity extends AppCompatActivity {
         summary=(TextView)findViewById(R.id.mvsummary);
         contentImage=(ImageView)findViewById(R.id.mvContentImage);
         Picasso.with(this).load(Utilites.getMVImgURL(1)+imgURL).into(contentImage);
-       // header=(TextView)findViewById(R.id.);
-        //header.setText(title);
+        header=(TextView)findViewById(R.id.mvContentTitle);
+        header.setText(title);
 
         new AsyncMostViewedContent().execute(id);
 
@@ -91,9 +91,9 @@ public class MostViewedContentActivity extends AppCompatActivity {
             try
             {
                 JSONObject jsonResult = new JSONObject(result);
-                JSONObject dataJSON = jsonResult.getJSONObject("data");
-                String contentString = dataJSON.getString("content");
-                String summaryString = dataJSON.getString("contentSummary");
+                JSONObject dataJSON = jsonResult.getJSONObject(MostViewedConstants.DATA);
+                String contentString = dataJSON.getString(MostViewedConstants.CONTENT);
+                String summaryString = dataJSON.getString(MostViewedConstants.SUMMARY);
                 content.setText(Html.fromHtml(contentString));
                 summary.setText(summaryString);
             } catch (JSONException e)
