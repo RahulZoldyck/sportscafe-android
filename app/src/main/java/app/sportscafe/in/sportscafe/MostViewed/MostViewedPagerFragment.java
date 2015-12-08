@@ -1,9 +1,11 @@
 package app.sportscafe.in.sportscafe.MostViewed;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -82,11 +84,15 @@ public class MostViewedPagerFragment extends Fragment {
         TextView tag=(TextView)v.findViewById(R.id.MVtag);
         mvCard.setOnClickListener(
                 new View.OnClickListener() {
+                    @SuppressLint("NewApi")
                     @Override
                     public void onClick(View v) {
+                        View image = v.findViewById(R.id.MVimage);
+                        image.setTransitionName("shared_mvimg_transition");
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),image,image.getTransitionName());
                         Intent i= new Intent(getContext(),MostViewedContentActivity.class);
                         i.putExtra(ARG_ITEM,items);
-                        getContext().startActivity(i);
+                        getContext().startActivity(i,options.toBundle());
                     }
                 }
         );

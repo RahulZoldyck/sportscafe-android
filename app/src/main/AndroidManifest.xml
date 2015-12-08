@@ -32,7 +32,11 @@
         <activity
             android:name=".MostViewed.MostViewedContentActivity"
             android:label="@string/title_activity_most_viewed_content"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.sportscafe.in.sportscafe.App.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
