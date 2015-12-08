@@ -106,9 +106,9 @@ public class Fixture extends android.support.v4.app.Fragment {
             df.setTimeZone(tz);
             Date today=new Date(System.currentTimeMillis());
             Date yesterday=new Date(System.currentTimeMillis());
-            yesterday.setDate(today.getDate()-2);
+            yesterday.setDate(today.getDate()-3);
             Date tomorrow=new Date(System.currentTimeMillis());
-            tomorrow.setDate(today.getDate()+2);
+            tomorrow.setDate(today.getDate()+5);
             String ISOtomo=df.format(tomorrow)+getResources().getString(R.string.formatModification);
             String ISOyes=df.format(yesterday)+getResources().getString(R.string.formatModification);
 
