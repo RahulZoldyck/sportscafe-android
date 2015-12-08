@@ -23,9 +23,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import app.sportscafe.in.sportscafe.App.Utilites;
+import app.sportscafe.in.sportscafe.Articles.Article;
 import app.sportscafe.in.sportscafe.R;
 
 public class MostViewedContentActivity extends AppCompatActivity {
+    Article article;
     String imgURL,title,tag,id;
     TextView content,header,summary;
     ImageView contentImage;
@@ -33,12 +35,14 @@ public class MostViewedContentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle b=getIntent().getExtras();
-        if(b!=null){
-            imgURL=b.getString(MostViewedPagerFragment.ARG_IMG);
-            title=b.getString(MostViewedPagerFragment.ARG_TITLE);
-            tag=b.getString(MostViewedPagerFragment.ARG_TAG);
-            id=b.getString(MostViewedPagerFragment.ARG_ID);
+        Bundle bundle=getIntent().getExtras();
+        if(bundle!=null){
+            article=bundle.getParcelable(MostViewedPagerFragment.ARG_ITEM);
+            assert article != null;
+            imgURL=article.getImageUrl();
+            title=article.getTitle();
+            tag=article.getSport();
+            id=article.getId();
         }
         setContentView(R.layout.activity_most_viewed_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

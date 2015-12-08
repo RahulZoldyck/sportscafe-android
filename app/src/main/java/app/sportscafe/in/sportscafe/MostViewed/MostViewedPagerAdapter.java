@@ -4,10 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import app.sportscafe.in.sportscafe.Articles.Article;
+
 
 public class MostViewedPagerAdapter extends FragmentPagerAdapter {
-    MVItem[] items;
-    public MostViewedPagerAdapter(FragmentManager fm,MVItem[] items) {
+    Article[] items;
+    public MostViewedPagerAdapter(FragmentManager fm,Article[] items) {
         super(fm);
         this.items=items;
     }
