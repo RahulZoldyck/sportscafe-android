@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.Fixtures;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -84,31 +85,33 @@ public class FixtureAdapter extends ArrayAdapter<Matches> {
 
     private String getDate(String date) throws ParseException {
 
-        java.text.DateFormat format=new SimpleDateFormat(getContext().getResources().getString(R.string.parseISO));
-        format.setTimeZone(TimeZone.getTimeZone(getContext().getResources().getString(R.string.gmt)));
+        Resources resources = getContext().getResources();
+        java.text.DateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+        format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
         Date dates=format.parse(date);
-        java.text.DateFormat getformat=new SimpleDateFormat(getContext().getResources().getString(R.string.dateFormat));
+        java.text.DateFormat getformat=new SimpleDateFormat(resources.getString(R.string.dateFormat));
 
         return getformat.format(dates);
     }
 
     private String getTime(String date) throws ParseException {
-        java.text.DateFormat format=new SimpleDateFormat(getContext().getResources().getString(R.string.parseISO));
-        format.setTimeZone(TimeZone.getTimeZone(getContext().getResources().getString(R.string.gmt)));
+        Resources resources = getContext().getResources();
+        java.text.DateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+        format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
         Date dates=format.parse(date);
-        String amorpm=getContext().getResources().getString(R.string.am);
+        String amorpm=resources.getString(R.string.am);
         String hr="00",mm;
         mm=String.valueOf(dates.getMinutes());
         if(dates.getHours()>12){
-            amorpm=getContext().getResources().getString(R.string.pm);
+            amorpm=resources.getString(R.string.pm);
             hr=String.valueOf(dates.getHours()-12);
         }
         if(dates.getHours()==12){
-            amorpm=getContext().getResources().getString(R.string.pm);
+            amorpm=resources.getString(R.string.pm);
             hr=String.valueOf(12);
         }
         if(dates.getHours()<12){
-            amorpm=getContext().getResources().getString(R.string.am);
+            amorpm=resources.getString(R.string.am);
             hr=String.valueOf(dates.getHours());
         }
 
