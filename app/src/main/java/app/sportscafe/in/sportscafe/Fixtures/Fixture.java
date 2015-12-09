@@ -38,6 +38,7 @@ public class Fixture extends android.support.v4.app.Fragment {
     View vh;
     SwipeRefreshLayout layout;
     ListView lv;
+    int length,teamLength,matchesLength;
     public  HashMap<String,String> mapIdtoTeam =new HashMap<>();
 
     private OnFragmentInteractionListener mListener;
@@ -173,11 +174,12 @@ public class Fixture extends android.support.v4.app.Fragment {
                 }catch (Exception e){
                     continue;
                 }
-
-                for (int i=0;i<gameArray.length();i++) {
+                length=gameArray.length();
+                for (int i=0;i<length;i++) {
                     tournamentObject=gameArray.getJSONObject(i);
                     teams = tournamentObject.getJSONArray(FixtureConstants.TEAMS);
-                    for(int j=0;j<teams.length();j++){
+                    teamLength=teams.length();
+                    for(int j=0;j<teamLength;j++){
                         JSONObject team = new JSONObject();
                         team = teams.getJSONObject(j);
                         boolean tryit=false;
@@ -208,7 +210,8 @@ public class Fixture extends android.support.v4.app.Fragment {
                     }
 
                     matchesArray = tournamentObject.getJSONArray(FixtureConstants.MATCHES);
-                    for(int k=0;k<matchesArray.length();k++){
+                    matchesLength=matchesArray.length();
+                    for(int k=0;k<matchesLength;k++){
                         JSONObject matchObject=matchesArray.getJSONObject(k);
                         matches=new Matches();
                         matches.setGame(game);
@@ -224,6 +227,7 @@ public class Fixture extends android.support.v4.app.Fragment {
                             matches.setId("");
                             JSONObject venue=tournamentObject.getJSONObject(FixtureConstants.TOURNAMENT_VENUE);
                             matches.setVenue(venue.getString(FixtureConstants.CITY)+","+venue.getString(FixtureConstants.COUNTRY));
+                            //todo : Debug this team
                             JSONArray team=new JSONArray();
                             List<String> play=new ArrayList<>();
                             for(int r=0;r<team.length();r++){
