@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="app.sportscafe.in.sportscafe.MostViewed.MostViewedContentActivity"
+    tools:context=".App.ContentActivity"
     tools:showIn="@layout/activity_most_viewed_content">
     <LinearLayout
         android:orientation="vertical"

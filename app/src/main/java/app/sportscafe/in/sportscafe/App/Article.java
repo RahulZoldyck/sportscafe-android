@@ -1,4 +1,4 @@
-package app.sportscafe.in.sportscafe.Articles;
+package app.sportscafe.in.sportscafe.App;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 

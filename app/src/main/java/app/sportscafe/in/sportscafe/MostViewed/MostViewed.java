@@ -27,7 +27,7 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import app.sportscafe.in.sportscafe.App.Utilites;
-import app.sportscafe.in.sportscafe.Articles.Article;
+import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.R;
 
 

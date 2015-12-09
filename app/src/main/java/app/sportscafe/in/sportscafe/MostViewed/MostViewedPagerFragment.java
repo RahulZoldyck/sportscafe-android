@@ -16,8 +16,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import app.sportscafe.in.sportscafe.App.ContentActivity;
 import app.sportscafe.in.sportscafe.App.Utilites;
-import app.sportscafe.in.sportscafe.Articles.Article;
+import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.R;
 
 /**
@@ -88,15 +89,15 @@ public class MostViewedPagerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         View image = v.findViewById(R.id.MVimage);
-                        image.setTransitionName("shared_mvimg_transition");
+                        image.setTransitionName("shared_img_transition");
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),image,image.getTransitionName());
-                        Intent i= new Intent(getContext(),MostViewedContentActivity.class);
+                        Intent i= new Intent(getContext(),ContentActivity.class);
                         i.putExtra(ARG_ITEM,items);
                         getContext().startActivity(i,options.toBundle());
                     }
                 }
         );
-        Picasso.with(v.getContext()).load(Utilites.getMVImgURL(0)+imgURL).placeholder(R.mipmap.logo).resize(300,300).into(img);
+        Picasso.with(v.getContext()).load(Utilites.getInitialImageURL("300","300",imgURL)).placeholder(R.mipmap.logo).into(img);
         title.setText(titles);
         tag.setTextColor(getResources().getColor(R.color.googleBlue));
         tag.setText(tags.toUpperCase());
