@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import app.sportscafe.in.sportscafe.Articles.Article;
+import app.sportscafe.in.sportscafe.App.Article;
 
 
 public class MostViewedPagerAdapter extends FragmentPagerAdapter {

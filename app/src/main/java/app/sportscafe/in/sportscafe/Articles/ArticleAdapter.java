@@ -16,7 +16,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.Utilites;
+import app.sportscafe.in.sportscafe.App.ContentActivity;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
 /**
@@ -27,7 +30,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     Context context;
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
-
+    String width = "600";
+    String height = "300";
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
         this.articles = articles_array;
@@ -59,11 +63,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         public void onClick(View view)
         {
             View v = view.findViewById(R.id.imageView);
-            v.setTransitionName("shared_articleimg_transition");
+            v.setTransitionName("shared_img_transition");
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context,v,v.getTransitionName());
-            Intent intent = new Intent(context,ArticleContentActivity.class);
-            intent.putParcelableArrayListExtra(Utilites.getStateArticles(),articles);
-            intent.putExtra(context.getResources().getString(R.string.extra_position),getAdapterPosition());
+            Intent intent = new Intent(context,ContentActivity.class);
+            //intent.putParcelableArrayListExtra(Utilites.getStateArticles(),articles);
+            intent.putExtra(MostViewedPagerFragment.ARG_ITEM,articles.get(getAdapterPosition()));
             context.startActivity(intent,options.toBundle());
         }
     }
@@ -94,7 +98,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
         }
         Picasso.with(context)
-                .load(articles.get(position).getImageUrl())
+                .load(Utilites.getInitialImageURL(width,height,articles.get(position).getImageUrl()))
                 .placeholder(R.drawable.sportscafe)
                 .into(holder.image);
     }
