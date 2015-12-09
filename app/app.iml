@@ -20,8 +20,8 @@
         </afterSyncTasks>
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
-        <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res/layouts/rest" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res/layouts/most-viewed" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res/layouts/articles;file://$MODULE_DIR$/src/main/res/layouts/most-viewed;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/res/layouts/fixtures;file://$MODULE_DIR$/src/main/res/layouts/app;file://$MODULE_DIR$/src/main/res/layouts" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -50,8 +50,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts/rest" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts/main" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts/most-viewed" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts/fixtures" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts/articles" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts/app" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res/layouts" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
