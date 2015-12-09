@@ -30,8 +30,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     Context context;
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
-    String width = "600";
-    String height = "300";
+
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
         this.articles = articles_array;
@@ -98,7 +97,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
         }
         Picasso.with(context)
-                .load(Utilites.getInitialImageURL(width,height,articles.get(position).getImageUrl()))
+                .load(Utilites.getInitialImageURL(Utilites.image_width,Utilites.image_height,articles.get(position).getImageUrl()))
                 .placeholder(R.drawable.sportscafe)
                 .into(holder.image);
     }
