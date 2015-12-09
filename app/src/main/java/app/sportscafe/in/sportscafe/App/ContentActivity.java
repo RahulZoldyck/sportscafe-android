@@ -49,7 +49,7 @@ public class ContentActivity extends AppCompatActivity {
             tag = article.getSport();
             id = article.getId();
         }
-            setContentView(R.layout.activity_most_viewed_content);
+            setContentView(R.layout.activity_report);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             try {
