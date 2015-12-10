@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -88,35 +89,33 @@ public class FixtureAdapter extends ArrayAdapter<Matches> {
         Resources resources = getContext().getResources();
         java.text.DateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
         format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
-        Date dates=format.parse(date);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(format.parse(date));
         java.text.DateFormat getformat=new SimpleDateFormat(resources.getString(R.string.dateFormat));
 
-        return getformat.format(dates);
+        return getformat.format(calendar);
     }
 
     private String getTime(String date) throws ParseException {
         Resources resources = getContext().getResources();
-        java.text.DateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+        SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
         format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
-        Date dates=format.parse(date);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime( format.parse(date));
         String amorpm=resources.getString(R.string.am);
         String hr="00",mm;
-        mm=String.valueOf(dates.getMinutes());
-        if(dates.getHours()>12){
+        hr=String.valueOf(calendar.get(Calendar.HOUR));
+        mm=String.valueOf(calendar.get(Calendar.MINUTE));
+
+        if(calendar.get(Calendar.HOUR_OF_DAY)>=12){
             amorpm=resources.getString(R.string.pm);
-            hr=String.valueOf(dates.getHours()-12);
         }
-        if(dates.getHours()==12){
-            amorpm=resources.getString(R.string.pm);
-            hr=String.valueOf(12);
-        }
-        if(dates.getHours()<12){
+        if(calendar.get(Calendar.HOUR_OF_DAY)<12){
             amorpm=resources.getString(R.string.am);
-            hr=String.valueOf(dates.getHours());
         }
 
-        if(dates.getMinutes()<10)
-            mm="0"+String.valueOf(dates.getMinutes());
+        if(calendar.get(Calendar.MINUTE)<10)
+            mm="0"+String.valueOf(calendar.get(Calendar.MINUTE));
 
 
 

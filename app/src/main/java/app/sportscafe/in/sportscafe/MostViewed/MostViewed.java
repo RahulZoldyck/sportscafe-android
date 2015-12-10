@@ -37,6 +37,7 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     Article[] dayitems,weekitems,monthitems;
     ViewPager dayPager,weekPager,monthPager;
     SwipeRefreshLayout sr;
+    int length;
 
     private OnFragmentInteractionListener mListener;
 
@@ -168,7 +169,8 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         Article item;
         JSONObject article;
         List<Article> mvList=new ArrayList<>();
-        for(int i =0; i< jsonArray.length();i++){
+        length=jsonArray.length();
+        for(int i =0; i< length;i++){
             item=new Article();
             article=new JSONObject();
             article=jsonArray.getJSONObject(i);

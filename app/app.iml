@@ -21,7 +21,7 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res/layouts/most-viewed" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res/layouts/articles;file://$MODULE_DIR$/src/main/res/layouts/most-viewed;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/res/layouts/fixtures;file://$MODULE_DIR$/src/main/res/layouts/app;file://$MODULE_DIR$/src/main/res/layouts" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res/layouts;file://$MODULE_DIR$/src/main/res/layouts/most-viewed;file://$MODULE_DIR$/src/main/res/layouts/app;file://$MODULE_DIR$/src/main/res/layouts/fixtures;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/res/layouts/articles" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
