@@ -83,6 +83,8 @@ public class ContentActivity extends AppCompatActivity {
 
     public class AsyncMostViewedContent extends AsyncTask<String, Void, Void> {
         String result;
+        Html.ImageGetter imageGetter;
+        String contentString;
 
         @Override
         protected Void doInBackground(String... params) {
@@ -106,9 +108,9 @@ public class ContentActivity extends AppCompatActivity {
             try {
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject dataJSON = jsonResult.getJSONObject(MostViewedConstants.DATA);
-                String contentString = dataJSON.getString(MostViewedConstants.CONTENT);
+                 contentString = dataJSON.getString(MostViewedConstants.CONTENT);
                 String summaryString = dataJSON.getString(MostViewedConstants.SUMMARY);
-                Html.ImageGetter imageGetter=new Html.ImageGetter() {
+                imageGetter=new Html.ImageGetter() {
                     @Override
                     public Drawable getDrawable(String source) {
                         final Drawable[] d = new Drawable[1];
@@ -119,7 +121,11 @@ public class ContentActivity extends AppCompatActivity {
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                 d[0] =new BitmapDrawable(bitmap);
                                 d[0].setBounds(0,0,d[0].getIntrinsicWidth(),d[0].getIntrinsicHeight());
+                                if(from.equals(Picasso.LoadedFrom.NETWORK)){
+                                    manifestContent();
+                                }
                             }
+
 
                             @Override
                             public void onBitmapFailed(Drawable errorDrawable) {
@@ -132,16 +138,21 @@ public class ContentActivity extends AppCompatActivity {
                             }
                         };
 
-                        Picasso.with(ContentActivity.this).load(source).into(target);
+                        Picasso.with(ContentActivity.this).load(source).placeholder(R.drawable.sportscafe).into(target);
 
                         return d[0];
                     }
                 };
-                content.setText(Html.fromHtml(contentString,imageGetter,null));
+
+                manifestContent();
                 summary.setText(summaryString);
             } catch (JSONException e) {
                 Log.d(Utilites.getTAG(), e + "");
             }
+        }
+
+        private void manifestContent() {
+            content.setText(Html.fromHtml(contentString,imageGetter,null));
         }
     }
 }
