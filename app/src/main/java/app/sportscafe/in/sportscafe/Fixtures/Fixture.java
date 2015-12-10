@@ -111,8 +111,8 @@ public class Fixture extends android.support.v4.app.Fragment {
             yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)-3);
             Calendar tomorrow=Calendar.getInstance();
             tomorrow.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)+5);
-            String ISOtomo=df.format(tomorrow)+getResources().getString(R.string.formatModification);
-            String ISOyes=df.format(yesterday)+getResources().getString(R.string.formatModification);
+            String ISOtomo=df.format(tomorrow.getTime())+getResources().getString(R.string.formatModification);
+            String ISOyes=df.format(yesterday.getTime())+getResources().getString(R.string.formatModification);
 
             // getting from REST API
             try {

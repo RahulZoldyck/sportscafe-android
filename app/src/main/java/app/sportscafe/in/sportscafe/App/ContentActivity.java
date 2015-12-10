@@ -1,5 +1,8 @@
 package app.sportscafe.in.sportscafe.App;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +34,8 @@ import app.sportscafe.in.sportscafe.R;
 
 public class ContentActivity extends AppCompatActivity {
     Article article;
-    String imgURL,title,tag,id;
-    TextView content,header,summary;
+    String imgURL, title, tag, id;
+    TextView content, header, summary;
     ImageView contentImage;
 
     @Override
@@ -49,70 +53,94 @@ public class ContentActivity extends AppCompatActivity {
             tag = article.getSport();
             id = article.getId();
         }
-            setContentView(R.layout.activity_report);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            try {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            } catch (Exception e) {
-                Log.d(Utilites.getTAG(), e.toString());
+        setContentView(R.layout.activity_report);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            Log.d(Utilites.getTAG(), e.toString());
+        }
+        content = (TextView) findViewById(R.id.mvcontent);
+        summary = (TextView) findViewById(R.id.mvsummary);
+        contentImage = (ImageView) findViewById(R.id.mvContentImage);
+        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, imgURL)).into(contentImage);
+        header = (TextView) findViewById(R.id.mvContentTitle);
+        header.setText(title);
+
+        new AsyncMostViewedContent().execute(id);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
-            content = (TextView) findViewById(R.id.mvcontent);
-            summary = (TextView) findViewById(R.id.mvsummary);
-            contentImage = (ImageView) findViewById(R.id.mvContentImage);
-            Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width,Utilites.image_height,imgURL)).into(contentImage);
-            header = (TextView) findViewById(R.id.mvContentTitle);
-            header.setText(title);
-
-            new AsyncMostViewedContent().execute(id);
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
+        });
     }
 
 
-    public class AsyncMostViewedContent extends AsyncTask<String,Void,Void> {
+    public class AsyncMostViewedContent extends AsyncTask<String, Void, Void> {
         String result;
+
         @Override
-        protected Void doInBackground(String... params)
-        {
-            String url = Utilites.getArticleContentURL()+params[0];
-            try
-            {
+        protected Void doInBackground(String... params) {
+            String url = Utilites.getArticleContentURL() + params[0];
+            try {
                 InputStream in = new URL(url).openStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 String line;
-                result="";
-                while((line = reader.readLine())!=null)
-                    result = result+line;
-            } catch (Exception e)
-            {
-                Log.d(Utilites.getTAG(),e+"");
+                result = "";
+                while ((line = reader.readLine()) != null)
+                    result = result + line;
+            } catch (Exception e) {
+                Log.d(Utilites.getTAG(), e + "");
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid)
-        {
+        protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            try
-            {
+            try {
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject dataJSON = jsonResult.getJSONObject(MostViewedConstants.DATA);
                 String contentString = dataJSON.getString(MostViewedConstants.CONTENT);
                 String summaryString = dataJSON.getString(MostViewedConstants.SUMMARY);
-                content.setText(Html.fromHtml(contentString));
+                Html.ImageGetter imageGetter=new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) {
+                        final Drawable[] d = new Drawable[1];
+
+                        Target target=new Target() {
+
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                d[0] =new BitmapDrawable(bitmap);
+                                d[0].setBounds(0,0,d[0].getIntrinsicWidth(),d[0].getIntrinsicHeight());
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        };
+
+                        Picasso.with(ContentActivity.this).load(source).into(target);
+
+                        return d[0];
+                    }
+                };
+                content.setText(Html.fromHtml(contentString,imageGetter,null));
                 summary.setText(summaryString);
-            } catch (JSONException e)
-            {
-                Log.d(Utilites.getTAG(),e+"");
+            } catch (JSONException e) {
+                Log.d(Utilites.getTAG(), e + "");
             }
         }
     }
