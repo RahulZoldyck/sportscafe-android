@@ -23,6 +23,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -105,11 +106,11 @@ public class Fixture extends android.support.v4.app.Fragment {
             TimeZone tz = TimeZone.getTimeZone(getResources().getString(R.string.utc));
             DateFormat df = new SimpleDateFormat(getResources().getString(R.string.dateformatISO));
             df.setTimeZone(tz);
-            Date today=new Date(System.currentTimeMillis());
-            Date yesterday=new Date(System.currentTimeMillis());
-            yesterday.setDate(today.getDate()-3);
-            Date tomorrow=new Date(System.currentTimeMillis());
-            tomorrow.setDate(today.getDate()+5);
+            Calendar today=Calendar.getInstance();
+            Calendar yesterday=Calendar.getInstance();
+            yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)-3);
+            Calendar tomorrow=Calendar.getInstance();
+            tomorrow.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)+5);
             String ISOtomo=df.format(tomorrow)+getResources().getString(R.string.formatModification);
             String ISOyes=df.format(yesterday)+getResources().getString(R.string.formatModification);
 
