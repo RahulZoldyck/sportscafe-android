@@ -93,7 +93,7 @@ public class FixtureAdapter extends ArrayAdapter<Matches> {
         calendar.setTime(format.parse(date));
         java.text.DateFormat getformat=new SimpleDateFormat(resources.getString(R.string.dateFormat));
 
-        return getformat.format(calendar);
+        return getformat.format(calendar.getTime());
     }
 
     private String getTime(String date) throws ParseException {
