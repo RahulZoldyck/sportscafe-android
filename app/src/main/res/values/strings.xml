@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">SportsCafe</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_default">TITLE</string>
+    <string name="author_default">By SC Editor</string>
+    <string name="dateformatISO">yyyy-MM-dd\'T\'HH:mm</string>
+    <string name="utc">UTC</string>
+    <string name="formatModification">:00.000Z</string>
+    <string name="parseISO">yyyy-MM-dd\'T\'hh:mm:ss.SSS\'Z\'</string>
+    <string name="dateFormat">MMM d, yyyy</string>
+    <string name="gmt">GMT</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="section1">NEWS</string>
+    <string name="section2">FEATURES</string>
+    <string name="section3">SCORES</string>
+    <string name="section4">FIXTURES</string>
+    <string name="section5">MY FEED</string>
+    <string name="section6">MOST VIEWED</string>
+    <string name="title_activity_article_content">ArticleContentActivity</string>
+    <string name="extra_position">position</string>
+    <string name="string_sportscafe_editor">SportsCafe Editor</string>
+    <string name="action_share">search</string>
+    <string name="month">MONTH</string>
+    <string name="week">WEEK</string>
+    <string name="day">DAY</string>
+    <string name="completed">Completed</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="title_activity_most_viewed_content">Content</string>
+    <string name="share">Share</string>
+</resources>
