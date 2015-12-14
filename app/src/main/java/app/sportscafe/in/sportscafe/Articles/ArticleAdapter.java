@@ -74,7 +74,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View view;
-        if(articleType.equals("match report"))      //Inflate different view for news and match report
+        if(articleType.equals("long feature"))      //Inflate different view for news and match report
         {
              view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view,parent,false);
         }
@@ -91,7 +91,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     {
         holder.textViewTitle.setText(articles.get(position).getTitle());
         //holder.textViewSummary.setText(articles.get(position).getSummary());
-        if(articleType.equals("match report"))
+        if(articleType.equals("long feature"))
         {
             holder.textViewAuthor.setText(articles.get(position).getAuthor());
             holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());

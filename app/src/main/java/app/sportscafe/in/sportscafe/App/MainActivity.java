@@ -116,9 +116,9 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         {
 
             if(position==0)
-                return ArticlesFragment.newInstance("news");
+                return ArticlesFragment.newInstance("news","match report");
             else if(position==1)
-                return ArticlesFragment.newInstance("match report");
+                return ArticlesFragment.newInstance("long feature","short feature");
             else if(position==3)
                 return Fixture.newInstance();
             else if(position==5)

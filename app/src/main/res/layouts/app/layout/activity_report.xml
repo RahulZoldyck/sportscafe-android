@@ -25,7 +25,7 @@
                 android:id="@+id/mvContentImage"
                 android:src="@drawable/sportscafe"
                 android:layout_width="match_parent"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 android:layout_height="match_parent"
                 android:transitionName="shared_img_transition"/>
 
