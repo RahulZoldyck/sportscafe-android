@@ -108,9 +108,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             String authorFirst = authorName.substring(0, i);
             holder.textViewAuthor.setText(authorFirst);
         }
+        holder.textViewDate.setText(articles.get(position).getDate());
         if(articleType.equals("long feature"))
         {
-            holder.textViewDate.setText(articles.get(position).getDate());
             if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP)
             {
                 int dpValue = 5+8; // margin in dips
@@ -122,10 +122,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             }
         }
         holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
-        Picasso.with(context)
+        if(articleType.equals("long feature"))
+            Picasso.with(context)
                 .load(Utilites.getInitialImageURL(imageWidth,imageHeight,imageQuality,articles.get(position).getImageUrl()))
                 .placeholder(R.drawable.sportscafe)
                 .into(holder.image);
+        else
+            Picasso.with(context)
+                    .load(Utilites.getInitialImageURL("300","300","80",articles.get(position).getImageUrl())).resize(300,300)
+                    .into(holder.image);
     }
 
     @Override

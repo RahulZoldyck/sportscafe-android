@@ -181,7 +181,7 @@ public class ArticlesFragment extends Fragment
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString(ArticleConstants.TITLE);
                         String date = json_article.getString(ArticleConstants.MODIFICATION_DATE);
-                        JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
+                        JSONObject author = (JSONObject)json_article.getJSONArray(ArticleConstants.AUTHOR).get(0);
                         String authorName = author.getString(ArticleConstants.AUTHOR_NAME);
                         String id = json_article.getString(ArticleConstants.ID);
                         String summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
