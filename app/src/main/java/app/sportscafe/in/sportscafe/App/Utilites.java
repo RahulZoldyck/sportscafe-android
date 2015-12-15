@@ -29,9 +29,9 @@ public class Utilites
         return articlesWithConditionsURL;
     }
 
-    public static String getInitialImageURL(String width,String height,String articleImageURL)
+    public static String getInitialImageURL(String width,String height,String quality,String articleImageURL)
     {
-        return initialImageURL+"-cfill-w"+width+"-h"+height+"/"+articleImageURL;
+        return initialImageURL+"-cfill-w"+width+"-h"+height+"-qn"+quality+"/"+articleImageURL;
     }
 
     public static String getArticleContentURL()

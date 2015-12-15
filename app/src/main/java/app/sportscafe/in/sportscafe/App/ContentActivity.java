@@ -35,6 +35,7 @@ import app.sportscafe.in.sportscafe.R;
 
 public class ContentActivity extends AppCompatActivity {
     Article article;
+    String imageQuality = "90";
     String imgURL, title, tag, id, authorName;
     TextView content, header, summary, author;
     ImageView contentImage;
@@ -69,7 +70,7 @@ public class ContentActivity extends AppCompatActivity {
         summary = (TextView) findViewById(R.id.summary);
         author = (TextView) findViewById(R.id.author_name);
         contentImage = (ImageView) findViewById(R.id.mvContentImage);
-        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, imgURL)).into(contentImage);
+        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height,imageQuality,imgURL)).into(contentImage);
         header = (TextView) findViewById(R.id.content_title);
         header.setText(title);
         author.setText(authorName);

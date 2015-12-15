@@ -17,8 +17,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import app.sportscafe.in.sportscafe.App.Article;
-import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.App.ContentActivity;
+import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
@@ -28,6 +28,9 @@ import app.sportscafe.in.sportscafe.R;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>
 {
     Context context;
+    String imageWidth = "600";
+    String imageHeight = "300";
+    String imageQuality = "70";
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
 
@@ -65,7 +68,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             v.setTransitionName("shared_img_transition");
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context,v,v.getTransitionName());
             Intent intent = new Intent(context,ContentActivity.class);
-            //intent.putParcelableArrayListExtra(Utilites.getStateArticles(),articles);
             intent.putExtra(MostViewedPagerFragment.ARG_ITEM,articles.get(getAdapterPosition()));
             context.startActivity(intent,options.toBundle());
         }
@@ -97,7 +99,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
         }
         Picasso.with(context)
-                .load(Utilites.getInitialImageURL(Utilites.image_width,Utilites.image_height,articles.get(position).getImageUrl()))
+                .load(Utilites.getInitialImageURL(imageWidth,imageHeight,imageQuality,articles.get(position).getImageUrl()))
                 .placeholder(R.drawable.sportscafe)
                 .into(holder.image);
     }

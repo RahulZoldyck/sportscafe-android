@@ -187,7 +187,6 @@ public class ArticlesFragment extends Fragment
                         JSONObject sections = classifications.getJSONObject(ArticleConstants.SECTIONS);
                         String articleType = sections.getString(ArticleConstants.ARTICLE_TYPE);
                         String sport = sections.getString(ArticleConstants.SPORT);
-                        Log.d(Utilites.getTAG(),sport);
                         Article article_temp = new Article();
                         article_temp.setId(id);
                         article_temp.setTitle(title);
