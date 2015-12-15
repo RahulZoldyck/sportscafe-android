@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
@@ -35,7 +34,7 @@ import app.sportscafe.in.sportscafe.R;
 import app.sportscafe.in.sportscafe.App.Utilites;
 
 
-public class Fixture extends android.support.v4.app.Fragment {
+public class FixtureFragment extends android.support.v4.app.Fragment {
     View vh;
     SwipeRefreshLayout layout;
     ListView lv;
@@ -45,12 +44,12 @@ public class Fixture extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
 
 
-    public static Fixture newInstance() {
-        Fixture fragment = new Fixture();
+    public static FixtureFragment newInstance() {
+        FixtureFragment fragment = new FixtureFragment();
         return fragment;
     }
 
-    public Fixture() {
+    public FixtureFragment() {
         // Required empty public constructor
     }
 
