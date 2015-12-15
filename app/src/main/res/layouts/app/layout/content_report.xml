@@ -2,6 +2,7 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -12,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/mvContentTitle"
+            android:id="@+id/content_title"
             android:textStyle="bold"
             android:textSize="25sp"
             android:textColor="@color/colorPureBlack"
@@ -20,15 +21,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/mvsummary"
+            android:id="@+id/summary"
             android:layout_width="wrap_content"
             android:textSize="17sp"
             android:textStyle="bold|italic"
             android:layout_margin="@dimen/text_margin"
             android:layout_height="wrap_content" />
-
         <TextView
-            android:id="@+id/mvcontent"
+            android:id="@+id/author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/googleBlue"
+            android:layout_margin="@dimen/text_margin"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin" />
