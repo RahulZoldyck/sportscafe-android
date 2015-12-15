@@ -6,8 +6,8 @@ import java.util.ArrayList;
  * Created by rahul on 15/12/15.
  */
 public class FixtureCardItem {
-    String sport, tournamentName;
-    ArrayList<FixtureListItem> listItems;
+    private String sport, tournamentName;
+    private ArrayList<FixtureListItem> listItems;
 
     public String getSport() {
         return sport;

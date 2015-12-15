@@ -310,7 +310,7 @@ public class Fixture extends android.support.v4.app.Fragment {
             listItem.setImageUrl2(Utilites.getTeamImg() + "/" + match.getGame() + "/" + match.getTournamentId() + "/" + match.getTeamId2() + ".png");
             listItem.setMatchName("Match "+match.getId());
             if(isTournamentPresent(match.getTournament(),cardItems)){
-                  setListToCardView(listItem,cardItems);
+                  cardItems=setListToCardView(match.getTournament(),listItem,cardItems);
             }
             else{
                 cardItem=new FixtureCardItem();
@@ -323,17 +323,28 @@ public class Fixture extends android.support.v4.app.Fragment {
             }
         }
 
-//        FixtureAdapter adapter=new FixtureAdapter(getContext(),matchArray);
-//        lv.setAdapter(adapter);
+        FixtureCardItem[] cardItemArray=new FixtureCardItem[cardItems.size()];
+        cardItemArray=cardItems.toArray(cardItemArray);
+        FixtureCardAdapter adapter=new FixtureCardAdapter(getContext(),cardItemArray);
+        lv.setAdapter(adapter);
         layout.setRefreshing(false);
 
 ;    }
 
-    private void setListToCardView(FixtureListItem listItem, ArrayList<FixtureCardItem> cardItems) {
-        ArrayList<FixtureCardItem> tempCarditems=new ArrayList<>();
-        FixtureCardItem tempCardItem=new FixtureCardItem();
+    private ArrayList<FixtureCardItem> setListToCardView(String tournament, FixtureListItem listItem, ArrayList<FixtureCardItem> cardItems) {
+        ArrayList<FixtureCardItem> tempCardItems=new ArrayList<>();
         ArrayList<FixtureListItem> tempListItems=new ArrayList<>();
-        FixtureListItem
+        for(FixtureCardItem item : cardItems){
+            if(item.getTournamentName().equals(tournament)){
+                tempListItems=item.getListItems();
+                tempListItems.add(listItem);
+                item.setListItems(tempListItems);
+            }
+
+            tempCardItems.add(item);
+
+        }
+        return tempCardItems;
     }
 
     private boolean isTournamentPresent(String tournament, ArrayList<FixtureCardItem> cardItems) {
