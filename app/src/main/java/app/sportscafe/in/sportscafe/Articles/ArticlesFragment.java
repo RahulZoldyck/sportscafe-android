@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.Articles;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +24,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.Utilites;
@@ -195,7 +200,7 @@ public class ArticlesFragment extends Fragment
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorName);
-                        article_temp.setDate(date);
+                        article_temp.setDate(getDate(date));
                         articles.add(article_temp);
                     }
                 }
@@ -217,7 +222,60 @@ public class ArticlesFragment extends Fragment
             swipeRefreshLayout.setRefreshing(false);
         }
     }
-
+    public String getDate(String date)
+    {
+        String returnDate="";
+        Resources resources = getContext().getResources();
+        SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+        format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
+        Calendar calendarArticle = Calendar.getInstance();
+        Calendar calendarNow = Calendar.getInstance();
+        try
+        {
+            calendarArticle.setTime(format.parse(date));
+            int articleDay = calendarArticle.get(Calendar.DAY_OF_MONTH);
+            int currentDay = calendarNow.get(Calendar.DAY_OF_MONTH);
+            int articleMonth = calendarArticle.get(Calendar.MONTH);
+            int currentMonth = calendarNow.get(Calendar.MONTH);
+            int articleHour = calendarArticle.get(Calendar.HOUR_OF_DAY);
+            int currentHour = calendarNow.get(Calendar.HOUR_OF_DAY);
+            int articleMinute = calendarArticle.get(Calendar.MINUTE);
+            int currentMinute = calendarNow.get(Calendar.MINUTE);
+            if(articleMonth-currentMonth==0)
+            {
+                if(articleDay-currentDay==0)
+                {
+                    if(articleHour-currentHour==0)
+                    {
+                        if(articleMinute-currentMinute==0)
+                        {
+                            returnDate = "Just now";
+                        }
+                        else
+                        {
+                            returnDate = (currentMinute-articleMinute)+"m ago";
+                        }
+                    }
+                    else
+                    {
+                        returnDate = (currentHour - articleHour)+"h ago";
+                    }
+                }
+                else
+                {
+                    returnDate = (currentDay - articleDay)+"d ago";
+                }
+            }
+            else
+            {
+                returnDate = (currentMonth-articleMonth)+"M ago";
+            }
+        } catch (ParseException e)
+        {
+            Log.e(Utilites.getTAG(),e.toString());
+        }
+        return returnDate;
+    }
     @Override
     public void onAttach(Context context)
     {
