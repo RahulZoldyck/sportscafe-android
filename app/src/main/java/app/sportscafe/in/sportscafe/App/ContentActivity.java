@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -34,9 +35,11 @@ import app.sportscafe.in.sportscafe.R;
 
 public class ContentActivity extends AppCompatActivity {
     Article article;
-    String imgURL, title, tag, id;
-    TextView content, header, summary;
+    String imageQuality = "90";
+    String imgURL, title, tag, id, authorName;
+    TextView content, header, summary, author;
     ImageView contentImage;
+    NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class ContentActivity extends AppCompatActivity {
             title = article.getTitle();
             tag = article.getSport();
             id = article.getId();
+            authorName = article.getAuthor();
         }
         setContentView(R.layout.activity_report);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -61,13 +65,15 @@ public class ContentActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(Utilites.getTAG(), e.toString());
         }
-        content = (TextView) findViewById(R.id.mvcontent);
-        summary = (TextView) findViewById(R.id.mvsummary);
+        nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
+        content = (TextView) findViewById(R.id.content);
+        summary = (TextView) findViewById(R.id.summary);
+        author = (TextView) findViewById(R.id.author_name);
         contentImage = (ImageView) findViewById(R.id.mvContentImage);
-        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, imgURL)).into(contentImage);
-        header = (TextView) findViewById(R.id.mvContentTitle);
+        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height,imageQuality,imgURL)).into(contentImage);
+        header = (TextView) findViewById(R.id.content_title);
         header.setText(title);
-
+        author.setText(authorName);
         new AsyncMostViewedContent().execute(id);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -119,7 +125,11 @@ public class ContentActivity extends AppCompatActivity {
 
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                d[0] =new BitmapDrawable(bitmap);
+                                double height = bitmap.getHeight();
+                                double width = bitmap.getWidth();
+                                Bitmap bitmapNew = Bitmap.createScaledBitmap(bitmap,
+                                        nestedScrollView.getWidth(),(int)((height/width)*nestedScrollView.getWidth()),false);
+                                d[0] =new BitmapDrawable(bitmapNew);
                                 d[0].setBounds(0,0,d[0].getIntrinsicWidth(),d[0].getIntrinsicHeight());
                                 if(from.equals(Picasso.LoadedFrom.NETWORK)){
                                     manifestContent();

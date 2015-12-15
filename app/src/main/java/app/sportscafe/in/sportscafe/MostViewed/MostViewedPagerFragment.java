@@ -97,7 +97,7 @@ public class MostViewedPagerFragment extends Fragment {
                     }
                 }
         );
-        Picasso.with(v.getContext()).load(Utilites.getInitialImageURL("300","300",imgURL)).placeholder(R.mipmap.logo).into(img);
+        Picasso.with(v.getContext()).load(Utilites.getInitialImageURL("300","300","60",imgURL)).placeholder(R.mipmap.logo).into(img);
         title.setText(titles);
         tag.setTextColor(getResources().getColor(R.color.googleBlue));
         tag.setText(tags.toUpperCase());

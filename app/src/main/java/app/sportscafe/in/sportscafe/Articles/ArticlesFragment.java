@@ -39,7 +39,8 @@ public class ArticlesFragment extends Fragment
     ArticleAdapter adapter;
     AsyncArticlesTask asyncArticlesTask;
 
-    public String articleType;
+    public String articleType1;
+    public String articleType2;
 
     String image_width="600";
     String image_height="300";
@@ -51,11 +52,12 @@ public class ArticlesFragment extends Fragment
 
     }
 
-    public static ArticlesFragment newInstance(String articletype)
+    public static ArticlesFragment newInstance(String articletype1,String articletype2)
     {
         ArticlesFragment fragment = new ArticlesFragment();
         Bundle args = new Bundle();
-        args.putString(ArticleConstants.ARTICLE_TYPE, articletype);
+        args.putString(ArticleConstants.ARTICLE_TYPE1, articletype1);
+        args.putString(ArticleConstants.ARTICLE_TYPE2,articletype2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +66,8 @@ public class ArticlesFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        this.articleType = getArguments().getString(ArticleConstants.ARTICLE_TYPE, "default");
+        this.articleType1 = getArguments().getString(ArticleConstants.ARTICLE_TYPE1, "default");
+        this.articleType2 = getArguments().getString(ArticleConstants.ARTICLE_TYPE2, "default");
     }
 
     @Override
@@ -78,7 +81,7 @@ public class ArticlesFragment extends Fragment
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ArticleAdapter(new ArrayList<Article>(),context,articleType);
+        adapter = new ArticleAdapter(new ArrayList<Article>(),context,articleType1);
         recyclerView.setAdapter(adapter);
         new AsyncArticlesTask().execute();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -117,22 +120,30 @@ public class ArticlesFragment extends Fragment
         @Override
         protected Void doInBackground(Void... params)
         {
-
+            if(articleType1.equals("news"))
+                getArticles(articleType1);
+            getArticles(articleType2);
+            adapter = new ArticleAdapter(articles,context,articleType1);
+            adapter.notifyDataSetChanged();
+            return null;
+        }
+        private void getArticles(String articletype)
+        {
             String link = Utilites.getArticlesWithConditionsURL();
             JSONObject msg = new JSONObject();
             try
             {
                 JSONObject conditions = new JSONObject();
                 conditions.accumulate(ArticleConstants.PUBLISHED,true);
-                Log.d(Utilites.getTAG(),articleType);
-                conditions.accumulate(ArticleConstants.CLASSIFICATIONS_SECTIONS_ARTICLETYPE,articleType);
+                Log.d(Utilites.getTAG(),articleType1);
+                conditions.accumulate(ArticleConstants.CLASSIFICATIONS_SECTIONS_ARTICLETYPE,articletype);
                 JSONObject projection = new JSONObject();
                 projection.accumulate(ArticleConstants.CONTENT,0);
                 JSONObject options = new JSONObject();
                 JSONObject sort = new JSONObject();
                 sort.accumulate(ArticleConstants.PUBLISH_DATE,-1);
                 options.accumulate(ArticleConstants.SORT,sort);
-                options.accumulate(ArticleConstants.LIMIT,50);
+                options.accumulate(ArticleConstants.LIMIT,10);
                 msg.accumulate(ArticleConstants.CONDITIONS,conditions);
                 msg.accumulate(ArticleConstants.PROJECTION,projection);
                 msg.accumulate(ArticleConstants.OPTIONS,options);
@@ -141,9 +152,9 @@ public class ArticlesFragment extends Fragment
                 try
                 {
                     URL url = new URL(link);
-                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type","application/json; charset=utf-8");
+                    connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
                     String param = object.toString();
                     byte[] bytes = param.getBytes();
                     OutputStream out = connection.getOutputStream();
@@ -153,43 +164,20 @@ public class ArticlesFragment extends Fragment
                     InputStream in = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     String line;
-                    String result="";
-                    while((line = reader.readLine())!=null)
-                        result = result+line;
-                    Log.d(Utilites.getTAG(),result);
+                    String result = "";
+                    while ((line = reader.readLine()) != null)
+                        result = result + line;
+                    Log.d(Utilites.getTAG(), result);
                     JSONArray jsonArray = new JSONArray(result);
                     Integer length = jsonArray.length();
-                    for(int i=0;i<length;i++)
+                    for (int i = 0; i < length; i++)
                     {
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString(ArticleConstants.TITLE);
-                        String authorId;
-                        try
-                        {
-                            authorId = json_article.getString(ArticleConstants.AUTHOR_ID);
-                            if(authorId.equals(""))
-                                authorId = getResources().getString(R.string.string_sportscafe_editor);
-                            else
-                            {
-                                int pos=-1;
-                                //TODO call api to get Author name
-                                for(int z=1;z<authorId.length();z++)
-                                {
-                                    Character c=authorId.charAt(z);
-                                    if(Character.isUpperCase(c))
-                                        pos = z;
-
-                                }
-                                if(pos!=-1)
-                                    authorId = authorId.substring(0,pos)+" "+authorId.substring(pos,authorId.length());
-
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            authorId = "Sportscafe Editor";
-                        }
+                        String date = json_article.getString(ArticleConstants.MODIFICATION_DATE);
+                        JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
+                        String authorName = author.getString(ArticleConstants.AUTHOR_NAME);
                         String id = json_article.getString(ArticleConstants.ID);
                         String summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
                         JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
@@ -206,25 +194,21 @@ public class ArticlesFragment extends Fragment
                         article_temp.setImageUrl(imageURL);
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
-                        article_temp.setAuthor(authorId);
+                        article_temp.setAuthor(authorName);
+                        article_temp.setDate(date);
                         articles.add(article_temp);
                     }
-                    adapter = new ArticleAdapter(articles,context,articleType);
-                    adapter.notifyDataSetChanged();
-
-                } catch (Exception e)
-                {
-                    Log.d(Utilites.getTAG(),"Error in Connecting : "+e);
                 }
+                    catch (Exception e)
+                    {
+                        Log.d(Utilites.getTAG(),"Error in Connecting : "+e);
+                    }
 
-            } catch (JSONException e)
-            {
-                Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
-            }
-
-            return null;
+                } catch (JSONException e)
+                {
+                    Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
+                }
         }
-
         @Override
         protected void onPostExecute(Void aVoid)
         {
