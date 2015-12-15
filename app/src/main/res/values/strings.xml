@@ -30,4 +30,7 @@
     <string name="upcoming">Upcoming</string>
     <string name="title_activity_most_viewed_content">Content</string>
     <string name="share">Share</string>
+    <string name="list_date_format">d</string>
+    <string name="list_month_format">MMM</string>
+    <string name="list_time_format"></string>
 </resources>

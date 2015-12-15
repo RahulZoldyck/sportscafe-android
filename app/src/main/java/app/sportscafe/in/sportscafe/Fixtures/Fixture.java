@@ -108,7 +108,7 @@ public class Fixture extends android.support.v4.app.Fragment {
             df.setTimeZone(tz);
             Calendar today=Calendar.getInstance();
             Calendar yesterday=Calendar.getInstance();
-            yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)-3);
+            yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH));
             Calendar tomorrow=Calendar.getInstance();
             tomorrow.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)+5);
             String ISOtomo=df.format(tomorrow.getTime())+getResources().getString(R.string.formatModification);
@@ -281,27 +281,79 @@ public class Fixture extends android.support.v4.app.Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Matches[] matchArray=new Matches[list.size()];
-        matchArray=list.toArray(matchArray);
-        list=new ArrayList<>();
-        for (Matches i :matchArray){
-            if(i.getStatus().equals(getResources().getString(R.string.completed)))
-                list.add(i);
+//        Matches[] matchArray=new Matches[list.size()];
+//        matchArray=list.toArray(matchArray);
+//        list=new ArrayList<>();
+//        for (Matches i :matchArray){
+//            if(i.getStatus().equals(getResources().getString(R.string.completed)))
+//                list.add(i);
+//
+//        }
+//        for (Matches i :matchArray){
+//            if(i.getStatus().equals(getResources().getString(R.string.upcoming)))
+//                list.add(i);
+//
+//        }
+//        matchArray=new Matches[list.size()];
+//        matchArray=list.toArray(matchArray);
+        FixtureCardItem cardItem=new FixtureCardItem();
+        ArrayList<FixtureCardItem> cardItems=new ArrayList<>();
+        FixtureListItem listItem=new FixtureListItem();
+        ArrayList<FixtureListItem> listItems=new ArrayList<>();
 
+        for(Matches match : list){
+            listItem=new FixtureListItem();
+            listItem.setDateTime(match.getDate());
+            listItem.setTeam1(match.getTeam1());
+            listItem.setTeam2(match.getTeam2());
+            listItem.setImageUrl1(Utilites.getTeamImg() + "/" + match.getGame() + "/" + match.getTournamentId() + "/" + match.getTeamId1() + ".png");
+            listItem.setImageUrl2(Utilites.getTeamImg() + "/" + match.getGame() + "/" + match.getTournamentId() + "/" + match.getTeamId2() + ".png");
+            listItem.setMatchName("Match "+match.getId());
+            if(isTournamentPresent(match.getTournament(),cardItems)){
+                  cardItems=setListToCardView(match.getTournament(),listItem,cardItems);
+            }
+            else{
+                cardItem=new FixtureCardItem();
+                cardItem.setSport(match.getGame());
+                cardItem.setTournamentName(match.getTournament());
+                listItems=new ArrayList<>();
+                listItems.add(listItem);
+                cardItem.setListItems(listItems);
+                cardItems.add(cardItem);
+            }
         }
-        for (Matches i :matchArray){
-            if(i.getStatus().equals(getResources().getString(R.string.upcoming)))
-                list.add(i);
 
-        }
-        matchArray=new Matches[list.size()];
-        matchArray=list.toArray(matchArray);
-
-        FixtureAdapter adapter=new FixtureAdapter(getContext(),matchArray);
+        FixtureCardItem[] cardItemArray=new FixtureCardItem[cardItems.size()];
+        cardItemArray=cardItems.toArray(cardItemArray);
+        FixtureCardAdapter adapter=new FixtureCardAdapter(getContext(),cardItemArray);
         lv.setAdapter(adapter);
         layout.setRefreshing(false);
 
 ;    }
+
+    private ArrayList<FixtureCardItem> setListToCardView(String tournament, FixtureListItem listItem, ArrayList<FixtureCardItem> cardItems) {
+        ArrayList<FixtureCardItem> tempCardItems=new ArrayList<>();
+        ArrayList<FixtureListItem> tempListItems=new ArrayList<>();
+        for(FixtureCardItem item : cardItems){
+            if(item.getTournamentName().equals(tournament)){
+                tempListItems=item.getListItems();
+                tempListItems.add(listItem);
+                item.setListItems(tempListItems);
+            }
+
+            tempCardItems.add(item);
+
+        }
+        return tempCardItems;
+    }
+
+    private boolean isTournamentPresent(String tournament, ArrayList<FixtureCardItem> cardItems) {
+        for(FixtureCardItem item : cardItems){
+            if(item.getTournamentName().equals(tournament))
+                return true;
+        }
+        return false;
+    }
 
 
     public void onButtonPressed(Uri uri) {
