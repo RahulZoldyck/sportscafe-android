@@ -10,6 +10,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TabHost;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +25,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -33,9 +36,9 @@ import app.sportscafe.in.sportscafe.R;
 
 
 public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFragmentInteractionListener{
-
+    private TabHost mTabHost;
+    TabHost.TabSpec spec;
     Article[] dayitems,weekitems,monthitems;
-    ViewPager dayPager,weekPager,monthPager;
     SwipeRefreshLayout sr;
     int length;
 
@@ -62,9 +65,8 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
-         dayPager=(ViewPager) v.findViewById(R.id.pagerday);
-         weekPager=(ViewPager) v.findViewById(R.id.pagerweek);
-         monthPager=(ViewPager) v.findViewById(R.id.pagermonth);
+        mTabHost = (TabHost) v.findViewById(R.id.tabHost);
+        mTabHost.setup();
         AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
         asyncMostViewed.execute();
          sr=(SwipeRefreshLayout)v.findViewById(R.id.mvRefresh);
@@ -153,12 +155,26 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         dayitems=getArrayFromJSON(dayJSON);
         monthitems=getArrayFromJSON(monthJSON);
         weekitems=getArrayFromJSON(weekJSON);
+        spec= mTabHost.newTabSpec("day");
+        spec.setIndicator("Day");
+        spec.setContent(new TabHost.TabContentFactory() {
+
+            @Override
+            public View createTabContent(String tag) {
+                LayoutInflater li=(LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v=li.inflate(R.layout.mostviewed_tab_layout,null);
+                ListView listView=(ListView)v.findViewById(R.id.tabList);
+                MostViewedAdapter adapter=new MostViewedAdapter(getContext(),dayitems);
+                listView.setAdapter(adapter);
+
+                return null;
+            }
+        }
+        );
+        mTabHost.addTab(spec);
         MostViewedPagerAdapter dayAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),dayitems);
         MostViewedPagerAdapter weekAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),weekitems);
         MostViewedPagerAdapter monthAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),monthitems);
-        dayPager.setAdapter(dayAdapter);
-        weekPager.setAdapter(weekAdapter);
-        monthPager.setAdapter(monthAdapter);
         sr.setRefreshing(false);
 
 
