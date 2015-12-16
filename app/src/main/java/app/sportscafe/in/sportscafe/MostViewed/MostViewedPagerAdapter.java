@@ -16,7 +16,7 @@ public class MostViewedPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return null;
+        return MostViewedPagerFragment.newInstance(items[position]);
     }
 
     @Override

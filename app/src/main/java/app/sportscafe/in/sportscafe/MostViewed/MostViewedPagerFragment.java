@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -80,7 +79,7 @@ public class MostViewedPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_most_viewed_pager, container, false);
-        LinearLayout mvCard=(LinearLayout)v.findViewById(R.id.mvCard);
+        CardView mvCard=(CardView)v.findViewById(R.id.mvCard);
         ImageView img=(ImageView)v.findViewById(R.id.MVimage);
         TextView title=(TextView)v.findViewById(R.id.MVtitle);
         TextView tag=(TextView)v.findViewById(R.id.MVtag);
