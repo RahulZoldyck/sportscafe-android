@@ -24,7 +24,7 @@ import app.sportscafe.in.sportscafe.MostViewed.MostViewed;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
 {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
