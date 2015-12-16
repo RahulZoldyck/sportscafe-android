@@ -36,7 +36,6 @@ import javax.net.ssl.HttpsURLConnection;
 import app.sportscafe.in.sportscafe.App.ContentActivity;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.App.Article;
-import app.sportscafe.in.sportscafe.Articles.ArticleConstants;
 import app.sportscafe.in.sportscafe.R;
 
 
@@ -165,21 +164,6 @@ public class MostViewed extends Fragment {
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(), dayitems);
                                 listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(
-                                        new AdapterView.OnItemClickListener() {
-                                            @SuppressLint("NewApi")
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                View image = view.findViewById(R.id.MVimage);
-                                                image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(), ContentActivity.class);
-
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
-                                                getContext().startActivity(i, options.toBundle());
-                                            }
-                                        }
-                                );
 
                                 return view;
                             }
@@ -199,21 +183,6 @@ public class MostViewed extends Fragment {
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(), weekitems);
                                 listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(
-                                        new AdapterView.OnItemClickListener() {
-                                            @SuppressLint("NewApi")
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                View image = view.findViewById(R.id.MVimage);
-                                                image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(), ContentActivity.class);
-
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
-                                                getContext().startActivity(i, options.toBundle());
-                                            }
-                                        }
-                                );
 
                                 return view;
                             }
@@ -239,11 +208,10 @@ public class MostViewed extends Fragment {
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                 View image = view.findViewById(R.id.MVimage);
                                                 image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(), ContentActivity.class);
-
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
-                                                getContext().startActivity(i, options.toBundle());
+                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),image,image.getTransitionName());
+                                                Intent i= new Intent(getContext(),ContentActivity.class);
+                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM,parent.getItemIdAtPosition(position));
+                                                getContext().startActivity(i,options.toBundle());
                                             }
                                         }
                                 );
@@ -275,9 +243,6 @@ public class MostViewed extends Fragment {
             JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
             JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
             item.setSport(sections.getString(MostViewedConstants.SPORT));
-            JSONObject author = article.getJSONObject(ArticleConstants.AUTHOR);
-            String authorName = author.getString(ArticleConstants.AUTHOR_NAME);
-            item.setAuthor(authorName);
             mvList.add(item);
         }
         mvItemsArray=new Article[mvList.size()];
