@@ -183,6 +183,7 @@ public class MostViewed extends Fragment {
 
                                 return view;
                             }
+
                         }
         );
         mTabHost.addTab(spec);
