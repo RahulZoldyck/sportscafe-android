@@ -7,4 +7,6 @@
     <color name="colorPureBlack">#000</color>
     <color name="black">#000000</color>
     <color name="googleBlue">#3f85f4</color>
+    <color name="fixtureBlue">#1e939d</color>
+    <color name="silvery">#f2f2f2</color>
 </resources>

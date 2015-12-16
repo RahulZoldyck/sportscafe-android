@@ -1,2 +1,8 @@
-/build
+.idea/
+.gradle/
+build/
+local.properties
+bin/
+gen/
 app/app.iml
+*/*.iml
