@@ -26,8 +26,10 @@ import app.sportscafe.in.sportscafe.R;
  */
 public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
     Context context;
-    public FixtureCardAdapter(Context context, FixtureCardItem[] objects) {
+    boolean isFixture;
+    public FixtureCardAdapter(Context context, FixtureCardItem[] objects, String type) {
         super(context, R.layout.fixture_card_layout, objects);
+        isFixture = type.equals("Fixtures");
         this.context=context;
     }
 
@@ -45,31 +47,51 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
         title.setText(cardItem.getTournamentName());
         ArrayList<FixtureListItem> listItems=cardItem.getListItems();
         for(FixtureListItem listItem :listItems){
-            child=childInflater.inflate(R.layout.fixture_list_layout,null);
+            if(isFixture){
+                child=childInflater.inflate(R.layout.fixture_list_layout,null);
 
-            String date=listItem.getDateTime();
-            ImageView teamImg1=(ImageView)child.findViewById(R.id.listTeamImage1);
-            ImageView teamImg2=(ImageView)child.findViewById(R.id.listTeamImage2);
-            TextView teamName1=(TextView)child.findViewById(R.id.listTeamName1);
-            TextView teamName2=(TextView)child.findViewById(R.id.listTeamName2);
-            TextView matchName=(TextView)child.findViewById(R.id.listMatchName);
-            TextView dateTextView=(TextView)child.findViewById(R.id.listDate);
-            TextView monthTextView=(TextView)child.findViewById(R.id.listMonth);
-            TextView timeTextView=(TextView)child.findViewById(R.id.listTime);
-            Picasso.with(context).load(listItem.getImageUrl1()).placeholder(R.mipmap.logo).into(teamImg1);
-            Picasso.with(context).load(listItem.getImageUrl2()).placeholder(R.mipmap.logo).into(teamImg2);
-            teamName1.setText(listItem.getTeam1());
-            teamName2.setText(listItem.getTeam2());
-            matchName.setText(listItem.getMatchName());
+                String date=listItem.getDateTime();
+                ImageView teamImg1=(ImageView)child.findViewById(R.id.listTeamImage1);
+                ImageView teamImg2=(ImageView)child.findViewById(R.id.listTeamImage2);
+                TextView teamName1=(TextView)child.findViewById(R.id.listTeamName1);
+                TextView teamName2=(TextView)child.findViewById(R.id.listTeamName2);
+                TextView matchName=(TextView)child.findViewById(R.id.listMatchName);
+                TextView dateTextView=(TextView)child.findViewById(R.id.listDate);
+                TextView monthTextView=(TextView)child.findViewById(R.id.listMonth);
+                TextView timeTextView=(TextView)child.findViewById(R.id.listTime);
+                Picasso.with(context).load(listItem.getImageUrl1()).placeholder(R.mipmap.logo).into(teamImg1);
+                Picasso.with(context).load(listItem.getImageUrl2()).placeholder(R.mipmap.logo).into(teamImg2);
+                teamName1.setText(listItem.getTeam1());
+                teamName2.setText(listItem.getTeam2());
+                matchName.setText(listItem.getMatchName());
 
-            try {
-                timeTextView.setText(getTime(date));
-                dateTextView.setText(getDate(date));
-                monthTextView.setText(getMonth(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
+                try {
+                    timeTextView.setText(getTime(date));
+                    dateTextView.setText(getDate(date));
+                    monthTextView.setText(getMonth(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                layout.addView(child);
             }
-            layout.addView(child);
+            else{
+                child=childInflater.inflate(R.layout.score_list_layout,null);
+
+                String date=listItem.getDateTime();
+                ImageView teamImg1=(ImageView)child.findViewById(R.id.listTeamImage1);
+                ImageView teamImg2=(ImageView)child.findViewById(R.id.listTeamImage2);
+                TextView teamName1=(TextView)child.findViewById(R.id.listTeamName1);
+                TextView teamName2=(TextView)child.findViewById(R.id.listTeamName2);
+                TextView matchName=(TextView)child.findViewById(R.id.scoreMatch);
+                TextView score=(TextView)child.findViewById(R.id.scoreBoard);
+                Picasso.with(context).load(listItem.getImageUrl1()).placeholder(R.mipmap.logo).into(teamImg1);
+                Picasso.with(context).load(listItem.getImageUrl2()).placeholder(R.mipmap.logo).into(teamImg2);
+                teamName1.setText(listItem.getTeam1());
+                teamName2.setText(listItem.getTeam2());
+                score.setText(listItem.getScore());
+                matchName.setText(listItem.getMatchName());
+                layout.addView(child);
+            }
         }
 
         return v;

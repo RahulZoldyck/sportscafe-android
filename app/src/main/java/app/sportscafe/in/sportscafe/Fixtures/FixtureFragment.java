@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import java.util.TimeZone;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import app.sportscafe.in.sportscafe.Articles.ArticleConstants;
 import app.sportscafe.in.sportscafe.R;
 import app.sportscafe.in.sportscafe.App.Utilites;
 
@@ -38,14 +40,18 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
     View vh;
     SwipeRefreshLayout layout;
     ListView lv;
+    String type;
     int length,teamLength,matchesLength;
     public  HashMap<String,String> mapIdtoTeam =new HashMap<>();
 
     private OnFragmentInteractionListener mListener;
 
 
-    public static FixtureFragment newInstance() {
+    public static FixtureFragment newInstance(String type) {
         FixtureFragment fragment = new FixtureFragment();
+        Bundle args = new Bundle();
+        args.putString(ArticleConstants.ARTICLE_TYPE1, type);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -56,6 +62,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.type=getArguments().getString(ArticleConstants.ARTICLE_TYPE1,"default");
     }
 
     @Override
@@ -107,9 +114,15 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
             df.setTimeZone(tz);
             Calendar today=Calendar.getInstance();
             Calendar yesterday=Calendar.getInstance();
-            yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH));
             Calendar tomorrow=Calendar.getInstance();
-            tomorrow.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)+5);
+            if(type.equals("Fixtures")){
+                yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH));
+                tomorrow.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)+5);
+            }
+            else{
+                yesterday.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH)-3);
+                tomorrow.set(Calendar.DAY_OF_MONTH,today.get(Calendar.DAY_OF_MONTH));
+            }
             String ISOtomo=df.format(tomorrow.getTime())+getResources().getString(R.string.formatModification);
             String ISOyes=df.format(yesterday.getTime())+getResources().getString(R.string.formatModification);
 
@@ -192,6 +205,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
                         if(tryit){
                             if(tournamentObject.getString(FixtureConstants.GAME_TYPE).equals(FixtureConstants.INDIVIDUALS)){
                             JSONObject player=new JSONObject();
+                                Log.e("sportscafe",jsonObject.toString());
                             player=team.getJSONObject(FixtureConstants.PLAYER_A);
                             matches.setCountry(player.getString(FixtureConstants.COUNTRY));
                             mapIdtoTeam.put(player.getString(FixtureConstants.PLAYER_ID),player.getString(FixtureConstants.PLAYER_NAME_SHORT));
@@ -265,7 +279,11 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
                         JSONObject result=matchObject.getJSONObject(FixtureConstants.MATCH_RESULT);
                         JSONArray scores=result.getJSONArray(FixtureConstants.MATCH_FINAL_SCORE);
                         if(scores.length()!=0){
-                            String score= String.valueOf(scores.getInt(0))+" - "+String.valueOf(scores.getInt(1));
+                            String score;
+                            try{ score= String.valueOf(scores.getInt(0))+" - "+String.valueOf(scores.getInt(1));}catch (IndexOutOfBoundsException |JSONException e){
+                                score="-1";
+                            }
+
                             matches.setScore(score);
                         }
                         else
@@ -307,7 +325,8 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
             listItem.setTeam2(match.getTeam2());
             listItem.setImageUrl1(Utilites.getTeamImg() + "/" + match.getGame() + "/" + match.getTournamentId() + "/" + match.getTeamId1() + ".png");
             listItem.setImageUrl2(Utilites.getTeamImg() + "/" + match.getGame() + "/" + match.getTournamentId() + "/" + match.getTeamId2() + ".png");
-            listItem.setMatchName("Match "+match.getId());
+            listItem.setMatchName("Match " + match.getId());
+            listItem.setScore(match.getScore());
             if(isTournamentPresent(match.getTournament(),cardItems)){
                   cardItems=setListToCardView(match.getTournament(),listItem,cardItems);
             }
@@ -324,7 +343,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
 
         FixtureCardItem[] cardItemArray=new FixtureCardItem[cardItems.size()];
         cardItemArray=cardItems.toArray(cardItemArray);
-        FixtureCardAdapter adapter=new FixtureCardAdapter(getContext(),cardItemArray);
+        FixtureCardAdapter adapter=new FixtureCardAdapter(getContext(),cardItemArray,type);
         lv.setAdapter(adapter);
         layout.setRefreshing(false);
 
