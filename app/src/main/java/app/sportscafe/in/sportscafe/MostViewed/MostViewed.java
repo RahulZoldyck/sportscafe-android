@@ -161,6 +161,7 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         spec.setContent(new TabHost.TabContentFactory() {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                             @Override
                             public View createTabContent(String tag) {
                                 LayoutInflater li = getActivity().getLayoutInflater();
@@ -254,6 +255,19 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
                                 return view;
                             }
                         }
+=======
+            @Override
+            public View createTabContent(String tag) {
+                LayoutInflater li=(LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v=li.inflate(R.layout.mostviewed_tab_layout,null);
+                ListView listView=(ListView)v.findViewById(R.id.tabList);
+                MostViewedAdapter adapter=new MostViewedAdapter(getContext(),dayitems);
+                listView.setAdapter(adapter);
+
+                return null;
+            }
+        }
+>>>>>>> parent of 1997d46... MostViewed Needs OnClick Sorted Out
 =======
             @Override
             public View createTabContent(String tag) {
