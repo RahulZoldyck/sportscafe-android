@@ -4,7 +4,15 @@ package app.sportscafe.in.sportscafe.Fixtures;
  * Created by rahul on 15/12/15.
  */
 public class FixtureListItem {
-    String team1,team2,imageUrl1,imageUrl2,matchName,dateTime;
+    String team1,team2,imageUrl1,imageUrl2,matchName,dateTime,score;
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public String getTeam1() {
         return team1;
