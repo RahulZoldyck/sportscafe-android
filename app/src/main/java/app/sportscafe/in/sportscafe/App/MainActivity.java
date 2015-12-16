@@ -19,12 +19,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
-import app.sportscafe.in.sportscafe.Fixtures.Fixture;
+import app.sportscafe.in.sportscafe.Fixtures.FixtureFragment;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewed;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, Fixture.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
 {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
             else if(position==1)
                 return ArticlesFragment.newInstance("long feature","short feature");
             else if(position==3)
-                return Fixture.newInstance();
+                return FixtureFragment.newInstance();
             else if(position==5)
                 return MostViewed.newInstance();
             else
