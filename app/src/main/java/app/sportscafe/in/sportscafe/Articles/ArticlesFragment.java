@@ -179,7 +179,7 @@ public class ArticlesFragment extends Fragment
                         result = result + line;
                     Log.d(Utilites.getTAG(), result);
                     JSONArray jsonArray = new JSONArray(result);
-                    Integer length = jsonArray.length();
+                    int length = jsonArray.length();
                     for (int i = 0; i < length; i++)
                     {
                         String authorName="SportsCafe";
