@@ -1,15 +1,19 @@
 package app.sportscafe.in.sportscafe.MostViewed;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
@@ -29,6 +33,7 @@ import java.util.zip.Inflater;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import app.sportscafe.in.sportscafe.App.ContentActivity;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.Articles.ArticleConstants;
@@ -36,11 +41,12 @@ import app.sportscafe.in.sportscafe.R;
 
 
 
-public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFragmentInteractionListener{
+public class MostViewed extends Fragment {
     private TabHost mTabHost;
     TabHost.TabSpec spec;
+    View v;
+    ViewGroup root;
     Article[] dayitems,weekitems,monthitems;
-    SwipeRefreshLayout sr;
     int length;
 
     private OnFragmentInteractionListener mListener;
@@ -65,21 +71,13 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
+        root=container;
+         v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
         mTabHost = (TabHost) v.findViewById(R.id.tabHost);
         mTabHost.setup();
         AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
         asyncMostViewed.execute();
-         sr=(SwipeRefreshLayout)v.findViewById(R.id.mvRefresh);
-        sr.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
-                        asyncMostViewed.execute();
-                    }
-                }
-        );
+
 
 
         return v;
@@ -156,12 +154,10 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         dayitems=getArrayFromJSON(dayJSON);
         monthitems=getArrayFromJSON(monthJSON);
         weekitems=getArrayFromJSON(weekJSON);
-        spec= mTabHost.newTabSpec("day");
+         spec= mTabHost.newTabSpec("day");
         spec.setIndicator("Day");
         spec.setContent(new TabHost.TabContentFactory() {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
                             @Override
                             public View createTabContent(String tag) {
                                 LayoutInflater li = getActivity().getLayoutInflater();
@@ -255,38 +251,8 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
                                 return view;
                             }
                         }
-=======
-            @Override
-            public View createTabContent(String tag) {
-                LayoutInflater li=(LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v=li.inflate(R.layout.mostviewed_tab_layout,null);
-                ListView listView=(ListView)v.findViewById(R.id.tabList);
-                MostViewedAdapter adapter=new MostViewedAdapter(getContext(),dayitems);
-                listView.setAdapter(adapter);
-
-                return null;
-            }
-        }
->>>>>>> parent of 1997d46... MostViewed Needs OnClick Sorted Out
-=======
-            @Override
-            public View createTabContent(String tag) {
-                LayoutInflater li=(LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v=li.inflate(R.layout.mostviewed_tab_layout,null);
-                ListView listView=(ListView)v.findViewById(R.id.tabList);
-                MostViewedAdapter adapter=new MostViewedAdapter(getContext(),dayitems);
-                listView.setAdapter(adapter);
-
-                return null;
-            }
-        }
->>>>>>> parent of 1997d46... MostViewed Needs OnClick Sorted Out
         );
         mTabHost.addTab(spec);
-        MostViewedPagerAdapter dayAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),dayitems);
-        MostViewedPagerAdapter weekAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),weekitems);
-        MostViewedPagerAdapter monthAdapter=new MostViewedPagerAdapter(getChildFragmentManager(),monthitems);
-        sr.setRefreshing(false);
 
 
     }
@@ -295,9 +261,9 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
         Article[] mvItemsArray;
         Article item;
         JSONObject article;
-        List<Article> mvList=new ArrayList<>();
+        List<Article> mvList = new ArrayList<>();
         length=jsonArray.length();
-        for(int i =0; i< length;i++){
+        for(int i =0; i< length;i++) {
             item=new Article();
             article=new JSONObject();
             article=jsonArray.getJSONObject(i);
@@ -341,11 +307,6 @@ public class MostViewed extends Fragment implements MostViewedPagerFragment.OnFr
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     public interface OnFragmentInteractionListener {
