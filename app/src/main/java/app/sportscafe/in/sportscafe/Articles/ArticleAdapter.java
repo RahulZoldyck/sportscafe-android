@@ -105,10 +105,18 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         {
             String authorName = articles.get(position).getAuthor();
             int i = authorName.indexOf(' ');
-            String authorFirst = authorName.substring(0, i);
+            String authorFirst = "";
+            if(i==-1)
+            {
+                authorFirst = authorName;
+            }
+            else
+            {
+                authorFirst = authorName.substring(0, i);
+            }
             holder.textViewAuthor.setText(authorFirst);
         }
-        holder.textViewDate.setText(articles.get(position).getDate());
+        holder.textViewDate.setText(articles.get(position).getTime());
         if(articleType.equals("long feature"))
         {
             if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP)
@@ -129,7 +137,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 .into(holder.image);
         else
             Picasso.with(context)
-                    .load(Utilites.getInitialImageURL("300","300","80",articles.get(position).getImageUrl())).resize(300,300)
+                    .load(Utilites.getInitialImageURL("300","300","80",articles.get(position).getImageUrl())).resize(300,300).centerCrop()
                     .into(holder.image);
     }
 
