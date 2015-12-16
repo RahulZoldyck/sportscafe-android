@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import app.sportscafe.in.sportscafe.App.Article;
@@ -36,6 +42,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     String imageQuality = "70";
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
+    OkHttpClient okHttpClient = new OkHttpClient();
+    OkHttpDownloader okHttpDownloader;
+    Picasso picasso;
+    File customCacheDirectory = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/SportsCafe"+"/cache");
 
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
@@ -66,7 +76,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             textViewDate = (TextView)V.findViewById(R.id.time);
             image = (ImageView)V.findViewById(R.id.imageView);
             V.setOnClickListener(this);
-
+            okHttpClient.setCache(new Cache(context.getCacheDir(), Integer.MAX_VALUE));
+            okHttpDownloader = new OkHttpDownloader(okHttpClient);
+            picasso = new Picasso.Builder(context).downloader(okHttpDownloader).build();
         }
 
         @SuppressLint("NewApi")
@@ -131,14 +143,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
         holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
         if(articleType.equals("long feature"))
-            Picasso.with(context)
-                .load(Utilites.getInitialImageURL(imageWidth,imageHeight,imageQuality,articles.get(position).getImageUrl()))
-                .placeholder(R.drawable.sportscafe)
-                .into(holder.image);
-        else
-            Picasso.with(context)
-                    .load(Utilites.getInitialImageURL("300","300","80",articles.get(position).getImageUrl())).resize(300,300).centerCrop()
+        {
+
+            Picasso.with(context).load(Utilites.getInitialImageURL(imageWidth, imageHeight, imageQuality, articles.get(position).getImageUrl()))
+                    .placeholder(R.drawable.sportscafe)
                     .into(holder.image);
+        }
+        else
+        {
+            picasso.setIndicatorsEnabled(true);
+            picasso.load(Utilites.getInitialImageURL("300", "300", "80", articles.get(position).getImageUrl()))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(holder.image);
+        }
     }
 
     @Override

@@ -12,12 +12,17 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -40,14 +45,13 @@ public class ContentActivity extends AppCompatActivity {
     TextView content, header, summary, author;
     ImageView contentImage;
     NestedScrollView nestedScrollView;
+    Transition transition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_image_transition));
-        }
+
         if (bundle != null) {
             article = bundle.getParcelable(MostViewedPagerFragment.ARG_ITEM);
             assert article != null;
@@ -70,11 +74,62 @@ public class ContentActivity extends AppCompatActivity {
         summary = (TextView) findViewById(R.id.summary);
         author = (TextView) findViewById(R.id.author_name);
         contentImage = (ImageView) findViewById(R.id.mvContentImage);
-        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height,imageQuality,imgURL)).into(contentImage);
-        header = (TextView) findViewById(R.id.content_title);
-        header.setText(title);
-        author.setText(authorName);
-        new AsyncMostViewedContent().execute(id);
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setCache(new Cache(getCacheDir(), Integer.MAX_VALUE));
+        OkHttpDownloader okHttpDownloader = new OkHttpDownloader(okHttpClient);
+        Picasso picasso = new Picasso.Builder(this).downloader(okHttpDownloader).build();
+        picasso.setIndicatorsEnabled(true);
+        picasso.load(Utilites.getInitialImageURL("300","300","80",imgURL)).networkPolicy(NetworkPolicy.OFFLINE).into(contentImage);
+
+        if (Build.VERSION.SDK_INT >= 21)
+        {
+            Transition.TransitionListener listener = new Transition.TransitionListener()
+            {
+                @Override
+                public void onTransitionStart(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition)
+                {
+                    header = (TextView) findViewById(R.id.content_title);
+                    header.setText(title);
+                    author.setText(authorName);
+                    new AsyncMostViewedContent().execute(id);
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition)
+                {
+
+                }
+            };
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_image_transition));
+            transition = getWindow().getSharedElementEnterTransition();
+            transition.addListener(listener);
+        }
+        else
+        {
+            header = (TextView) findViewById(R.id.content_title);
+            header.setText(title);
+            author.setText(authorName);
+            new AsyncMostViewedContent().execute(id);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -112,9 +167,12 @@ public class ContentActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             try {
+                Picasso.with(ContentActivity.this).load(Utilites.getInitialImageURL(
+                        Utilites.image_width, Utilites.image_height,"100",imgURL))
+                        .into(contentImage);
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject dataJSON = jsonResult.getJSONObject(MostViewedConstants.DATA);
-                 contentString = dataJSON.getString(MostViewedConstants.CONTENT);
+                contentString = dataJSON.getString(MostViewedConstants.CONTENT);
                 String summaryString = dataJSON.getString(MostViewedConstants.SUMMARY);
                 imageGetter=new Html.ImageGetter() {
                     @Override
