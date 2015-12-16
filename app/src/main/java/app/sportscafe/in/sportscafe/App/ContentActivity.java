@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -56,6 +57,9 @@ public class ContentActivity extends AppCompatActivity {
             tag = article.getSport();
             id = article.getId();
             authorName = article.getAuthor();
+        }
+        else{
+            Toast.makeText(this,"fdsgu",Toast.LENGTH_LONG).show();
         }
         setContentView(R.layout.activity_report);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
