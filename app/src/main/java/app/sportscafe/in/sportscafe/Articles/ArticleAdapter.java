@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import app.sportscafe.in.sportscafe.App.Article;
@@ -45,13 +43,14 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     OkHttpClient okHttpClient = new OkHttpClient();
     OkHttpDownloader okHttpDownloader;
     Picasso picasso;
-    File customCacheDirectory = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/SportsCafe"+"/cache");
-
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
         this.articles = articles_array;
         this.context = context;
         this.articleType=articleType;
+        okHttpClient.setCache(new Cache(context.getCacheDir(), Integer.MAX_VALUE));
+        okHttpDownloader = new OkHttpDownloader(okHttpClient);
+        picasso = new Picasso.Builder(context).downloader(okHttpDownloader).build();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -76,9 +75,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             textViewDate = (TextView)V.findViewById(R.id.time);
             image = (ImageView)V.findViewById(R.id.imageView);
             V.setOnClickListener(this);
-            okHttpClient.setCache(new Cache(context.getCacheDir(), Integer.MAX_VALUE));
-            okHttpDownloader = new OkHttpDownloader(okHttpClient);
-            picasso = new Picasso.Builder(context).downloader(okHttpDownloader).build();
         }
 
         @SuppressLint("NewApi")
@@ -97,7 +93,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View view;
-        if(articleType.equals("long feature"))      //Inflate different view for news and match report
+        if(articleType.equals("long feature"))      //Inflate different view for news and feature
         {
              view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_feature,parent,false);
         }
@@ -129,6 +125,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             holder.textViewAuthor.setText(authorFirst);
         }
         holder.textViewDate.setText(articles.get(position).getTime());
+        holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
         if(articleType.equals("long feature"))
         {
             if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP)
@@ -140,18 +137,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 params.leftMargin = margin; params.bottomMargin = margin;params.rightMargin=margin;
                 holder.overlayLayout.setLayoutParams(params);
             }
-        }
-        holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
-        if(articleType.equals("long feature"))
-        {
-
-            Picasso.with(context).load(Utilites.getInitialImageURL(imageWidth, imageHeight, imageQuality, articles.get(position).getImageUrl()))
+            picasso.load(Utilites.getInitialImageURL(imageWidth, imageHeight, imageQuality, articles.get(position).getImageUrl()))
                     .placeholder(R.drawable.sportscafe)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(holder.image);
         }
         else
         {
-            picasso.setIndicatorsEnabled(true);
             picasso.load(Utilites.getInitialImageURL("300", "300", "80", articles.get(position).getImageUrl()))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(holder.image);
