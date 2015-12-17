@@ -4,16 +4,25 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import app.sportscafe.in.sportscafe.App.Article;
@@ -33,6 +42,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     String imageQuality = "70";
     ArrayList<Article> articles = new ArrayList<>();
     String articleType;
+    OkHttpClient okHttpClient = new OkHttpClient();
+    OkHttpDownloader okHttpDownloader;
+    Picasso picasso;
+    File customCacheDirectory = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/SportsCafe"+"/cache");
 
     public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
     {
@@ -43,21 +56,29 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        LinearLayout overlayLayout;
         TextView textViewTitle;
         TextView textViewSummary;
         TextView textViewAuthor;
         TextView textViewSport;
+        TextView textViewDate;
+        CardView cardView;
         ImageView image;
         public ViewHolder(View V)
         {
             super(V);
+            overlayLayout = (LinearLayout)V.findViewById(R.id.overlay_layout);
+            cardView = (CardView)V.findViewById(R.id.card_view);
             textViewTitle = (TextView)V.findViewById(R.id.title);
             textViewSummary = (TextView)V.findViewById(R.id.summary);
             textViewAuthor = (TextView)V.findViewById(R.id.author);
             textViewSport = (TextView)V.findViewById(R.id.sport);
+            textViewDate = (TextView)V.findViewById(R.id.time);
             image = (ImageView)V.findViewById(R.id.imageView);
             V.setOnClickListener(this);
-
+            okHttpClient.setCache(new Cache(context.getCacheDir(), Integer.MAX_VALUE));
+            okHttpDownloader = new OkHttpDownloader(okHttpClient);
+            picasso = new Picasso.Builder(context).downloader(okHttpDownloader).build();
         }
 
         @SuppressLint("NewApi")
@@ -78,7 +99,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         View view;
         if(articleType.equals("long feature"))      //Inflate different view for news and match report
         {
-             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view,parent,false);
+             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_feature,parent,false);
         }
         else
         {
@@ -93,15 +114,48 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     {
         holder.textViewTitle.setText(articles.get(position).getTitle());
         //holder.textViewSummary.setText(articles.get(position).getSummary());
+        {
+            String authorName = articles.get(position).getAuthor();
+            int i = authorName.indexOf(' ');
+            String authorFirst = "";
+            if(i==-1)
+            {
+                authorFirst = authorName;
+            }
+            else
+            {
+                authorFirst = authorName.substring(0, i);
+            }
+            holder.textViewAuthor.setText(authorFirst);
+        }
+        holder.textViewDate.setText(articles.get(position).getTime());
         if(articleType.equals("long feature"))
         {
-            holder.textViewAuthor.setText(articles.get(position).getAuthor());
-            holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP)
+            {
+                int dpValue = 5+8; // margin in dips
+                float d = context.getResources().getDisplayMetrics().density;
+                int margin = (int)(dpValue * d); // margin in pixels
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)holder.overlayLayout.getLayoutParams();
+                params.leftMargin = margin; params.bottomMargin = margin;params.rightMargin=margin;
+                holder.overlayLayout.setLayoutParams(params);
+            }
         }
-        Picasso.with(context)
-                .load(Utilites.getInitialImageURL(imageWidth,imageHeight,imageQuality,articles.get(position).getImageUrl()))
-                .placeholder(R.drawable.sportscafe)
-                .into(holder.image);
+        holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
+        if(articleType.equals("long feature"))
+        {
+
+            Picasso.with(context).load(Utilites.getInitialImageURL(imageWidth, imageHeight, imageQuality, articles.get(position).getImageUrl()))
+                    .placeholder(R.drawable.sportscafe)
+                    .into(holder.image);
+        }
+        else
+        {
+            picasso.setIndicatorsEnabled(true);
+            picasso.load(Utilites.getInitialImageURL("300", "300", "80", articles.get(position).getImageUrl()))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(holder.image);
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.Articles;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,12 +19,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.TimeZone;
 
 import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.Utilites;
@@ -123,6 +131,8 @@ public class ArticlesFragment extends Fragment
             if(articleType1.equals("news"))
                 getArticles(articleType1);
             getArticles(articleType2);
+            Collections.sort(articles,new ArticleComparator());
+            Collections.reverse(articles);
             adapter = new ArticleAdapter(articles,context,articleType1);
             adapter.notifyDataSetChanged();
             return null;
@@ -143,7 +153,7 @@ public class ArticlesFragment extends Fragment
                 JSONObject sort = new JSONObject();
                 sort.accumulate(ArticleConstants.PUBLISH_DATE,-1);
                 options.accumulate(ArticleConstants.SORT,sort);
-                options.accumulate(ArticleConstants.LIMIT,10);
+                options.accumulate(ArticleConstants.LIMIT,25);
                 msg.accumulate(ArticleConstants.CONDITIONS,conditions);
                 msg.accumulate(ArticleConstants.PROJECTION,projection);
                 msg.accumulate(ArticleConstants.OPTIONS,options);
@@ -169,15 +179,22 @@ public class ArticlesFragment extends Fragment
                         result = result + line;
                     Log.d(Utilites.getTAG(), result);
                     JSONArray jsonArray = new JSONArray(result);
-                    Integer length = jsonArray.length();
+                    int length = jsonArray.length();
                     for (int i = 0; i < length; i++)
                     {
+                        String authorName="SportsCafe";
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString(ArticleConstants.TITLE);
                         String date = json_article.getString(ArticleConstants.MODIFICATION_DATE);
-                        JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
-                        String authorName = author.getString(ArticleConstants.AUTHOR_NAME);
+                        String authorId = json_article.getString("authorId");                       //TODO Backend change to not provide null author
+                        if(authorId.equals("Vijayaleti"))
+                            authorName = "Vijayaleti ";
+                        else
+                        {
+                            JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
+                            authorName = author.getString(ArticleConstants.AUTHOR_NAME);
+                        }
                         String id = json_article.getString(ArticleConstants.ID);
                         String summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
                         JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
@@ -195,14 +212,14 @@ public class ArticlesFragment extends Fragment
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorName);
+                        article_temp.setTime(getDate(date));
                         article_temp.setDate(date);
                         articles.add(article_temp);
                     }
+                } catch (IOException e)
+                {
+                    Log.d(Utilites.getTAG(),"Error in IO : "+e);
                 }
-                    catch (Exception e)
-                    {
-                        Log.d(Utilites.getTAG(),"Error in Connecting : "+e);
-                    }
 
                 } catch (JSONException e)
                 {
@@ -217,7 +234,81 @@ public class ArticlesFragment extends Fragment
             swipeRefreshLayout.setRefreshing(false);
         }
     }
+    public String getDate(String date)
+    {
+        String returnDate="";
+        Resources resources = getContext().getResources();
+        SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+        format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
+        Calendar calendarArticle = Calendar.getInstance();
+        Calendar calendarNow = Calendar.getInstance();
+        try
+        {
+            calendarArticle.setTime(format.parse(date));
+            int articleDay = calendarArticle.get(Calendar.DAY_OF_MONTH);
+            int currentDay = calendarNow.get(Calendar.DAY_OF_MONTH);
+            int articleMonth = calendarArticle.get(Calendar.MONTH);
+            int currentMonth = calendarNow.get(Calendar.MONTH);
+            int articleHour = calendarArticle.get(Calendar.HOUR_OF_DAY);
+            int currentHour = calendarNow.get(Calendar.HOUR_OF_DAY);
+            int articleMinute = calendarArticle.get(Calendar.MINUTE);
+            int currentMinute = calendarNow.get(Calendar.MINUTE);
+            if(articleMonth-currentMonth==0)
+            {
+                if(articleDay-currentDay==0)
+                {
+                    if(articleHour-currentHour==0)
+                    {
+                        if(articleMinute-currentMinute==0)
+                        {
+                            returnDate = "Just now";
+                        }
+                        else
+                        {
+                            returnDate = (currentMinute-articleMinute)+"m ago";
+                        }
+                    }
+                    else
+                    {
+                        returnDate = (currentHour - articleHour)+"h ago";
+                    }
+                }
+                else
+                {
+                    returnDate = (currentDay - articleDay)+"d ago";
+                }
+            }
+            else
+            {
+                returnDate = (currentMonth-articleMonth)+"M ago";
+            }
+        } catch (ParseException e)
+        {
+            Log.e(Utilites.getTAG(),e.toString());
+        }
+        return returnDate;
+    }
+    public class ArticleComparator implements Comparator<Article>
+    {
+        @Override
+        public int compare(Article article1, Article article2) {
+            Resources resources = getContext().getResources();
+            SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+            format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar calendar2 = Calendar.getInstance();
+            try
+            {
+                calendar1.setTime(format.parse(article1.getDate()));
+                calendar2.setTime(format.parse(article2.getDate()));
+            } catch (ParseException e)
+            {
+                Log.e(Utilites.getTAG(),e.toString());
+            }
+            return calendar1.compareTo(calendar2);
+        }
 
+    }
     @Override
     public void onAttach(Context context)
     {
