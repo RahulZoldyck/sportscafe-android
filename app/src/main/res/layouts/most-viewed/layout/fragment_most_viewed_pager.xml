@@ -35,6 +35,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:textAllCaps="true"
+                        android:textColor="@color/googleBlue"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Small Text"
                         />

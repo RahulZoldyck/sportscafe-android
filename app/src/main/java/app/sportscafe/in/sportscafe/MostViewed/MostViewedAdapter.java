@@ -36,7 +36,7 @@ public class MostViewedAdapter extends ArrayAdapter<Article> {
         ImageView image =(ImageView)v.findViewById(R.id.MVimage);
         TextView title =(TextView)v.findViewById(R.id.MVtitle);
         TextView tag= (TextView)v.findViewById(R.id.MVtag);
-        Picasso.with(v.getContext()).load(Utilites.getInitialImageURL("300", "300", "60", article.getImageUrl())).placeholder(R.mipmap.logo).into(image);
+        Picasso.with(v.getContext()).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, "60", article.getImageUrl())).placeholder(R.mipmap.logo).centerCrop().resize(300,300).into(image);
         title.setText(article.getTitle());
         tag.setText(article.getSport());
         return v;
