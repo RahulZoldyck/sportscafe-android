@@ -33,6 +33,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedConstants;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
@@ -46,7 +48,7 @@ public class ContentActivity extends AppCompatActivity {
     ImageView contentImage;
     NestedScrollView nestedScrollView;
     Transition transition;
-
+    ArrayList<String> imageSettings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +77,26 @@ public class ContentActivity extends AppCompatActivity {
         author = (TextView) findViewById(R.id.author_name);
         contentImage = (ImageView) findViewById(R.id.mvContentImage);
 
+        imageSettings = new ArrayList<>(Arrays.asList("","",""));
+        if(article.getArticleType().equals("news")||article.getArticleType().equals("match report"))
+        {
+            imageSettings.set(0,"300");
+            imageSettings.set(1,"300");
+            imageSettings.set(2,"80");
+        }
+        else
+        {
+            imageSettings.set(0,"600");
+            imageSettings.set(1,"300");
+            imageSettings.set(2,"70");
+        }
+
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setCache(new Cache(getCacheDir(), Integer.MAX_VALUE));
         OkHttpDownloader okHttpDownloader = new OkHttpDownloader(okHttpClient);
         Picasso picasso = new Picasso.Builder(this).downloader(okHttpDownloader).build();
-        picasso.setIndicatorsEnabled(true);
-        picasso.load(Utilites.getInitialImageURL("300","300","80",imgURL)).networkPolicy(NetworkPolicy.OFFLINE).into(contentImage);
+        picasso.load(Utilites.getInitialImageURL(imageSettings.get(0),imageSettings.get(1),imageSettings.get(2),imgURL))
+                .networkPolicy(NetworkPolicy.OFFLINE).into(contentImage);
 
         if (Build.VERSION.SDK_INT >= 21)
         {
@@ -167,8 +183,10 @@ public class ContentActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             try {
+                Drawable drawable = contentImage.getDrawable();
                 Picasso.with(ContentActivity.this).load(Utilites.getInitialImageURL(
                         Utilites.image_width, Utilites.image_height,"100",imgURL))
+                        .placeholder(drawable)
                         .into(contentImage);
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject dataJSON = jsonResult.getJSONObject(MostViewedConstants.DATA);
