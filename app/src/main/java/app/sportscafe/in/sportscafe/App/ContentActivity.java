@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -28,6 +29,7 @@ import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.XMLReader;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -46,6 +48,7 @@ public class ContentActivity extends AppCompatActivity {
     ImageView contentImage;
     NestedScrollView nestedScrollView;
     Transition transition;
+    Html.TagHandler tagHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +215,13 @@ public class ContentActivity extends AppCompatActivity {
 
                             }
                         };
+                            tagHandler=new Html.TagHandler() {
+                            @Override
+                            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+//                                if(tag.equals(""))
+
+                            }
+                        };
 
                         Picasso.with(ContentActivity.this).load(source).placeholder(R.drawable.sportscafe).into(target);
 
@@ -229,5 +239,6 @@ public class ContentActivity extends AppCompatActivity {
         private void manifestContent() {
             content.setText(Html.fromHtml(contentString,imageGetter,null));
         }
+
     }
 }
