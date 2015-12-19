@@ -52,7 +52,7 @@
             android:orientation="vertical"
             app:layout_anchor="@id/imageView"
             app:layout_anchorGravity="bottom|right|end"
-            android:background="#a6000000"
+            android:background="@drawable/feature_text_bg"
             android:alpha="120">
             <TextView
                 android:id="@+id/title"
