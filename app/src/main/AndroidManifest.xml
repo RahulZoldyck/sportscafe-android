@@ -28,6 +28,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.sportscafe.in.sportscafe.App.MainActivity" />
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b1280f94c3c7dc721b0901a5498301cb7c9b9974" />
     </application>
 
 </manifest>

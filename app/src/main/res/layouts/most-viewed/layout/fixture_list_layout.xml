@@ -44,6 +44,7 @@
                     android:id="@+id/listMatchName"
                     android:layout_marginTop="4dp"
                     android:textAlignment="center"
+                    android:fontFamily="san-serif-condensed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

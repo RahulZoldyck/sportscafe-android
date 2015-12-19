@@ -36,7 +36,7 @@ import app.sportscafe.in.sportscafe.R;
 import app.sportscafe.in.sportscafe.App.Utilites;
 
 
-public class FixtureFragment extends android.support.v4.app.Fragment {
+public class    FixtureFragment extends android.support.v4.app.Fragment {
     View vh;
     SwipeRefreshLayout layout;
     ListView lv;
