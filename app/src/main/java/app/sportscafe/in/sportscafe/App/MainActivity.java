@@ -31,8 +31,11 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
 {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "cDm4K9DtffdAjvcWapRO1cTEr";
-    private static final String TWITTER_SECRET = "qh4mOIT7zdp0ixoG0LlBMCCwMs2Q8qEfwsY7rQr893H9DkkhDZ";
+    private static final String TWITTER_KEY = "BSO1vSfZlYsTkgvPBgAUKum2B";
+    private static final String TWITTER_SECRET = "xBeJ9PRYlbqRZMF3TWYYTiTk8AahDaMiRvWV9w8uvaZ2ED4FAS";
+
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
+//        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+//        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
         if(Build.VERSION.SDK_INT>=21)
         {

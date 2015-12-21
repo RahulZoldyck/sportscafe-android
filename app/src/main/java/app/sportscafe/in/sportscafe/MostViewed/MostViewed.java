@@ -8,8 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +27,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import app.sportscafe.in.sportscafe.App.ContentActivity;
+import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.R;
@@ -43,6 +41,7 @@ import app.sportscafe.in.sportscafe.R;
 public class MostViewed extends Fragment {
     private TabHost mTabHost;
     TabHost.TabSpec spec;
+    SCDataBaseClass dataBaseClass;
     View v;
     ViewGroup root;
     Article[] dayitems,weekitems,monthitems;
@@ -72,10 +71,27 @@ public class MostViewed extends Fragment {
                              Bundle savedInstanceState) {
         root=container;
          v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
+        dataBaseClass=new SCDataBaseClass(getContext());
         mTabHost = (TabHost) v.findViewById(R.id.tabHost);
         mTabHost.setup();
-        AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
-        asyncMostViewed.execute();
+
+        Article[] dayArrayFromDB,weekArrayFromDB,monthArrayFromDB;
+        ArrayList<Article> dayListFromDB=dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVDAY);
+        ArrayList<Article> weekListFromDB=dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVWEEK);
+        ArrayList<Article> monthListFromDB=dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVMONTH);
+        if(dayListFromDB.size()==0 || monthListFromDB.size()==0 || weekListFromDB.size()==0){
+            AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
+            asyncMostViewed.execute();
+        }
+        else{
+            dayArrayFromDB=new Article[dayListFromDB.size()];
+            dayArrayFromDB=dayListFromDB.toArray(dayArrayFromDB);
+            weekArrayFromDB=new Article[weekListFromDB.size()];
+            weekArrayFromDB=weekListFromDB.toArray(weekArrayFromDB);
+            monthArrayFromDB=new Article[monthListFromDB.size()];
+            monthArrayFromDB=monthListFromDB.toArray(monthArrayFromDB);
+            inflateTabs(dayArrayFromDB,monthArrayFromDB,weekArrayFromDB);
+        }
         return v;
     }
 
@@ -147,10 +163,20 @@ public class MostViewed extends Fragment {
         JSONArray dayJSON=jsonObject.getJSONArray(MostViewedConstants.DAY);
         JSONArray weekJSON=jsonObject.getJSONArray(MostViewedConstants.WEEK);
         JSONArray monthJSON=jsonObject.getJSONArray(MostViewedConstants.MONTH);
-        dayitems=getArrayFromJSON(dayJSON);
-        monthitems=getArrayFromJSON(monthJSON);
-        weekitems=getArrayFromJSON(weekJSON);
-         spec= mTabHost.newTabSpec("day");
+        dayitems=getArrayFromJSON(dayJSON,Utilites.ARTICLE_TYPE_MVDAY);
+        monthitems=getArrayFromJSON(monthJSON,Utilites.ARTICLE_TYPE_MVMONTH);
+        weekitems=getArrayFromJSON(weekJSON,Utilites.ARTICLE_TYPE_MVWEEK);
+        inflateTabs(dayitems,monthitems,weekitems);
+
+
+    }
+
+    private void inflateTabs(Article[] dayitems, Article[] monthitems, Article[] weekitems) {
+        final Article[] dayItems=dayitems;
+        final Article[] weekItems=weekitems;
+        final Article[] monthItems=monthitems;
+
+        spec= mTabHost.newTabSpec("day");
         spec.setIndicator("Day");
         spec.setContent(new TabHost.TabContentFactory() {
 
@@ -159,7 +185,7 @@ public class MostViewed extends Fragment {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
-                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), dayitems);
+                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), dayItems);
                                 listView.setAdapter(adapter);
                                 listView.setOnItemClickListener(
                                         new AdapterView.OnItemClickListener() {
@@ -191,7 +217,7 @@ public class MostViewed extends Fragment {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
-                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), weekitems);
+                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), weekItems);
                                 listView.setAdapter(adapter);
                                 listView.setOnItemClickListener(
                                         new AdapterView.OnItemClickListener() {
@@ -223,7 +249,7 @@ public class MostViewed extends Fragment {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
-                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), monthitems);
+                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), monthItems);
                                 listView.setAdapter(adapter);
                                 listView.setOnItemClickListener(
                                         new AdapterView.OnItemClickListener() {
@@ -245,15 +271,13 @@ public class MostViewed extends Fragment {
                         }
         );
         mTabHost.addTab(spec);
-
-
     }
 
-    private Article[] getArrayFromJSON(JSONArray jsonArray) throws JSONException {
+    private Article[] getArrayFromJSON(JSONArray jsonArray,String articleType) throws JSONException {
         Article[] mvItemsArray;
         Article item;
         JSONObject article;
-        List<Article> mvList = new ArrayList<>();
+        ArrayList<Article> mvList = new ArrayList<>();
         length=jsonArray.length();
         for(int i =0; i< length;i++) {
             item=new Article();
@@ -267,8 +291,10 @@ public class MostViewed extends Fragment {
             JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
             JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
             item.setSport(sections.getString(MostViewedConstants.SPORT));
+            item.setArticleType(articleType);
             mvList.add(item);
         }
+        dataBaseClass.insertData(mvList);
         mvItemsArray=new Article[mvList.size()];
         mvItemsArray=mvList.toArray(mvItemsArray);
             return mvItemsArray;

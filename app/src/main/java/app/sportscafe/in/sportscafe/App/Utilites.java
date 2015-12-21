@@ -6,6 +6,8 @@ package app.sportscafe.in.sportscafe.App;
 public class Utilites
 {
 
+    public static final String ARTICLE_TYPE_MVWEEK = "mvweek";
+    public static final String ARTICLE_TYPE_MVMONTH = "mvmonth";
     private static String articlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
     private static String initialImageURL = "https://sportscafe.in/img/es3";
     private static String fixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
@@ -14,6 +16,7 @@ public class Utilites
     private static final String stateArticles = "state_articles";
     private static final String TAG = "LOGGING";
     public static final String image_width = "800";
+    public static final String ARTICLE_TYPE_MVDAY="mvday";
     public static final String image_height = "400";
 
     public static String getTeamImg() {
