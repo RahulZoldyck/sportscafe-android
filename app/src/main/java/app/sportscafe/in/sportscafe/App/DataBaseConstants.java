@@ -1,0 +1,42 @@
+package app.sportscafe.in.sportscafe.App;
+
+/**
+ * Created by rb on 19/12/15.
+ */
+public class DataBaseConstants
+{
+    public static final String DATABASE_NAME = "SportsCafeDatabase";
+    public static final String TABLE_NAME = "Articles";
+    public static final String _ID = "_id";
+    public static final String ARTICLE_ID = "article_id";
+    public static final String TITLE = "title";
+    public static final String SUMMARY = "summary";
+    public static final String CONTENT = "content";
+    public static final String IMAGEURL = "imageUrl";
+    public static final String AUTHOR = "author";
+    public static final String SPORT = "sport";
+    public static final String DATE = "date";
+    public static final String TIME = "time";
+    public static final String ARTICLE_TYPE = "articleType";
+    public static final String CREDITS = "credits";
+    public static final String ARTICLE_DOWNLOADED = "articleDownloaded";
+
+    public static final String[] getColumns()
+    {
+        String columns[] = new String[13];
+        columns[0] = _ID;
+        columns[1] = ARTICLE_ID;
+        columns[2] = TITLE;
+        columns[3] = SUMMARY;
+        columns[4] = CONTENT;
+        columns[5] = IMAGEURL;
+        columns[6] = AUTHOR;
+        columns[7] = SPORT;
+        columns[8] = DATE;
+        columns[9] = TIME;
+        columns[10] = ARTICLE_TYPE;
+        columns[11] = CREDITS;
+        columns[12] = ARTICLE_DOWNLOADED;
+        return columns;
+    }
+}

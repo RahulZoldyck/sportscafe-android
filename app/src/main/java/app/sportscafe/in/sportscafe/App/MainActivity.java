@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private SCDataBaseClass.SCDBHelper scdbhelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

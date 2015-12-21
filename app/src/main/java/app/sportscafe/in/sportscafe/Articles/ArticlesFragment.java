@@ -2,6 +2,8 @@ package app.sportscafe.in.sportscafe.Articles;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +36,8 @@ import java.util.Comparator;
 import java.util.TimeZone;
 
 import app.sportscafe.in.sportscafe.App.Article;
+import app.sportscafe.in.sportscafe.App.DataBaseConstants;
+import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
@@ -43,7 +47,9 @@ public class ArticlesFragment extends Fragment
     public RecyclerView recyclerView;
     public RecyclerView.LayoutManager layoutManager;
     SwipeRefreshLayout swipeRefreshLayout;
-
+    SQLiteDatabase database;
+    SCDataBaseClass scDataBaseClass;
+    SCDataBaseClass.SCDBHelper scdbHelper;
     ArticleAdapter adapter;
     AsyncArticlesTask asyncArticlesTask;
 
@@ -76,6 +82,8 @@ public class ArticlesFragment extends Fragment
         super.onCreate(savedInstanceState);
         this.articleType1 = getArguments().getString(ArticleConstants.ARTICLE_TYPE1, "default");
         this.articleType2 = getArguments().getString(ArticleConstants.ARTICLE_TYPE2, "default");
+        scDataBaseClass = new SCDataBaseClass(getActivity());
+        scdbHelper = new SCDataBaseClass.SCDBHelper(getActivity());
     }
 
     @Override
@@ -124,6 +132,24 @@ public class ArticlesFragment extends Fragment
     public class AsyncArticlesTask extends AsyncTask<Void,Void,Void>
     {
         ArrayList<Article> articles = new ArrayList<>();
+        Boolean isFetchFromNetwork = true;
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            database = scdbHelper.getWritableDatabase();
+            Cursor cursor = database.query(
+                    DataBaseConstants.TABLE_NAME,DataBaseConstants.getColumns(),null,null,
+                    null,null,null);
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast())
+            {
+                Article article = SCDataBaseClass.cursorToArticle(cursor);
+                articles.add(article);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
 
         @Override
         protected Void doInBackground(Void... params)
@@ -214,15 +240,18 @@ public class ArticlesFragment extends Fragment
                         article_temp.setAuthor(authorName);
                         article_temp.setTime(getDate(date));
                         article_temp.setDate(date);
-                        articles.add(article_temp);
+                        if(!articles.contains(article_temp))
+                            articles.add(article_temp);
                     }
                 } catch (IOException e)
                 {
+                    isFetchFromNetwork = false;
                     Log.d(Utilites.getTAG(),"Error in IO : "+e);
                 }
 
                 } catch (JSONException e)
                 {
+                    isFetchFromNetwork = false;
                     Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
                 }
         }
@@ -231,6 +260,8 @@ public class ArticlesFragment extends Fragment
         {
             super.onPostExecute(aVoid);
             recyclerView.setAdapter(adapter);
+            if(isFetchFromNetwork)
+                scDataBaseClass.insertData(articles);
             swipeRefreshLayout.setRefreshing(false);
         }
     }
