@@ -47,7 +47,6 @@ public class ArticlesFragment extends Fragment
     public RecyclerView recyclerView;
     public RecyclerView.LayoutManager layoutManager;
     SwipeRefreshLayout swipeRefreshLayout;
-    SQLiteDatabase database;
     SCDataBaseClass scDataBaseClass;
     SCDataBaseClass.SCDBHelper scdbHelper;
     ArticleAdapter adapter;
@@ -137,18 +136,7 @@ public class ArticlesFragment extends Fragment
         protected void onPreExecute()
         {
             super.onPreExecute();
-            database = scdbHelper.getWritableDatabase();
-            Cursor cursor = database.query(
-                    DataBaseConstants.TABLE_NAME,DataBaseConstants.getColumns(),null,null,
-                    null,null,null);
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast())
-            {
-                Article article = SCDataBaseClass.cursorToArticle(cursor);
-                articles.add(article);
-                cursor.moveToNext();
-            }
-            cursor.close();
+            articles=scDataBaseClass.getArticleList("all");
         }
 
         @Override
