@@ -29,10 +29,10 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.ContentActivity;
 import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
-import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.R;
 
 
@@ -287,6 +287,7 @@ public class MostViewedFragment extends Fragment {
             JSONObject images=article.getJSONObject(MostViewedConstants.IMAGES);
             JSONObject feature=images.getJSONObject(MostViewedConstants.FEATURED);
             item.setImageUrl(feature.getString(MostViewedConstants.PATH));
+            item.setDate(article.getString(MostViewedConstants.MODIFICATION_DATE));
             JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
             JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
             item.setSport(sections.getString(MostViewedConstants.SPORT));

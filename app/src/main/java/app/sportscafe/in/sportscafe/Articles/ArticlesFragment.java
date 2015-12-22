@@ -2,8 +2,6 @@ package app.sportscafe.in.sportscafe.Articles;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +34,6 @@ import java.util.Comparator;
 import java.util.TimeZone;
 
 import app.sportscafe.in.sportscafe.App.Article;
-import app.sportscafe.in.sportscafe.App.DataBaseConstants;
 import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
@@ -136,7 +133,6 @@ public class ArticlesFragment extends Fragment
         protected void onPreExecute()
         {
             super.onPreExecute();
-            articles=scDataBaseClass.getArticleList("all");
         }
 
         @Override
@@ -147,8 +143,7 @@ public class ArticlesFragment extends Fragment
             getArticles(articleType2);
             Collections.sort(articles,new ArticleComparator());
             Collections.reverse(articles);
-            adapter = new ArticleAdapter(articles,context,articleType1);
-            adapter.notifyDataSetChanged();
+
             return null;
         }
         private void getArticles(String articletype)
@@ -167,7 +162,7 @@ public class ArticlesFragment extends Fragment
                 JSONObject sort = new JSONObject();
                 sort.accumulate(ArticleConstants.PUBLISH_DATE,-1);
                 options.accumulate(ArticleConstants.SORT,sort);
-                options.accumulate(ArticleConstants.LIMIT,25);
+                options.accumulate(ArticleConstants.LIMIT,10);
                 msg.accumulate(ArticleConstants.CONDITIONS,conditions);
                 msg.accumulate(ArticleConstants.PROJECTION,projection);
                 msg.accumulate(ArticleConstants.OPTIONS,options);
@@ -210,7 +205,15 @@ public class ArticlesFragment extends Fragment
                             authorName = author.getString(ArticleConstants.AUTHOR_NAME);
                         }
                         String id = json_article.getString(ArticleConstants.ID);
-                        String summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
+                        String summary;
+                        try
+                        {
+                            summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
+                        }
+                        catch (Exception e)
+                        {
+                            summary = "";
+                        }
                         JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
                         JSONObject featured = images.getJSONObject(ArticleConstants.FEATURED);
                         String imageURL = featured.getString(ArticleConstants.PATH);
@@ -226,7 +229,6 @@ public class ArticlesFragment extends Fragment
                         article_temp.setArticleType(articleType);
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorName);
-                        article_temp.setTime(getDate(date));
                         article_temp.setDate(date);
                         if(!articles.contains(article_temp))
                             articles.add(article_temp);
@@ -247,66 +249,16 @@ public class ArticlesFragment extends Fragment
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
-            recyclerView.setAdapter(adapter);
             if(isFetchFromNetwork)
                 scDataBaseClass.insertData(articles);
+            articles=scDataBaseClass.getArticleList(articleType1,articleType2);
+            adapter = new ArticleAdapter(articles,context,articleType1);
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);
         }
     }
-    public String getDate(String date)
-    {
-        String returnDate="";
-        Resources resources = getContext().getResources();
-        SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
-        format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
-        Calendar calendarArticle = Calendar.getInstance();
-        Calendar calendarNow = Calendar.getInstance();
-        try
-        {
-            calendarArticle.setTime(format.parse(date));
-            int articleDay = calendarArticle.get(Calendar.DAY_OF_MONTH);
-            int currentDay = calendarNow.get(Calendar.DAY_OF_MONTH);
-            int articleMonth = calendarArticle.get(Calendar.MONTH);
-            int currentMonth = calendarNow.get(Calendar.MONTH);
-            int articleHour = calendarArticle.get(Calendar.HOUR_OF_DAY);
-            int currentHour = calendarNow.get(Calendar.HOUR_OF_DAY);
-            int articleMinute = calendarArticle.get(Calendar.MINUTE);
-            int currentMinute = calendarNow.get(Calendar.MINUTE);
-            if(articleMonth-currentMonth==0)
-            {
-                if(articleDay-currentDay==0)
-                {
-                    if(articleHour-currentHour==0)
-                    {
-                        if(articleMinute-currentMinute==0)
-                        {
-                            returnDate = "Just now";
-                        }
-                        else
-                        {
-                            returnDate = (currentMinute-articleMinute)+"m ago";
-                        }
-                    }
-                    else
-                    {
-                        returnDate = (currentHour - articleHour)+"h ago";
-                    }
-                }
-                else
-                {
-                    returnDate = (currentDay - articleDay)+"d ago";
-                }
-            }
-            else
-            {
-                returnDate = (currentMonth-articleMonth)+"M ago";
-            }
-        } catch (ParseException e)
-        {
-            Log.e(Utilites.getTAG(),e.toString());
-        }
-        return returnDate;
-    }
+
     public class ArticleComparator implements Comparator<Article>
     {
         @Override
@@ -318,6 +270,7 @@ public class ArticlesFragment extends Fragment
             Calendar calendar2 = Calendar.getInstance();
             try
             {
+                Log.d(Utilites.getTAG(),article1.getTitle());
                 calendar1.setTime(format.parse(article1.getDate()));
                 calendar2.setTime(format.parse(article2.getDate()));
             } catch (ParseException e)
