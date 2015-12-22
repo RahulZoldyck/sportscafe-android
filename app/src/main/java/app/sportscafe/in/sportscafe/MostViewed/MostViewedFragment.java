@@ -90,6 +90,8 @@ public class MostViewedFragment extends Fragment {
             monthArrayFromDB=new Article[monthListFromDB.size()];
             monthArrayFromDB=monthListFromDB.toArray(monthArrayFromDB);
             inflateTabs(dayArrayFromDB,monthArrayFromDB,weekArrayFromDB);
+            AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
+            asyncMostViewed.execute();
         }
         return v;
     }
