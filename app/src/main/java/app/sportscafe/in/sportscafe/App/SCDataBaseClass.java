@@ -12,20 +12,18 @@ import java.util.ArrayList;
 /**
  * Created by rb on 17/12/15.
  */
-public class SCDataBaseClass
-{
+public class SCDataBaseClass {
     static SCDBHelper scdbHelper;
-    public SCDataBaseClass(Context context)
-    {
+
+    public SCDataBaseClass(Context context) {
         scdbHelper = new SCDBHelper(context);
     }
-    public void insertData(ArrayList<Article> articles)
-    {
+
+    public void insertData(ArrayList<Article> articles) {
 
         SQLiteDatabase db = scdbHelper.getWritableDatabase();
 
-        for(int i=0;i<articles.size();i++)
-        {
+        for (int i = 0; i < articles.size(); i++) {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put(DataBaseConstants.ARTICLE_ID, articles.get(i).getId());
@@ -36,25 +34,42 @@ public class SCDataBaseClass
             contentValues.put(DataBaseConstants.AUTHOR, articles.get(i).getAuthor());
             contentValues.put(DataBaseConstants.SPORT, articles.get(i).getSport());
             contentValues.put(DataBaseConstants.DATE, articles.get(i).getDate());
-            contentValues.put(DataBaseConstants.TIME, articles.get(i).getTime());
             contentValues.put(DataBaseConstants.ARTICLE_TYPE, articles.get(i).getArticleType());
             contentValues.put(DataBaseConstants.CREDITS, articles.get(i).getCredits());
 
-            if(articles.get(i).getContent()!=null)
-            {
-                if(!articles.get(i).getContent().equals(""))
-                    contentValues.put(DataBaseConstants.ARTICLE_DOWNLOADED,true);
+            if (articles.get(i).getContent() != null) {
+                if (!articles.get(i).getContent().equals(""))
+                    contentValues.put(DataBaseConstants.ARTICLE_DOWNLOADED, true);
                 else
-                    contentValues.put(DataBaseConstants.ARTICLE_DOWNLOADED,false);
-            }
-            else
-                contentValues.put(DataBaseConstants.ARTICLE_DOWNLOADED,false);
+                    contentValues.put(DataBaseConstants.ARTICLE_DOWNLOADED, false);
+            } else
+                contentValues.put(DataBaseConstants.ARTICLE_DOWNLOADED, false);
             long id = db.insert(DataBaseConstants.TABLE_NAME, null, contentValues);
         }
     }
+    public  ArrayList<Article> getArticleList(String articleType){
+        boolean isAll=false;
+        if(articleType.equals("all"))
+            isAll=true;
+        SQLiteDatabase database;
+        ArrayList<Article> articles = new ArrayList<>();
+        database = scdbHelper.getWritableDatabase();
+        Cursor cursor = database.query(
+                DataBaseConstants.TABLE_NAME,DataBaseConstants.getColumns(),null,null,
+                null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {   if(cursor.getString(9).equals(articleType) || isAll) {
+            Article article = SCDataBaseClass.cursorToArticle(cursor);
+            articles.add(article);
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return articles;
+    }
 
-    public static Article cursorToArticle(Cursor cursor)
-    {
+    public static Article cursorToArticle(Cursor cursor) {
         Article article = new Article();
         article.setId(cursor.getString(1));
         article.setTitle(cursor.getString(2));
@@ -64,43 +79,39 @@ public class SCDataBaseClass
         article.setAuthor(cursor.getString(6));
         article.setSport(cursor.getString(7));
         article.setDate(cursor.getString(8));
-        article.setTime(cursor.getString(9));
-        article.setArticleType(cursor.getString(10));
-        article.setCredits(cursor.getString(11));
+        article.setArticleType(cursor.getString(9));
+        article.setCredits(cursor.getString(10));
         return article;
     }
 
-    public static class SCDBHelper extends SQLiteOpenHelper
-    {
-        private static final String CREATE_TABLE = "CREATE TABLE "+DataBaseConstants.TABLE_NAME+" ("+
-                DataBaseConstants._ID+" INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                DataBaseConstants.ARTICLE_ID+" INTEGER, "+DataBaseConstants.TITLE+" TEXT, "+
-                DataBaseConstants.SUMMARY+" TEXT, "+DataBaseConstants.CONTENT+" TEXT, "+
-                DataBaseConstants.IMAGEURL+" TEXT, "+DataBaseConstants.AUTHOR+" TEXT, "+
-                DataBaseConstants.SPORT+" TEXT, "+DataBaseConstants.DATE+" TEXT, "+
-                DataBaseConstants.TIME+" TEXT, "+DataBaseConstants.ARTICLE_TYPE+" TEXT, "+
-                DataBaseConstants.CREDITS+" TEXT, "+DataBaseConstants.ARTICLE_DOWNLOADED+" TEXT);";
+    public static class SCDBHelper extends SQLiteOpenHelper {
+        private static final String CREATE_TABLE = "CREATE TABLE " + DataBaseConstants.TABLE_NAME + " (" +
+                DataBaseConstants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                DataBaseConstants.ARTICLE_ID + " INTEGER , " + DataBaseConstants.TITLE + " TEXT, " +
+                DataBaseConstants.SUMMARY + " TEXT, " + DataBaseConstants.CONTENT + " TEXT, " +
+                DataBaseConstants.IMAGEURL + " TEXT, " + DataBaseConstants.AUTHOR + " TEXT, " +
+                DataBaseConstants.SPORT + " TEXT, " + DataBaseConstants.DATE + " TEXT, " +
+                DataBaseConstants.ARTICLE_TYPE + " TEXT, " +
+                DataBaseConstants.CREDITS + " TEXT, " + DataBaseConstants.ARTICLE_DOWNLOADED + " TEXT, "
+                +"UNIQUE("+DataBaseConstants.ARTICLE_ID+"));";
         private static final String DELETE_TABLE = "DROP TABLE IF EXISTS";
-        private static int dbVersion = 3;
+        private static int dbVersion = 5;
 
-        public SCDBHelper(Context context)
-        {
+        public SCDBHelper(Context context) {
             super(context, DataBaseConstants.DATABASE_NAME, null, dbVersion);
-            Log.d(Utilites.getTAG(),"COnstructor Called");
+            Log.d(Utilites.getTAG(), "COnstructor Called");
         }
 
         @Override
-        public void onCreate(SQLiteDatabase db)
-        {
-            Log.d(Utilites.getTAG(),CREATE_TABLE);
+        public void onCreate(SQLiteDatabase db) {
+            Log.d(Utilites.getTAG(), CREATE_TABLE);
             db.execSQL(CREATE_TABLE);
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-        {
-            Log.d(Utilites.getTAG(),"Updating Database from "+oldVersion+" to "+newVersion);
-            db.execSQL(DELETE_TABLE+" "+DataBaseConstants.TABLE_NAME);
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.d(Utilites.getTAG(), "Updating Database from " + oldVersion + " to " + newVersion);
+            db.execSQL(DELETE_TABLE + " " + DataBaseConstants.TABLE_NAME);
             onCreate(db);
         }
 

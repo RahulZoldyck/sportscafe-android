@@ -18,21 +18,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
 import app.sportscafe.in.sportscafe.Fixtures.FixtureFragment;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewed;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
 {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "cDm4K9DtffdAjvcWapRO1cTEr";
-    private static final String TWITTER_SECRET = "qh4mOIT7zdp0ixoG0LlBMCCwMs2Q8qEfwsY7rQr893H9DkkhDZ";
+    private static final String TWITTER_KEY = "BSO1vSfZlYsTkgvPBgAUKum2B";
+    private static final String TWITTER_SECRET = "xBeJ9PRYlbqRZMF3TWYYTiTk8AahDaMiRvWV9w8uvaZ2ED4FAS";
+
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
+//        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+//        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
         if(Build.VERSION.SDK_INT>=21)
         {
