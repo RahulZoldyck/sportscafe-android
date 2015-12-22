@@ -23,12 +23,12 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
 import app.sportscafe.in.sportscafe.Fixtures.FixtureFragment;
-import app.sportscafe.in.sportscafe.MostViewed.MostViewed;
-import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedFragment;
+
 import app.sportscafe.in.sportscafe.R;
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewed.OnFragmentInteractionListener,MostViewedPagerFragment.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewedFragment.OnFragmentInteractionListener
 {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         }
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter
-    {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter    {
 
         public SectionsPagerAdapter(FragmentManager fm)
         {
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
             else if(position==3)
                 return FixtureFragment.newInstance("Fixtures");
             else if(position==5)
-                return MostViewed.newInstance();
+                return MostViewedFragment.newInstance();
             else
                 return PlaceholderFragment.newInstance(position+1);
         }

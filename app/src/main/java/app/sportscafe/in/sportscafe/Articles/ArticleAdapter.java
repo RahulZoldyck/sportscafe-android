@@ -32,7 +32,7 @@ import java.util.TimeZone;
 import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.ContentActivity;
 import app.sportscafe.in.sportscafe.App.Utilites;
-import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
+import app.sportscafe.in.sportscafe.MostViewed.MostViewedConstants;
 import app.sportscafe.in.sportscafe.R;
 
 /**
@@ -144,7 +144,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             v.setTransitionName("shared_img_transition");
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context,v,v.getTransitionName());
             Intent intent = new Intent(context,ContentActivity.class);
-            intent.putExtra(MostViewedPagerFragment.ARG_ITEM,articles.get(getAdapterPosition()));
+            intent.putExtra(MostViewedConstants.ARG_ITEM,articles.get(getAdapterPosition()));
             context.startActivity(intent,options.toBundle());
         }
     }
@@ -171,6 +171,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         //holder.textViewSummary.setText(articles.get(position).getSummary());
         {
             String authorName = articles.get(position).getAuthor();
+            if(authorName==null)
+                authorName = "";
             int i = authorName.indexOf(' ');
             String authorFirst = "";
             if(i==-1)

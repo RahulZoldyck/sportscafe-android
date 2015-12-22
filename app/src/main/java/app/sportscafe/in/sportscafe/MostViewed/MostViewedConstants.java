@@ -7,6 +7,7 @@ public class MostViewedConstants {
     public static final String DATA="data";
     public static final String DAY="day";
     public static final String MONTH="month";
+    public static final String ARG_ITEM ="item";
     public static final String WEEK="week";
     public static final String TITLE="title";
     public static final String IMAGES="images";
@@ -19,5 +20,5 @@ public class MostViewedConstants {
     public static final String QUERY_DAY ="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvday\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
     public static final String QUERY_WEEK ="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvweek\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
     public static final String QUERY_MONTH ="{\"msg\":{\"conditions\":{\"published\":true,\"classifications.sections.misc\":\"mvmonth\"},\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"limit\":4}}}";
-
+    public static final String MODIFICATION_DATE = "modificationDate";
 }

@@ -37,7 +37,7 @@ import app.sportscafe.in.sportscafe.R;
 
 
 
-public class MostViewed extends Fragment {
+public class MostViewedFragment extends Fragment {
     private TabHost mTabHost;
     TabHost.TabSpec spec;
     SCDataBaseClass dataBaseClass;
@@ -48,13 +48,13 @@ public class MostViewed extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MostViewed() {
+    public MostViewedFragment() {
         // Required empty public constructor
     }
 
 
-    public static MostViewed newInstance() {
-        MostViewed fragment = new MostViewed();
+    public static MostViewedFragment newInstance() {
+        MostViewedFragment fragment = new MostViewedFragment();
         return fragment;
     }
 
@@ -195,7 +195,7 @@ public class MostViewed extends Fragment {
                                                 image.setTransitionName("shared_img_transition");
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -227,7 +227,7 @@ public class MostViewed extends Fragment {
                                                 image.setTransitionName("shared_img_transition");
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -259,7 +259,7 @@ public class MostViewed extends Fragment {
                                                 image.setTransitionName("shared_img_transition");
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -287,6 +287,7 @@ public class MostViewed extends Fragment {
             JSONObject images=article.getJSONObject(MostViewedConstants.IMAGES);
             JSONObject feature=images.getJSONObject(MostViewedConstants.FEATURED);
             item.setImageUrl(feature.getString(MostViewedConstants.PATH));
+            item.setDate(article.getString(MostViewedConstants.MODIFICATION_DATE));
             JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
             JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
             item.setSport(sections.getString(MostViewedConstants.SPORT));

@@ -133,7 +133,6 @@ public class ArticlesFragment extends Fragment
         protected void onPreExecute()
         {
             super.onPreExecute();
-            articles=scDataBaseClass.getArticleList("all");
         }
 
         @Override
@@ -144,8 +143,7 @@ public class ArticlesFragment extends Fragment
             getArticles(articleType2);
             Collections.sort(articles,new ArticleComparator());
             Collections.reverse(articles);
-            adapter = new ArticleAdapter(articles,context,articleType1);
-            adapter.notifyDataSetChanged();
+
             return null;
         }
         private void getArticles(String articletype)
@@ -251,9 +249,12 @@ public class ArticlesFragment extends Fragment
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
-            recyclerView.setAdapter(adapter);
             if(isFetchFromNetwork)
                 scDataBaseClass.insertData(articles);
+            articles=scDataBaseClass.getArticleList(articleType1,articleType2);
+            adapter = new ArticleAdapter(articles,context,articleType1);
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);
         }
     }

@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedConstants;
-import app.sportscafe.in.sportscafe.MostViewed.MostViewedPagerFragment;
 import app.sportscafe.in.sportscafe.R;
 
 public class ContentActivity extends AppCompatActivity {
@@ -58,7 +57,7 @@ public class ContentActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            article = bundle.getParcelable(MostViewedPagerFragment.ARG_ITEM);
+            article = bundle.getParcelable(MostViewedConstants.ARG_ITEM);
             assert article != null;
             imgURL = article.getImageUrl();
             title = article.getTitle();

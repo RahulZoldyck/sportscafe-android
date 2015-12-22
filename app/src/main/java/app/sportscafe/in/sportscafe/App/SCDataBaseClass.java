@@ -47,25 +47,27 @@ public class SCDataBaseClass {
             long id = db.insert(DataBaseConstants.TABLE_NAME, null, contentValues);
         }
     }
-    public  ArrayList<Article> getArticleList(String articleType){
-        boolean isAll=false;
-        if(articleType.equals("all"))
-            isAll=true;
-        SQLiteDatabase database;
+    public  ArrayList<Article> getArticleList(String... articleTypes){
         ArrayList<Article> articles = new ArrayList<>();
-        database = scdbHelper.getWritableDatabase();
-        Cursor cursor = database.query(
-                DataBaseConstants.TABLE_NAME,DataBaseConstants.getColumns(),null,null,
-                null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast())
-        {   if(cursor.getString(9).equals(articleType) || isAll) {
-            Article article = SCDataBaseClass.cursorToArticle(cursor);
-            articles.add(article);
+        for (String articletype :articleTypes)
+        {
+            SQLiteDatabase database;
+            database = scdbHelper.getWritableDatabase();
+            Cursor cursor = database.query(
+                    DataBaseConstants.TABLE_NAME, DataBaseConstants.getColumns(), null, null,
+                    null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast())
+            {
+                if (cursor.getString(9).equals(articletype))
+                {
+                    Article articleTemp = SCDataBaseClass.cursorToArticle(cursor);
+                    articles.add(articleTemp);
+                }
+                cursor.moveToNext();
             }
-            cursor.moveToNext();
+            cursor.close();
         }
-        cursor.close();
         return articles;
     }
 
