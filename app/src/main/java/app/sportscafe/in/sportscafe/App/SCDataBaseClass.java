@@ -34,7 +34,6 @@ public class SCDataBaseClass {
             contentValues.put(DataBaseConstants.AUTHOR, articles.get(i).getAuthor());
             contentValues.put(DataBaseConstants.SPORT, articles.get(i).getSport());
             contentValues.put(DataBaseConstants.DATE, articles.get(i).getDate());
-            contentValues.put(DataBaseConstants.TIME, articles.get(i).getTime());
             contentValues.put(DataBaseConstants.ARTICLE_TYPE, articles.get(i).getArticleType());
             contentValues.put(DataBaseConstants.CREDITS, articles.get(i).getCredits());
 
@@ -48,25 +47,27 @@ public class SCDataBaseClass {
             long id = db.insert(DataBaseConstants.TABLE_NAME, null, contentValues);
         }
     }
-    public  ArrayList<Article> getArticleList(String articleType){
-        boolean isAll=false;
-        if(articleType.equals("all"))
-            isAll=true;
-        SQLiteDatabase database;
+    public  ArrayList<Article> getArticleList(String... articleTypes){
         ArrayList<Article> articles = new ArrayList<>();
-        database = scdbHelper.getWritableDatabase();
-        Cursor cursor = database.query(
-                DataBaseConstants.TABLE_NAME,DataBaseConstants.getColumns(),null,null,
-                null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast())
-        {   if(cursor.getString(10).equals(articleType) || isAll) {
-            Article article = SCDataBaseClass.cursorToArticle(cursor);
-            articles.add(article);
+        for (String articletype :articleTypes)
+        {
+            SQLiteDatabase database;
+            database = scdbHelper.getWritableDatabase();
+            Cursor cursor = database.query(
+                    DataBaseConstants.TABLE_NAME, DataBaseConstants.getColumns(), null, null,
+                    null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast())
+            {
+                if (cursor.getString(9).equals(articletype))
+                {
+                    Article articleTemp = SCDataBaseClass.cursorToArticle(cursor);
+                    articles.add(articleTemp);
+                }
+                cursor.moveToNext();
             }
-            cursor.moveToNext();
+            cursor.close();
         }
-        cursor.close();
         return articles;
     }
 
@@ -80,9 +81,8 @@ public class SCDataBaseClass {
         article.setAuthor(cursor.getString(6));
         article.setSport(cursor.getString(7));
         article.setDate(cursor.getString(8));
-        article.setTime(cursor.getString(9));
-        article.setArticleType(cursor.getString(10));
-        article.setCredits(cursor.getString(11));
+        article.setArticleType(cursor.getString(9));
+        article.setCredits(cursor.getString(10));
         return article;
     }
 
@@ -93,10 +93,11 @@ public class SCDataBaseClass {
                 DataBaseConstants.SUMMARY + " TEXT, " + DataBaseConstants.CONTENT + " TEXT, " +
                 DataBaseConstants.IMAGEURL + " TEXT, " + DataBaseConstants.AUTHOR + " TEXT, " +
                 DataBaseConstants.SPORT + " TEXT, " + DataBaseConstants.DATE + " TEXT, " +
-                DataBaseConstants.TIME + " TEXT, " + DataBaseConstants.ARTICLE_TYPE + " TEXT, " +
-                DataBaseConstants.CREDITS + " TEXT, " + DataBaseConstants.ARTICLE_DOWNLOADED + " TEXT);";
+                DataBaseConstants.ARTICLE_TYPE + " TEXT, " +
+                DataBaseConstants.CREDITS + " TEXT, " + DataBaseConstants.ARTICLE_DOWNLOADED + " TEXT, "
+                +"UNIQUE("+DataBaseConstants.ARTICLE_ID+"));";
         private static final String DELETE_TABLE = "DROP TABLE IF EXISTS";
-        private static int dbVersion = 4;
+        private static int dbVersion = 5;
 
         public SCDBHelper(Context context) {
             super(context, DataBaseConstants.DATABASE_NAME, null, dbVersion);

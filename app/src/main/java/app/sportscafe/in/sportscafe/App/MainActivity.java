@@ -18,13 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
 import app.sportscafe.in.sportscafe.Fixtures.FixtureFragment;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedFragment;
 
 import app.sportscafe.in.sportscafe.R;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewedFragment.OnFragmentInteractionListener
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
 
         public PlaceholderFragment()
         {
-                                      }
+        }
 
         public static PlaceholderFragment newInstance(int sectionNumber)
         {

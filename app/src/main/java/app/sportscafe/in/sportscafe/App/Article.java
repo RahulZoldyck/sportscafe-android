@@ -16,7 +16,6 @@ public class Article implements Parcelable
     private String author;
     private String sport;
     private String date;                //This contains date from api
-    private String time;                //This contains date string that we set after processing
     private String articleType;
     private String credits;
 
@@ -140,16 +139,6 @@ public class Article implements Parcelable
     public int describeContents()
     {
         return 0;
-    }
-
-    public String getTime()
-    {
-        return time;
-    }
-
-    public void setTime(String time)
-    {
-        this.time = time;
     }
 
     @Override
