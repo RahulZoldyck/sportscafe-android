@@ -26,7 +26,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -38,7 +37,7 @@ import app.sportscafe.in.sportscafe.R;
 
 
 
-public class MostViewed extends Fragment {
+public class MostViewedFragment extends Fragment {
     private TabHost mTabHost;
     TabHost.TabSpec spec;
     SCDataBaseClass dataBaseClass;
@@ -49,13 +48,13 @@ public class MostViewed extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MostViewed() {
+    public MostViewedFragment() {
         // Required empty public constructor
     }
 
 
-    public static MostViewed newInstance() {
-        MostViewed fragment = new MostViewed();
+    public static MostViewedFragment newInstance() {
+        MostViewedFragment fragment = new MostViewedFragment();
         return fragment;
     }
 
@@ -196,7 +195,7 @@ public class MostViewed extends Fragment {
                                                 image.setTransitionName("shared_img_transition");
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -228,7 +227,7 @@ public class MostViewed extends Fragment {
                                                 image.setTransitionName("shared_img_transition");
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -260,7 +259,7 @@ public class MostViewed extends Fragment {
                                                 image.setTransitionName("shared_img_transition");
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedPagerFragment.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
