@@ -36,16 +36,14 @@ import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
 
-
 public class MostViewedFragment extends Fragment {
-    private TabHost mTabHost;
     TabHost.TabSpec spec;
     SCDataBaseClass dataBaseClass;
     View v;
     ViewGroup root;
-    Article[] dayitems,weekitems,monthitems;
+    Article[] dayitems, weekitems, monthitems;
     int length;
-
+    private TabHost mTabHost;
     private OnFragmentInteractionListener mListener;
 
     public MostViewedFragment() {
@@ -68,136 +66,77 @@ public class MostViewedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        root=container;
-         v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
-        dataBaseClass=new SCDataBaseClass(getContext());
-        mTabHost = (TabHost) v.findViewById(R.id.tabHost);
-        mTabHost.setup();
+        root = container;
+        v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
+        dataBaseClass = new SCDataBaseClass(getContext());
 
-        Article[] dayArrayFromDB,weekArrayFromDB,monthArrayFromDB;
-        ArrayList<Article> dayListFromDB=dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVDAY);
-        ArrayList<Article> weekListFromDB=dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVWEEK);
-        ArrayList<Article> monthListFromDB=dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVMONTH);
-        if(dayListFromDB.size()==0 || monthListFromDB.size()==0 || weekListFromDB.size()==0){
-            AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
+        Article[] dayArrayFromDB, weekArrayFromDB, monthArrayFromDB;
+        ArrayList<Article> dayListFromDB = dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVDAY);
+        ArrayList<Article> weekListFromDB = dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVWEEK);
+        ArrayList<Article> monthListFromDB = dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVMONTH);
+        if (dayListFromDB.size() == 0 || monthListFromDB.size() == 0 || weekListFromDB.size() == 0){
+            AsyncMostViewed asyncMostViewed = new AsyncMostViewed();
             asyncMostViewed.execute();
-        }
-        else{
-            dayArrayFromDB=new Article[dayListFromDB.size()];
-            dayArrayFromDB=dayListFromDB.toArray(dayArrayFromDB);
-            weekArrayFromDB=new Article[weekListFromDB.size()];
-            weekArrayFromDB=weekListFromDB.toArray(weekArrayFromDB);
-            monthArrayFromDB=new Article[monthListFromDB.size()];
-            monthArrayFromDB=monthListFromDB.toArray(monthArrayFromDB);
-            inflateTabs(dayArrayFromDB,monthArrayFromDB,weekArrayFromDB);
-            AsyncMostViewed asyncMostViewed=new AsyncMostViewed();
+        } else {
+            dayArrayFromDB = new Article[dayListFromDB.size()];
+            dayArrayFromDB = dayListFromDB.toArray(dayArrayFromDB);
+            weekArrayFromDB = new Article[weekListFromDB.size()];
+            weekArrayFromDB = weekListFromDB.toArray(weekArrayFromDB);
+            monthArrayFromDB = new Article[monthListFromDB.size()];
+            monthArrayFromDB = monthListFromDB.toArray(monthArrayFromDB);
+            inflateTabs(dayArrayFromDB, monthArrayFromDB, weekArrayFromDB);
+            AsyncMostViewed asyncMostViewed = new AsyncMostViewed();
             asyncMostViewed.execute();
         }
         return v;
     }
 
-    class AsyncMostViewed extends AsyncTask<Void,Void,JSONObject>{
-        JSONArray dayArray=new JSONArray();
-        JSONArray weekArray=new JSONArray();
-        JSONArray monthArray =new JSONArray();
-
-
-        public JSONArray fetchRESTAPI(String query) throws JSONException, IOException {
-
-
-                JSONObject js=new JSONObject(query);
-                String ps=js.toString();
-                byte[] bytes=ps.getBytes();
-
-                URL url= new URL(Utilites.getArticlesWithConditionsURL());
-                HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
-                connection.setDoOutput(true);
-                connection.setUseCaches(false);
-                connection.setFixedLengthStreamingMode(bytes.length);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type","application/json");
-
-                OutputStream out=connection.getOutputStream();
-                out.write(bytes);
-                out.close();
-                InputStream in =connection.getInputStream();
-                BufferedReader reader=new BufferedReader(new InputStreamReader(in));
-                String line;
-                String result="";
-                while((line=reader.readLine())!=null){
-                    result=result+line;
-                }
-            return new JSONArray(result);
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            JSONObject data=new JSONObject();
-
-            try {
-                dayArray=fetchRESTAPI(MostViewedConstants.QUERY_DAY);
-                weekArray=fetchRESTAPI(MostViewedConstants.QUERY_WEEK);
-                monthArray=fetchRESTAPI(MostViewedConstants.QUERY_MONTH);
-
-                data.put(MostViewedConstants.DAY,dayArray);
-                data.put(MostViewedConstants.WEEK,weekArray);
-                data.put(MostViewedConstants.MONTH,monthArray);
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
-            }
-            return data;
-
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            try {
-                parseJSON(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
     private void parseJSON(JSONObject jsonObject) throws JSONException {
-        JSONArray dayJSON=jsonObject.getJSONArray(MostViewedConstants.DAY);
-        JSONArray weekJSON=jsonObject.getJSONArray(MostViewedConstants.WEEK);
-        JSONArray monthJSON=jsonObject.getJSONArray(MostViewedConstants.MONTH);
-        dayitems=getArrayFromJSON(dayJSON,Utilites.ARTICLE_TYPE_MVDAY);
-        monthitems=getArrayFromJSON(monthJSON,Utilites.ARTICLE_TYPE_MVMONTH);
-        weekitems=getArrayFromJSON(weekJSON,Utilites.ARTICLE_TYPE_MVWEEK);
-        inflateTabs(dayitems,monthitems,weekitems);
+        JSONArray dayJSON = jsonObject.getJSONArray(MostViewedConstants.DAY);
+        JSONArray weekJSON = jsonObject.getJSONArray(MostViewedConstants.WEEK);
+        JSONArray monthJSON = jsonObject.getJSONArray(MostViewedConstants.MONTH);
+        dayitems = getArrayFromJSON(dayJSON, Utilites.ARTICLE_TYPE_MVDAY);
+        monthitems = getArrayFromJSON(monthJSON, Utilites.ARTICLE_TYPE_MVMONTH);
+        weekitems = getArrayFromJSON(weekJSON, Utilites.ARTICLE_TYPE_MVWEEK);
+        inflateTabs(dayitems, monthitems, weekitems);
 
 
     }
 
     private void inflateTabs(Article[] dayitems, Article[] monthitems, Article[] weekitems) {
-        final Article[] dayItems=dayitems;
-        final Article[] weekItems=weekitems;
-        final Article[] monthItems=monthitems;
+        mTabHost = (TabHost) v.findViewById(R.id.tabHost);
+        mTabHost.setup();
+        mTabHost.clearAllTabs();
+        final Article[] dayItems = dayitems;
+        final Article[] weekItems = weekitems;
+        final Article[] monthItems = monthitems;
 
-        spec= mTabHost.newTabSpec("day");
+        spec = mTabHost.newTabSpec("day");
         spec.setIndicator("Day");
         spec.setContent(new TabHost.TabContentFactory() {
-
                             @Override
                             public View createTabContent(String tag) {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
-                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), dayItems);
+                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
+                                        dayItems);
                                 listView.setAdapter(adapter);
                                 listView.setOnItemClickListener(
                                         new AdapterView.OnItemClickListener() {
                                             @SuppressLint("NewApi")
                                             @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            public void onItemClick(AdapterView<?> parent, View view,
+                                                                    int position, long id) {
                                                 View image = view.findViewById(R.id.MVimage);
                                                 image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                ActivityOptionsCompat options =
+                                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                                                getActivity(),image, image.getTransitionName());
+                                                Intent i = new Intent(getContext(),
+                                                        ContentActivity.class);
+                                                i.putExtra(MostViewedConstants.ARG_ITEM,
+                                                        (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -209,7 +148,7 @@ public class MostViewedFragment extends Fragment {
         );
         mTabHost.addTab(spec);
         // Week
-        spec= mTabHost.newTabSpec("Week");
+        spec = mTabHost.newTabSpec("Week");
         spec.setIndicator("Week");
         spec.setContent(new TabHost.TabContentFactory() {
 
@@ -224,12 +163,16 @@ public class MostViewedFragment extends Fragment {
                                         new AdapterView.OnItemClickListener() {
                                             @SuppressLint("NewApi")
                                             @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            public void onItemClick(AdapterView<?> parent, View view,
+                                                                    int position, long id) {
                                                 View image = view.findViewById(R.id.MVimage);
                                                 image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
+                                                ActivityOptionsCompat options =
+                                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                                                getActivity(), image, image.getTransitionName());
                                                 Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                i.putExtra(MostViewedConstants.ARG_ITEM,
+                                                        (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -250,18 +193,24 @@ public class MostViewedFragment extends Fragment {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
                                 ListView listView = (ListView) view.findViewById(R.id.tabList);
-                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), monthItems);
+                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
+                                        monthItems);
                                 listView.setAdapter(adapter);
                                 listView.setOnItemClickListener(
                                         new AdapterView.OnItemClickListener() {
                                             @SuppressLint("NewApi")
                                             @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            public void onItemClick(AdapterView<?> parent, View view,
+                                                                    int position, long id) {
                                                 View image = view.findViewById(R.id.MVimage);
                                                 image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedConstants.ARG_ITEM, (Article) parent.getItemAtPosition(position));
+                                                ActivityOptionsCompat options =
+                                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                                                getActivity(), image, image.getTransitionName());
+                                                Intent i = new Intent(getContext(),
+                                                        ContentActivity.class);
+                                                i.putExtra(MostViewedConstants.ARG_ITEM,
+                                                        (Article) parent.getItemAtPosition(position));
                                                 getContext().startActivity(i, options.toBundle());
                                             }
                                         }
@@ -274,34 +223,33 @@ public class MostViewedFragment extends Fragment {
         mTabHost.addTab(spec);
     }
 
-    private Article[] getArrayFromJSON(JSONArray jsonArray,String articleType) throws JSONException {
+    private Article[] getArrayFromJSON(JSONArray jsonArray, String articleType) throws JSONException {
         Article[] mvItemsArray;
         Article item;
         JSONObject article;
         ArrayList<Article> mvList = new ArrayList<>();
-        length=jsonArray.length();
-        for(int i =0; i< length;i++) {
-            item=new Article();
-            article=new JSONObject();
-            article=jsonArray.getJSONObject(i);
+        length = jsonArray.length();
+        for (int i = 0; i < length; i++) {
+            item = new Article();
+            article = new JSONObject();
+            article = jsonArray.getJSONObject(i);
             item.setId(article.getString(MostViewedConstants.ID));
             item.setTitle(article.getString(MostViewedConstants.TITLE));
-            JSONObject images=article.getJSONObject(MostViewedConstants.IMAGES);
-            JSONObject feature=images.getJSONObject(MostViewedConstants.FEATURED);
+            JSONObject images = article.getJSONObject(MostViewedConstants.IMAGES);
+            JSONObject feature = images.getJSONObject(MostViewedConstants.FEATURED);
             item.setImageUrl(feature.getString(MostViewedConstants.PATH));
             item.setDate(article.getString(MostViewedConstants.MODIFICATION_DATE));
-            JSONObject classification=article.getJSONObject(MostViewedConstants.CLASSIFICATION);
-            JSONObject sections=classification.getJSONObject(MostViewedConstants.SECTIONS);
+            JSONObject classification = article.getJSONObject(MostViewedConstants.CLASSIFICATION);
+            JSONObject sections = classification.getJSONObject(MostViewedConstants.SECTIONS);
             item.setSport(sections.getString(MostViewedConstants.SPORT));
             item.setArticleType(articleType);
             mvList.add(item);
         }
         dataBaseClass.insertData(mvList);
-        mvItemsArray=new Article[mvList.size()];
-        mvItemsArray=mvList.toArray(mvItemsArray);
-            return mvItemsArray;
+        mvItemsArray = new Article[mvList.size()];
+        mvItemsArray = mvList.toArray(mvItemsArray);
+        return mvItemsArray;
     }
-
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -328,5 +276,69 @@ public class MostViewedFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    class AsyncMostViewed extends AsyncTask<Void, Void, JSONObject> {
+        JSONArray dayArray = new JSONArray();
+        JSONArray weekArray = new JSONArray();
+        JSONArray monthArray = new JSONArray();
+
+
+        public JSONArray fetchFromRESTAPI(String query) throws JSONException, IOException {
+
+
+            JSONObject js = new JSONObject(query);
+            String ps = js.toString();
+            byte[] bytes = ps.getBytes();
+
+            URL url = new URL(Utilites.getArticlesWithConditionsURL());
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setFixedLengthStreamingMode(bytes.length);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            OutputStream out = connection.getOutputStream();
+            out.write(bytes);
+            out.close();
+            InputStream in = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            String result = "";
+            while ((line = reader.readLine()) != null) {
+                result = result + line;
+            }
+            return new JSONArray(result);
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            JSONObject data = new JSONObject();
+
+            try {
+                dayArray = fetchFromRESTAPI(MostViewedConstants.QUERY_DAY);
+                weekArray = fetchFromRESTAPI(MostViewedConstants.QUERY_WEEK);
+                monthArray = fetchFromRESTAPI(MostViewedConstants.QUERY_MONTH);
+
+                data.put(MostViewedConstants.DAY, dayArray);
+                data.put(MostViewedConstants.WEEK, weekArray);
+                data.put(MostViewedConstants.MONTH, monthArray);
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+            return data;
+
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            try {
+                parseJSON(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
