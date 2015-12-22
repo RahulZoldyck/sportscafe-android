@@ -7,6 +7,7 @@ public class MostViewedConstants {
     public static final String DATA="data";
     public static final String DAY="day";
     public static final String MONTH="month";
+    public static final String ARG_ITEM ="item";
     public static final String WEEK="week";
     public static final String TITLE="title";
     public static final String IMAGES="images";
