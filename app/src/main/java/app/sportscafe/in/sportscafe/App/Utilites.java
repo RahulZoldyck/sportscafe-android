@@ -8,6 +8,8 @@ public class Utilites
 
     public static final String ARTICLE_TYPE_MVWEEK = "mvweek";
     public static final String ARTICLE_TYPE_MVMONTH = "mvmonth";
+    public static final String PREFERENCES = "myPref";
+    public static final String GAME_PREF_ID = "gamePref";
     private static String articlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
     private static String initialImageURL = "https://sportscafe.in/img/es3";
     private static String fixturesURL ="https://sportscafe.in/api/fixtures/getMatchesWithAggregation";

@@ -167,32 +167,47 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
                         else
                             matches.setLink("-1");
                         matches.setStatus(matchObject.getString(FixtureConstants.MATCH_STATUS));
-                        if (tournamentObject.getString(FixtureConstants.GAME_TYPE).equals(FixtureConstants.INDIVIDUALS)) {
-                            matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_SUPER_NAME));
-                            matches.setDate(matchObject.getString(FixtureConstants.MATCH_DATE));
-                            matches.setId("");
-                            JSONObject venue = tournamentObject.getJSONObject(FixtureConstants.TOURNAMENT_VENUE);
-                            matches.setVenue(venue.getString(FixtureConstants.CITY) + "," + venue.getString(FixtureConstants.COUNTRY));
-                            //todo : Debug this team
-                            JSONArray team = new JSONArray();
-                            List<String> play = new ArrayList<>();
-                            for (int r = 0; r < team.length(); r++) {
-                                JSONObject teamObject = new JSONObject();
-                                teamObject = team.getJSONObject(r);
-                                JSONObject teamA = new JSONObject();
-                                teamA = teamObject.getJSONObject(FixtureConstants.PLAYER_A);
-                                play.add(teamA.getString(FixtureConstants.PLAYER_ID));
+                        try {
+                            if (tournamentObject.getString(FixtureConstants.GAME_TYPE).equals(FixtureConstants.INDIVIDUALS)) {
+                                matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_SUPER_NAME));
+                                matches.setDate(matchObject.getString(FixtureConstants.MATCH_DATE));
+                                matches.setId("");
+                                JSONObject venue = tournamentObject.getJSONObject(FixtureConstants.TOURNAMENT_VENUE);
+                                matches.setVenue(venue.getString(FixtureConstants.CITY) + "," + venue.getString(FixtureConstants.COUNTRY));
+                                //todo : Debug this team
+                                JSONArray team = new JSONArray();
+                                List<String> play = new ArrayList<>();
+                                for (int r = 0; r < team.length(); r++) {
+                                    JSONObject teamObject = new JSONObject();
+                                    teamObject = team.getJSONObject(r);
+                                    JSONObject teamA = new JSONObject();
+                                    teamA = teamObject.getJSONObject(FixtureConstants.PLAYER_A);
+                                    play.add(teamA.getString(FixtureConstants.PLAYER_ID));
 
+                                }
+                                String[] players = new String[play.size()];
+                                players = play.toArray(players);
+                                matches.setTeamId1(players[0]);
+                                matches.setTeamId2(players[1]);
+                                matches.setTeam1(mapIdtoTeam.get(players[0]));
+                                matches.setTeam2(mapIdtoTeam.get(players[1]));
+
+//The two else statement is because the team game like Wrestling has no GameType in API.
+                                //TODO: take the else off when the API is corrected
+                            } else {
+                                matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_NAME));
+                                matches.setDate(matchObject.getString(FixtureConstants.MATCH_START_DATE));
+                                matches.setId(String.valueOf(matchObject.getInt(FixtureConstants.MATCH_ID)));
+                                JSONObject venue = matchObject.getJSONObject(FixtureConstants.MATCH_VENUE);
+                                matches.setVenue(venue.getString(FixtureConstants.CITY));
+                                JSONArray teamid = matchObject.getJSONArray(FixtureConstants.TEAM_IDS);
+                                matches.setTeamId1(teamid.getString(0));
+                                matches.setTeamId2(teamid.getString(1));
+                                matches.setTournamentId(tournamentObject.getString(FixtureConstants.TOURNAMENT_ID));
+                                matches.setTeam1(mapIdtoTeam.get(teamid.getString(0)));
+                                matches.setTeam2(mapIdtoTeam.get(teamid.getString(1)));
                             }
-                            String[] players = new String[play.size()];
-                            players = play.toArray(players);
-                            matches.setTeamId1(players[0]);
-                            matches.setTeamId2(players[1]);
-                            matches.setTeam1(mapIdtoTeam.get(players[0]));
-                            matches.setTeam2(mapIdtoTeam.get(players[1]));
-
-
-                        } else {
+                        } catch (JSONException e) {
                             matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_NAME));
                             matches.setDate(matchObject.getString(FixtureConstants.MATCH_START_DATE));
                             matches.setId(String.valueOf(matchObject.getInt(FixtureConstants.MATCH_ID)));

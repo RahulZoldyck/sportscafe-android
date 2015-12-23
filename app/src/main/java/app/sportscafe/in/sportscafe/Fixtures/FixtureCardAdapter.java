@@ -96,8 +96,6 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
                         layout.addView(inflateHockey(listItem));
                         break;
                 }
-
-                layout.addView(child);
             }
         }
 
@@ -115,8 +113,22 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
     }
 
     private View inflateWrestling(FixtureListItem listItem) {
-        //TODO:Wrestling layout
-        return null;
+        child = childInflater.inflate(R.layout.score_list_layout, null);
+
+        String date = listItem.getDateTime();
+        ImageView teamImg1 = (ImageView) child.findViewById(R.id.listTeamImage1);
+        ImageView teamImg2 = (ImageView) child.findViewById(R.id.listTeamImage2);
+        TextView teamName1 = (TextView) child.findViewById(R.id.listTeamName1);
+        TextView teamName2 = (TextView) child.findViewById(R.id.listTeamName2);
+        TextView matchName = (TextView) child.findViewById(R.id.scoreMatch);
+        TextView score = (TextView) child.findViewById(R.id.scoreBoard);
+        Picasso.with(context).load(listItem.getImageUrl1()).placeholder(R.mipmap.logo).into(teamImg1);
+        Picasso.with(context).load(listItem.getImageUrl2()).placeholder(R.mipmap.logo).into(teamImg2);
+        teamName1.setText(listItem.getTeam1());
+        teamName2.setText(listItem.getTeam2());
+        score.setText(listItem.getScore());
+        matchName.setText(listItem.getMatchName());
+        return child;
     }
 
     private View inflateTennis(FixtureListItem listItem) {
