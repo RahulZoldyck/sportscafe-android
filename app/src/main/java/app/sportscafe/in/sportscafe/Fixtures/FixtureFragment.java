@@ -167,7 +167,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
                         else
                             matches.setLink("-1");
                         matches.setStatus(matchObject.getString(FixtureConstants.MATCH_STATUS));
-                        if (tournamentObject.getString(FixtureConstants.GAME_TYPE) != null) {
+                        try {
                             if (tournamentObject.getString(FixtureConstants.GAME_TYPE).equals(FixtureConstants.INDIVIDUALS)) {
                                 matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_SUPER_NAME));
                                 matches.setDate(matchObject.getString(FixtureConstants.MATCH_DATE));
@@ -207,7 +207,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
                                 matches.setTeam1(mapIdtoTeam.get(teamid.getString(0)));
                                 matches.setTeam2(mapIdtoTeam.get(teamid.getString(1)));
                             }
-                        } else {
+                        } catch (JSONException e) {
                             matches.setTournament(tournamentObject.getString(FixtureConstants.TOURNAMENT_NAME));
                             matches.setDate(matchObject.getString(FixtureConstants.MATCH_START_DATE));
                             matches.setId(String.valueOf(matchObject.getInt(FixtureConstants.MATCH_ID)));

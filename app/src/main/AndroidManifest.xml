@@ -33,6 +33,14 @@
             android:name="io.fabric.ApiKey"
             android:value="044c3190e23f934685016fa0355c79d16d1ab7d6" />
 
+        <activity
+            android:name=".App.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".App.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.sportscafe.in.sportscafe.App.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

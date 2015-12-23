@@ -1,5 +1,6 @@
 package app.sportscafe.in.sportscafe.App;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         int id = item.getItemId();
         if (id == R.id.action_settings)
         {
+            startActivity(new Intent(this,SettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
