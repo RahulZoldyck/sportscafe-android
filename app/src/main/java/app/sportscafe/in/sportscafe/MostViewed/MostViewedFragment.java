@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +71,15 @@ public class MostViewedFragment extends Fragment {
         root = container;
         v = inflater.inflate(R.layout.fragment_most_viewed, container, false);
         dataBaseClass = new SCDataBaseClass(getContext());
+//        RecyclerView rv=(RecyclerView)v.findViewById(R.id.mvrecycler);
+//        RecyclerView.LayoutManager manager= new LinearLayoutManager(getContext());
+//        rv.setLayoutManager(manager);
 
         Article[] dayArrayFromDB, weekArrayFromDB, monthArrayFromDB;
         ArrayList<Article> dayListFromDB = dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVDAY);
         ArrayList<Article> weekListFromDB = dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVWEEK);
         ArrayList<Article> monthListFromDB = dataBaseClass.getArticleList(Utilites.ARTICLE_TYPE_MVMONTH);
-        if (dayListFromDB.size() == 0 || monthListFromDB.size() == 0 || weekListFromDB.size() == 0){
+        if (dayListFromDB.size() == 0 || monthListFromDB.size() == 0 || weekListFromDB.size() == 0) {
             AsyncMostViewed asyncMostViewed = new AsyncMostViewed();
             asyncMostViewed.execute();
         } else {
@@ -118,30 +123,11 @@ public class MostViewedFragment extends Fragment {
                             public View createTabContent(String tag) {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
-                                ListView listView = (ListView) view.findViewById(R.id.tabList);
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tabList);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
-                                        dayItems);
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(
-                                        new AdapterView.OnItemClickListener() {
-                                            @SuppressLint("NewApi")
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view,
-                                                                    int position, long id) {
-                                                View image = view.findViewById(R.id.MVimage);
-                                                image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options =
-                                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                                                getActivity(),image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(),
-                                                        ContentActivity.class);
-                                                i.putExtra(MostViewedConstants.ARG_ITEM,
-                                                        (Article) parent.getItemAtPosition(position));
-                                                getContext().startActivity(i, options.toBundle());
-                                            }
-                                        }
-                                );
-
+                                        dayItems, getActivity());
+                                recyclerView.setAdapter(adapter);
                                 return view;
                             }
                         }
@@ -156,28 +142,11 @@ public class MostViewedFragment extends Fragment {
                             public View createTabContent(String tag) {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
-                                ListView listView = (ListView) view.findViewById(R.id.tabList);
-                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(), weekItems);
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(
-                                        new AdapterView.OnItemClickListener() {
-                                            @SuppressLint("NewApi")
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view,
-                                                                    int position, long id) {
-                                                View image = view.findViewById(R.id.MVimage);
-                                                image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options =
-                                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                                                getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(), ContentActivity.class);
-                                                i.putExtra(MostViewedConstants.ARG_ITEM,
-                                                        (Article) parent.getItemAtPosition(position));
-                                                getContext().startActivity(i, options.toBundle());
-                                            }
-                                        }
-                                );
-
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tabList);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                                MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
+                                        weekItems, getActivity());
+                                recyclerView.setAdapter(adapter);
                                 return view;
                             }
                         }
@@ -192,30 +161,11 @@ public class MostViewedFragment extends Fragment {
                             public View createTabContent(String tag) {
                                 LayoutInflater li = getActivity().getLayoutInflater();
                                 View view = li.inflate(R.layout.mostviewed_tab_layout, null);
-                                ListView listView = (ListView) view.findViewById(R.id.tabList);
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tabList);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
-                                        monthItems);
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(
-                                        new AdapterView.OnItemClickListener() {
-                                            @SuppressLint("NewApi")
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view,
-                                                                    int position, long id) {
-                                                View image = view.findViewById(R.id.MVimage);
-                                                image.setTransitionName("shared_img_transition");
-                                                ActivityOptionsCompat options =
-                                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                                                getActivity(), image, image.getTransitionName());
-                                                Intent i = new Intent(getContext(),
-                                                        ContentActivity.class);
-                                                i.putExtra(MostViewedConstants.ARG_ITEM,
-                                                        (Article) parent.getItemAtPosition(position));
-                                                getContext().startActivity(i, options.toBundle());
-                                            }
-                                        }
-                                );
-
+                                        monthItems, getActivity());
+                                recyclerView.setAdapter(adapter);
                                 return view;
                             }
                         }

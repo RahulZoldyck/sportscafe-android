@@ -16,8 +16,9 @@
 
             <ImageView
                 android:id="@+id/MVimage"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,17 +35,18 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_margin="2dp"
                         android:textAllCaps="true"
                         android:textColor="@color/googleBlue"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Small Text"
                         />
-
                     <TextView
                         android:id="@+id/MVtitle"
                         android:layout_width="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_below="@+id/MVtag"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Medium Text"
                         />
