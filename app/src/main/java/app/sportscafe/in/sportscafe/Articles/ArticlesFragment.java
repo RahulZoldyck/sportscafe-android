@@ -128,7 +128,6 @@ public class ArticlesFragment extends Fragment
     public class AsyncArticlesTask extends AsyncTask<Void,Void,Void>
     {
         ArrayList<Article> articles = new ArrayList<>();
-        Boolean isFetchFromNetwork = true;
         @Override
         protected void onPreExecute()
         {
@@ -141,9 +140,6 @@ public class ArticlesFragment extends Fragment
             if(articleType1.equals("news"))
                 getArticles(articleType1);
             getArticles(articleType2);
-            Collections.sort(articles,new ArticleComparator());
-            Collections.reverse(articles);
-
             return null;
         }
         private void getArticles(String articletype)
@@ -235,13 +231,11 @@ public class ArticlesFragment extends Fragment
                     }
                 } catch (IOException e)
                 {
-                    isFetchFromNetwork = false;
                     Log.d(Utilites.getTAG(),"Error in IO : "+e);
                 }
 
                 } catch (JSONException e)
                 {
-                    isFetchFromNetwork = false;
                     Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
                 }
         }
@@ -249,9 +243,10 @@ public class ArticlesFragment extends Fragment
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
-            if(isFetchFromNetwork)
-                scDataBaseClass.insertData(articles);
+            scDataBaseClass.insertData(articles);
             articles=scDataBaseClass.getArticleList(articleType1,articleType2);
+            Collections.sort(articles,new ArticleComparator());
+            Collections.reverse(articles);
             adapter = new ArticleAdapter(articles,context,articleType1);
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);

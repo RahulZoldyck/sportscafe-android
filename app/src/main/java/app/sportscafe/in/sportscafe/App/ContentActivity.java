@@ -245,7 +245,6 @@ public class ContentActivity extends AppCompatActivity {
                         return d[0];
                     }
                 };
-
                 manifestContent();
                 summary.setText(summaryString);
             } catch (JSONException e) {
