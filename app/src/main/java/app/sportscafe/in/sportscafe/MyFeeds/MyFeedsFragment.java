@@ -2,29 +2,33 @@ package app.sportscafe.in.sportscafe.MyFeeds;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MyFeedsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MyFeedsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MyFeedsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+public class MyFeedsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
@@ -34,20 +38,10 @@ public class MyFeedsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyFeedsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static MyFeedsFragment newInstance(String param1, String param2) {
         MyFeedsFragment fragment = new MyFeedsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +50,6 @@ public class MyFeedsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -65,10 +57,13 @@ public class MyFeedsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_feeds, container, false);
+        View v = inflater.inflate(R.layout.fragment_my_feeds, container, false);
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.feedRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -92,18 +87,51 @@ public class MyFeedsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public JSONArray fetchFromRESTAPI(String query) throws JSONException, IOException {
+
+
+        JSONObject js = new JSONObject(query);
+        String ps = js.toString();
+        byte[] bytes = ps.getBytes();
+
+        URL url = new URL(Utilites.getArticlesWithConditionsURL());
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setUseCaches(false);
+        connection.setFixedLengthStreamingMode(bytes.length);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        OutputStream out = connection.getOutputStream();
+        out.write(bytes);
+        out.close();
+        InputStream in = connection.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line;
+        String result = "";
+        while ((line = reader.readLine()) != null) {
+            result = result + line;
+        }
+        return new JSONArray(result);
+    }
+
+    class AsyncFeeds extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String query = Utilites.getQuery(params);
+            JSONArray jsonArray = new JSONArray();
+            try {
+                 jsonArray = fetchFromRESTAPI(query);
+            } catch (JSONException|IOException e) {
+                e.printStackTrace();
+            }
+            
+            return null;
+        }
     }
 }
