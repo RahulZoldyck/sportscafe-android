@@ -1,8 +1,20 @@
 package app.sportscafe.in.sportscafe.App;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.TimeZone;
+
+import app.sportscafe.in.sportscafe.R;
 
 public class Utilites {
 
@@ -65,6 +77,33 @@ public class Utilites {
                 "\"classifications.sections.articleType\":\"match report\",\"$or\":" + or.toString() + "}," +
                 "\"projection\":{\"content\":0},\"options\":{\"sort\":{\"publishDate\":-1},\"skip\":0," +
                 "\"limit\":8}}}";
+
+    }
+    public static class ArticleComparator implements Comparator<Article>
+    {
+        Context context;
+        public ArticleComparator(Context context)
+        {
+            this.context = context;
+        }
+        @Override
+        public int compare(Article article1, Article article2) {
+            Resources resources = context.getResources();
+            SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+            format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar calendar2 = Calendar.getInstance();
+            try
+            {
+                Log.d(Utilites.getTAG(),article1.getTitle());
+                calendar1.setTime(format.parse(article1.getDate()));
+                calendar2.setTime(format.parse(article2.getDate()));
+            } catch (ParseException e)
+            {
+                Log.e(Utilites.getTAG(),e.toString());
+            }
+            return calendar1.compareTo(calendar2);
+        }
 
     }
 }

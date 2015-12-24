@@ -22,6 +22,7 @@
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/summary"
+            android:textColor="@color/greyMaterial"
             android:layout_width="wrap_content"
             android:textSize="17sp"
             android:textStyle="bold|italic"
@@ -37,6 +38,8 @@
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/content"
+            android:textColor="#000f0f"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin" />

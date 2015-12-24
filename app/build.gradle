@@ -67,4 +67,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.7.0'
     compile 'com.github.nkzawa:socket.io-client:0.6.+'
     compile 'com.google.android.gms:play-services-identity:8.4.0'
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
 }

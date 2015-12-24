@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
@@ -74,6 +75,8 @@ public class ContentActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(Utilites.getTAG(), e.toString());
         }
+        CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
         nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
         content = (TextView) findViewById(R.id.content);
         summary = (TextView) findViewById(R.id.summary);
@@ -82,6 +85,7 @@ public class ContentActivity extends AppCompatActivity {
         Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height,imageQuality,imgURL)).centerCrop().resize(300,300).into(contentImage);
         header = (TextView) findViewById(R.id.content_title);
         header.setText(title);
+        getSupportActionBar().setTitle(title);
         author.setText(authorName);
         new AsyncMostViewedContent().execute(id);
 
@@ -246,7 +250,6 @@ public class ContentActivity extends AppCompatActivity {
                         return d[0];
                     }
                 };
-
                 manifestContent();
                 summary.setText(summaryString);
             } catch (JSONException e) {

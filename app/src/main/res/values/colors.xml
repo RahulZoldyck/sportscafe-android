@@ -9,4 +9,6 @@
     <color name="googleBlue">#3f85f4</color>
     <color name="fixtureBlue">#1e939d</color>
     <color name="silvery">#f2f2f2</color>
+    <color name="greyMaterial">#9E9E9E</color>
+    <color name="transparent">#00000000</color>
 </resources>

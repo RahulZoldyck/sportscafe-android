@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,25 +22,42 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import app.sportscafe.in.sportscafe.App.Article;
+import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
+import app.sportscafe.in.sportscafe.Articles.ArticleAdapter;
+import app.sportscafe.in.sportscafe.Articles.ArticleConstants;
 import app.sportscafe.in.sportscafe.R;
 
 
-public class MyFeedsFragment extends Fragment {
+public class MyFeedsFragment extends Fragment
+{
     private String mParam1;
     private String mParam2;
+    SwipeRefreshLayout swipeRefreshLayout;
+    RecyclerView.LayoutManager layoutManager;
+    ArrayList<Article> articles;
+    ArticleAdapter adapter;
+    RecyclerView recyclerView;
+    SCDataBaseClass scDataBaseClass;
+    SCDataBaseClass.SCDBHelper scdbHelper;
+
 
     private OnFragmentInteractionListener mListener;
 
-    public MyFeedsFragment() {
+    public MyFeedsFragment()
+    {
         // Required empty public constructor
     }
 
 
-    public static MyFeedsFragment newInstance(String param1, String param2) {
+    public static MyFeedsFragment newInstance(String param1, String param2)
+    {
         MyFeedsFragment fragment = new MyFeedsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -47,53 +65,81 @@ public class MyFeedsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if (getArguments() != null)
+        {
         }
+        scDataBaseClass = new SCDataBaseClass(getActivity());
+        articles = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_my_feeds, container, false);
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.feedRecycler);
+        View view = inflater.inflate(R.layout.fragment_my_feeds, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ArticleAdapter(new ArrayList<Article>(),getActivity(),"long feature");
+        recyclerView.setAdapter(adapter);
+        new AsyncFeeds().execute("cricket","football");
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                new AsyncFeeds().execute("cricket","football");
+                adapter.notifyDataSetChanged();
 
-        return v;
+            }
+        });
+        return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
+    public void onButtonPressed(Uri uri)
+    {
+        if (mListener != null)
+        {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Context context)
+    {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+        if (context instanceof OnFragmentInteractionListener)
+        {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
+        } else
+        {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public void onDetach() {
+    public void onDetach()
+    {
         super.onDetach();
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener
+    {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
-    public JSONArray fetchFromRESTAPI(String query) throws JSONException, IOException {
-
+    public JSONArray fetchFromRESTAPI(String query) throws JSONException, IOException
+    {
 
         JSONObject js = new JSONObject(query);
         String ps = js.toString();
@@ -113,25 +159,85 @@ public class MyFeedsFragment extends Fragment {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
         String result = "";
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null)
+        {
             result = result + line;
         }
         return new JSONArray(result);
     }
 
-    class AsyncFeeds extends AsyncTask<String, Void, Void> {
+    class AsyncFeeds extends AsyncTask<String, Void, Void>
+    {
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(String... params)
+        {
             String query = Utilites.getQuery(params);
             JSONArray jsonArray = new JSONArray();
-            try {
-                 jsonArray = fetchFromRESTAPI(query);
-            } catch (JSONException|IOException e) {
+            try
+            {
+                jsonArray = fetchFromRESTAPI(query);
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    String authorName = "SportsCafe";
+                    JSONObject json_article = new JSONObject();
+                    json_article = jsonArray.getJSONObject(i);
+                    String title = json_article.getString(ArticleConstants.TITLE);
+                    String date = json_article.getString(ArticleConstants.MODIFICATION_DATE);
+                    String authorId = json_article.getString("authorId");                       //TODO Backend change to not provide null author
+                    if (authorId.equals("Vijayaleti"))
+                        authorName = "Vijayaleti ";
+                    else
+                    {
+                        JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
+                        authorName = author.getString(ArticleConstants.AUTHOR_NAME);
+                    }
+                    String id = json_article.getString(ArticleConstants.ID);
+                    String summary;
+                    try
+                    {
+                        summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
+                    } catch (Exception e)
+                    {
+                        summary = "";
+                    }
+                    JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
+                    JSONObject featured = images.getJSONObject(ArticleConstants.FEATURED);
+                    String imageURL = featured.getString(ArticleConstants.PATH);
+                    JSONObject classifications = json_article.getJSONObject(ArticleConstants.CLASSIFICATIONS);
+                    JSONObject sections = classifications.getJSONObject(ArticleConstants.SECTIONS);
+                    String articleType = sections.getString(ArticleConstants.ARTICLE_TYPE);
+                    String sport = sections.getString(ArticleConstants.SPORT);
+                    Article article_temp = new Article();
+                    article_temp.setId(id);
+                    article_temp.setTitle(title);
+                    article_temp.setSummary(summary);
+                    article_temp.setImageUrl(imageURL);
+                    article_temp.setArticleType(articleType);
+                    article_temp.setSport(sport);
+                    article_temp.setAuthor(authorName);
+                    article_temp.setDate(date);
+                    if (!articles.contains(article_temp))
+                        articles.add(article_temp);
+                }
+            } catch (JSONException | IOException e)
+            {
                 e.printStackTrace();
             }
-            
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            super.onPostExecute(aVoid);
+            Collections.sort(articles,new Utilites.ArticleComparator(getActivity()));
+            Collections.reverse(articles);
+            scDataBaseClass.insertData(articles);
+            adapter = new ArticleAdapter(articles,getActivity(),"long feature");
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 }
