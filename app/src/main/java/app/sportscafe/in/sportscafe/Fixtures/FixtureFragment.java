@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,9 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_fixtures, container, false);
         vh = v;
+//        RecyclerView myRecycler=(RecyclerView)v.findViewById(R.id.myrecycler);
+//        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+//        myRecycler.setLayoutManager(manager);
         lv = (ListView) v.findViewById(R.id.fixtureListView);
         lv.setDivider(null);
         lv.setDividerHeight(0);

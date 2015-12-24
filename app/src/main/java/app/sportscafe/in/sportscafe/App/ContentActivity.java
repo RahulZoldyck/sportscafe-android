@@ -18,6 +18,7 @@ import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.okhttp.Cache;
@@ -254,7 +255,12 @@ public class ContentActivity extends AppCompatActivity {
         }
 
         private void manifestContent() {
-            content.setText(Html.fromHtml(contentString,imageGetter,null));
+            content.setText(Html.fromHtml(contentString, imageGetter, null));
+        }
+        private View parseHTML(String html){
+            LinearLayout linearLayout=new LinearLayout(ContentActivity.this);
+            return null;
+
         }
 
     }

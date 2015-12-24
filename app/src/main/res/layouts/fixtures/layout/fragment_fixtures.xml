@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".Fixtures.FixtureFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/myrecycler"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp">-->
+
+    <!--</android.support.v7.widget.RecyclerView>-->
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
         <ListView
             android:id="@+id/fixtureListView"
             android:scrollbars="vertical"
@@ -14,4 +24,7 @@
             android:focusable="false"
             app:layout_scrollFlags="scroll|enterAlways"
             android:layout_height="match_parent"/>
+    </android.support.v4.widget.NestedScrollView>
+
+
 </android.support.v4.widget.SwipeRefreshLayout>
