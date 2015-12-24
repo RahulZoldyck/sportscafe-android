@@ -26,10 +26,13 @@ import app.sportscafe.in.sportscafe.Articles.ArticlesFragment;
 import app.sportscafe.in.sportscafe.Fixtures.FixtureFragment;
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedFragment;
 
+import app.sportscafe.in.sportscafe.MyFeeds.MyFeedsFragment;
 import app.sportscafe.in.sportscafe.R;
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener, FixtureFragment.OnFragmentInteractionListener, MostViewedFragment.OnFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements ArticlesFragment.OnFragmentInteractionListener,
+        FixtureFragment.OnFragmentInteractionListener, MostViewedFragment.OnFragmentInteractionListener,
+        MyFeedsFragment.OnFragmentInteractionListener
 {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
@@ -141,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
                 return FixtureFragment.newInstance("Scores");
             else if(position==3)
                 return FixtureFragment.newInstance("Fixtures");
+            else if(position==4)
+                return MyFeedsFragment.newInstance("","");
             else if(position==5)
                 return MostViewedFragment.newInstance();
             else

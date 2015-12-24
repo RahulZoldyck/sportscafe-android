@@ -1,7 +1,6 @@
 package app.sportscafe.in.sportscafe.Articles;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,13 +24,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.TimeZone;
 
 import app.sportscafe.in.sportscafe.App.Article;
 import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
@@ -245,7 +239,7 @@ public class ArticlesFragment extends Fragment
             super.onPostExecute(aVoid);
             scDataBaseClass.insertData(articles);
             articles=scDataBaseClass.getArticleList(articleType1,articleType2);
-            Collections.sort(articles,new ArticleComparator());
+            Collections.sort(articles,new Utilites.ArticleComparator(getActivity()));
             Collections.reverse(articles);
             adapter = new ArticleAdapter(articles,context,articleType1);
             adapter.notifyDataSetChanged();
@@ -254,28 +248,7 @@ public class ArticlesFragment extends Fragment
         }
     }
 
-    public class ArticleComparator implements Comparator<Article>
-    {
-        @Override
-        public int compare(Article article1, Article article2) {
-            Resources resources = getContext().getResources();
-            SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
-            format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
-            Calendar calendar1 = Calendar.getInstance();
-            Calendar calendar2 = Calendar.getInstance();
-            try
-            {
-                Log.d(Utilites.getTAG(),article1.getTitle());
-                calendar1.setTime(format.parse(article1.getDate()));
-                calendar2.setTime(format.parse(article2.getDate()));
-            } catch (ParseException e)
-            {
-                Log.e(Utilites.getTAG(),e.toString());
-            }
-            return calendar1.compareTo(calendar2);
-        }
 
-    }
     @Override
     public void onAttach(Context context)
     {
