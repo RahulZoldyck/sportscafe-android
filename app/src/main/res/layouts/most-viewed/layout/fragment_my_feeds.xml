@@ -1,13 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefresh"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    app:layout_scrollFlags="scroll|enterAlways"
     android:layout_height="match_parent"
-    tools:context="app.sportscafe.in.sportscafe.MyFeeds.MyFeedsFragment">
+    tools:context=".Fixtures.FixtureFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.RecyclerView
+    android:id="@+id/feedRecycler"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
