@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.App;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -38,8 +39,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import app.sportscafe.in.sportscafe.MostViewed.MostViewedConstants;
 import app.sportscafe.in.sportscafe.R;
@@ -169,7 +174,17 @@ public class ContentActivity extends AppCompatActivity {
                 Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Share Intent");
-                intent.putExtra(Intent.EXTRA_TEXT, "https://sportscafe.in/articles/wrestling/2015/dec/23/vinesh-phogat-shines-as-dilli-veer-ends-pwl-with-a-victory");
+                String url = Utilites.getSportscafeURL()+"articles/";
+
+                try {
+                    url = url+article.getSport()+"/";
+                    url = url+constructDateString(article.getDate())+"/";
+                    url = url+article.getSlug();
+                    intent.putExtra(Intent.EXTRA_TEXT, url);
+                } catch (ParseException e)
+                {
+                    e.printStackTrace();
+                }
                 startActivity(intent);
             }
         });
@@ -191,6 +206,17 @@ public class ContentActivity extends AppCompatActivity {
         Log.d(Utilites.getTAG(),string);
         return string;
     }
+
+    public String constructDateString(String date) throws ParseException {
+        Resources resources = this.getResources();
+        java.text.DateFormat format = new SimpleDateFormat(resources.getString(R.string.parseISO));
+        format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(format.parse(date));
+        java.text.DateFormat getformat = new SimpleDateFormat("yyyy/MMM/dd");
+        return getformat.format(calendar.getTime());
+    }
+
     public class AsyncMostViewedContent extends AsyncTask<String, Void, Void> {
         String result;
         Html.ImageGetter imageGetter;

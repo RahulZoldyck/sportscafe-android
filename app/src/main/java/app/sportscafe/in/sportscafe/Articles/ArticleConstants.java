@@ -31,4 +31,5 @@ public class ArticleConstants
     public static final String ARTICLE_TYPE1 = "articleType1";
     public static final String ARTICLE_TYPE2 = "articleType2";
     public static final String SPORT = "sport";
+    public static final String SLUG = "slug";
 }

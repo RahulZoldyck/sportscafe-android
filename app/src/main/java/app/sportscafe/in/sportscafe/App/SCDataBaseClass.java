@@ -36,6 +36,7 @@ public class SCDataBaseClass {
             contentValues.put(DataBaseConstants.DATE, articles.get(i).getDate());
             contentValues.put(DataBaseConstants.ARTICLE_TYPE, articles.get(i).getArticleType());
             contentValues.put(DataBaseConstants.CREDITS, articles.get(i).getCredits());
+            contentValues.put(DataBaseConstants.SLUG, articles.get(i).getSlug());
             contentValues.put(DataBaseConstants.ARTICLE_ID+"_"+DataBaseConstants.ARTICLE_TYPE, articles.get(i).getId()+"_"+articles.get(i).getArticleType());
 
             if (articles.get(i).getContent() != null) {
@@ -111,6 +112,7 @@ public class SCDataBaseClass {
         article.setDate(cursor.getString(8));
         article.setArticleType(cursor.getString(9));
         article.setCredits(cursor.getString(10));
+        article.setSlug(cursor.getString(12));
         return article;
     }
 
@@ -122,10 +124,11 @@ public class SCDataBaseClass {
                 DataBaseConstants.IMAGEURL + " TEXT, " + DataBaseConstants.AUTHOR + " TEXT, " +
                 DataBaseConstants.SPORT + " TEXT, " + DataBaseConstants.DATE + " TEXT, " +
                 DataBaseConstants.ARTICLE_TYPE + " TEXT, " +
-                DataBaseConstants.CREDITS + " TEXT, " + DataBaseConstants.ARTICLE_DOWNLOADED + " TEXT, "
-                +DataBaseConstants.ARTICLE_ID+"_"+DataBaseConstants.ARTICLE_TYPE +" TEXT UNIQUE);";
+                DataBaseConstants.CREDITS + " TEXT, " + DataBaseConstants.SLUG + " TEXT, "+
+                DataBaseConstants.ARTICLE_DOWNLOADED + " TEXT, " +
+                DataBaseConstants.ARTICLE_ID+"_"+DataBaseConstants.ARTICLE_TYPE +" TEXT UNIQUE);";
         private static final String DELETE_TABLE = "DROP TABLE IF EXISTS";
-        private static int dbVersion = 6;
+        private static int dbVersion = 8;
 
         public SCDBHelper(Context context) {
             super(context, DataBaseConstants.DATABASE_NAME, null, dbVersion);

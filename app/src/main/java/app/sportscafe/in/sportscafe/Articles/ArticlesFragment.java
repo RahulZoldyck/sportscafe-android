@@ -186,6 +186,7 @@ public class ArticlesFragment extends Fragment
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString(ArticleConstants.TITLE);
                         String date = json_article.getString(ArticleConstants.MODIFICATION_DATE);
+                        String slug = json_article.getJSONArray(ArticleConstants.SLUG).getString(0);
                         String authorId = json_article.getString("authorId");                       //TODO Backend change to not provide null author
                         if(authorId.equals("Vijayaleti"))
                             authorName = "Vijayaleti ";
@@ -220,6 +221,7 @@ public class ArticlesFragment extends Fragment
                         article_temp.setSport(sport);
                         article_temp.setAuthor(authorName);
                         article_temp.setDate(date);
+                        article_temp.setSlug(slug);
                         if(!articles.contains(article_temp))
                             articles.add(article_temp);
                     }
