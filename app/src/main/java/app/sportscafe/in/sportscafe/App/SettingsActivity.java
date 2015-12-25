@@ -1,5 +1,6 @@
 package app.sportscafe.in.sportscafe.App;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -26,13 +28,22 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        CardView cardView = (CardView) findViewById(R.id.gamePrefCard);
+        cardView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gamePrefClicked(v);
+                    }
+                }
+        );
     }
 
     public void gamePrefClicked(View view) {
-        final ArrayList itemsSelected = new ArrayList();
+        final ArrayList<String> itemsSelected = new ArrayList();
         final SharedPreferences sharedPreferences = getSharedPreferences("gamePref", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor=sharedPreferences.edit();
-        Set<String> gameSet = sharedPreferences.getStringSet("key", null);
+        Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
         String[] gameArray={};
         if (gameSet != null) {
             gameArray = gameSet.toArray(new String[gameSet.size()]);
@@ -44,24 +55,27 @@ public class SettingsActivity extends AppCompatActivity {
         for(String game : totalGames){
             isPresent=false;
             for(String checkedGame : gameArray){
-                if(checkedGame.equals(game))
+                if(checkedGame.equals(game)){
                     isPresent=true;
+                    itemsSelected.add(checkedGame);
+                }
+
 
             }
             checkedList[i]=isPresent;
-
+            i++;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Game Preference");
-        builder.setMultiChoiceItems(totalGames, checkedList,
+        builder.setMultiChoiceItems(getResources().getStringArray(R.array.game_pref_caps), checkedList,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedItemId,
                                         boolean isSelected) {
                             if (isSelected) {
-                            itemsSelected.add(selectedItemId);
-                        } else if (itemsSelected.contains(selectedItemId)) {
-                            itemsSelected.remove(Integer.valueOf(selectedItemId));
+                            itemsSelected.add(getItemFromId(selectedItemId));
+                        } else if (itemsSelected.contains(getItemFromId(selectedItemId))) {
+                            itemsSelected.remove(getItemFromId(selectedItemId));
                         }
                     }
                 })
@@ -69,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Set<String> itemSelected = new HashSet<String>(itemsSelected);
-                        editor.putStringSet("key", itemSelected);
+                        editor.putStringSet("keys", itemSelected);
                         editor.apply();
                     }
                 })
@@ -78,5 +92,11 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+    public String getItemFromId(int id){
+        String[] allGamesArray = getResources().getStringArray(R.array.game_pref);
+        return allGamesArray[id];
     }
 }

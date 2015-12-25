@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.MyFeeds;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -36,6 +38,7 @@ import app.sportscafe.in.sportscafe.R;
 
 
 public class MyFeedsFragment extends Fragment {
+    String[] gamePrefArray;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<Article> articles;
@@ -76,17 +79,25 @@ public class MyFeedsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_feeds, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
+        Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
+        if (gameSet != null) {
+            gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
+        }
+        else{
+            return inflater.inflate(R.layout.dummy_my_feeds, container, false);
+        }
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ArticleAdapter(new ArrayList<Article>(), getActivity(), "long feature");
         recyclerView.setAdapter(adapter);
-        new AsyncFeeds().execute("cricket", "football");
+        new AsyncFeeds().execute(gamePrefArray);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new AsyncFeeds().execute("cricket", "football");
+                new AsyncFeeds().execute(gamePrefArray);
                 adapter.notifyDataSetChanged();
 
             }
@@ -209,7 +220,7 @@ public class MyFeedsFragment extends Fragment {
             Collections.reverse(articles);
             scDataBaseClass.insertData(articles);
             //TODO:gamePrefs
-            articles = scDataBaseClass.getMyFeeds("cricket", "football");
+            articles = scDataBaseClass.getMyFeeds(gamePrefArray);
             adapter = new ArticleAdapter(articles, getActivity(), "long feature");
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
