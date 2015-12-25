@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.MyFeeds;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,7 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 
 import app.sportscafe.in.sportscafe.App.Article;
+import app.sportscafe.in.sportscafe.App.MainActivity;
 import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.Articles.ArticleAdapter;
@@ -79,9 +82,9 @@ public class MyFeedsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_feeds, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
         Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
-        if (gameSet != null) {
+        if (gameSet != null && gameSet.size()!=0) {
             gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
         }
         else{
@@ -97,6 +100,15 @@ public class MyFeedsFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
+                Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
+                if (gameSet != null && gameSet.size()!=0) {
+                    gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
+                }
+                else{
+                    Toast.makeText(getContext(),"Please Select your preference in Settings Above",Toast.LENGTH_LONG).show();
+
+                }
                 new AsyncFeeds().execute(gamePrefArray);
                 adapter.notifyDataSetChanged();
 
