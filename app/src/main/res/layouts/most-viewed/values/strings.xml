@@ -24,13 +24,24 @@
         <item>Never</item>
     </string-array>
     <string-array name="game_pref">
-        <item>Football</item>
-        <item>Cricket</item>
-        <item>Tennis</item>
-        <item>Hockey</item>
-        <item>Badminton</item>
-        <item>Wrestling</item>
+        <item>football</item>
+        <item>cricket</item>
+        <item>tennis</item>
+        <item>hockey</item>
+        <item>badminton</item>
+        <item>wrestling</item>
     </string-array>
+
+    <string-array name="game_pref_caps">
+    <item>Football</item>
+    <item>Cricket</item>
+    <item>Tennis</item>
+    <item>Hockey</item>
+    <item>Badminton</item>
+    <item>Wrestling</item>
+    </string-array>
+
+
     <string-array name="pref_example_list_values">
         <item>1</item>
         <item>0</item>
