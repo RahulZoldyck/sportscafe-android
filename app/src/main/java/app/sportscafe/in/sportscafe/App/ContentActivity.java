@@ -1,5 +1,6 @@
 package app.sportscafe.in.sportscafe.App;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -8,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +17,7 @@ import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -165,13 +166,31 @@ public class ContentActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Share Intent");
+                intent.putExtra(Intent.EXTRA_TEXT, "https://sportscafe.in/articles/wrestling/2015/dec/23/vinesh-phogat-shines-as-dilli-veer-ends-pwl-with-a-victory");
+                startActivity(intent);
             }
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home : onBackPressed();
+                                     return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    public static String findAndReplace(String string) {
+        string = string.replaceAll("blockquote ","blockquote style=\"displayNone\" ");
+        Log.d(Utilites.getTAG(),string);
+        return string;
+    }
     public class AsyncMostViewedContent extends AsyncTask<String, Void, Void> {
         String result;
         Html.ImageGetter imageGetter;
