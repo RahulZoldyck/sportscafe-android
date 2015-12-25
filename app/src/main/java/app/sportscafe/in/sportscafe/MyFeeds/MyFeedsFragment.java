@@ -35,10 +35,7 @@ import app.sportscafe.in.sportscafe.Articles.ArticleConstants;
 import app.sportscafe.in.sportscafe.R;
 
 
-public class MyFeedsFragment extends Fragment
-{
-    private String mParam1;
-    private String mParam2;
+public class MyFeedsFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<Article> articles;
@@ -46,18 +43,17 @@ public class MyFeedsFragment extends Fragment
     RecyclerView recyclerView;
     SCDataBaseClass scDataBaseClass;
     SCDataBaseClass.SCDBHelper scdbHelper;
-
-
+    private String[] gamePrefs;
+    private String mParam1;
+    private String mParam2;
     private OnFragmentInteractionListener mListener;
 
-    public MyFeedsFragment()
-    {
+    public MyFeedsFragment() {
         // Required empty public constructor
     }
 
 
-    public static MyFeedsFragment newInstance(String param1, String param2)
-    {
+    public static MyFeedsFragment newInstance(String param1, String param2) {
         MyFeedsFragment fragment = new MyFeedsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -65,11 +61,9 @@ public class MyFeedsFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-        {
+        if (getArguments() != null) {
         }
         scDataBaseClass = new SCDataBaseClass(getActivity());
         articles = new ArrayList<>();
@@ -77,25 +71,22 @@ public class MyFeedsFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_feeds, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ArticleAdapter(new ArrayList<Article>(),getActivity(),"long feature");
+        adapter = new ArticleAdapter(new ArrayList<Article>(), getActivity(), "long feature");
         recyclerView.setAdapter(adapter);
-        new AsyncFeeds().execute("cricket","football");
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        new AsyncFeeds().execute("cricket", "football");
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
-                new AsyncFeeds().execute("cricket","football");
+            public void onRefresh() {
+                new AsyncFeeds().execute("cricket", "football");
                 adapter.notifyDataSetChanged();
 
             }
@@ -103,43 +94,30 @@ public class MyFeedsFragment extends Fragment
         return view;
     }
 
-    public void onButtonPressed(Uri uri)
-    {
-        if (mListener != null)
-        {
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener)
-        {
+        if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else
-        {
+        } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener
-    {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-    public JSONArray fetchFromRESTAPI(String query) throws JSONException, IOException
-    {
+    public JSONArray fetchFromRESTAPI(String query) throws JSONException, IOException {
 
         JSONObject js = new JSONObject(query);
         String ps = js.toString();
@@ -159,27 +137,27 @@ public class MyFeedsFragment extends Fragment
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
         String result = "";
-        while ((line = reader.readLine()) != null)
-        {
+        while ((line = reader.readLine()) != null) {
             result = result + line;
         }
         return new JSONArray(result);
     }
 
-    class AsyncFeeds extends AsyncTask<String, Void, Void>
-    {
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+    class AsyncFeeds extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... params)
-        {
+        protected Void doInBackground(String... params) {
             String query = Utilites.getQuery(params);
             JSONArray jsonArray = new JSONArray();
-            try
-            {
+            try {
                 jsonArray = fetchFromRESTAPI(query);
                 int length = jsonArray.length();
-                for (int i = 0; i < length; i++)
-                {
+                for (int i = 0; i < length; i++) {
                     String authorName = "SportsCafe";
                     JSONObject json_article = new JSONObject();
                     json_article = jsonArray.getJSONObject(i);
@@ -188,18 +166,15 @@ public class MyFeedsFragment extends Fragment
                     String authorId = json_article.getString("authorId");                       //TODO Backend change to not provide null author
                     if (authorId.equals("Vijayaleti"))
                         authorName = "Vijayaleti ";
-                    else
-                    {
+                    else {
                         JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
                         authorName = author.getString(ArticleConstants.AUTHOR_NAME);
                     }
                     String id = json_article.getString(ArticleConstants.ID);
                     String summary;
-                    try
-                    {
+                    try {
                         summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
-                    } catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         summary = "";
                     }
                     JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
@@ -221,20 +196,21 @@ public class MyFeedsFragment extends Fragment
                     if (!articles.contains(article_temp))
                         articles.add(article_temp);
                 }
-            } catch (JSONException | IOException e)
-            {
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
-        protected void onPostExecute(Void aVoid)
-        {
+        protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Collections.sort(articles,new Utilites.ArticleComparator(getActivity()));
+            Collections.sort(articles, new Utilites.ArticleComparator(getActivity()));
             Collections.reverse(articles);
             scDataBaseClass.insertData(articles);
-            adapter = new ArticleAdapter(articles,getActivity(),"long feature");
+            //TODO:gamePrefs
+            articles = scDataBaseClass.getMyFeeds("cricket", "football");
+            adapter = new ArticleAdapter(articles, getActivity(), "long feature");
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);

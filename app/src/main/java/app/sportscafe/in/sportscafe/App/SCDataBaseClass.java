@@ -50,13 +50,12 @@ public class SCDataBaseClass {
     }
     public  ArrayList<Article> getArticleList(String... articleTypes){
         ArrayList<Article> articles = new ArrayList<>();
-        for (String articletype :articleTypes)
-        {
-            SQLiteDatabase database;
-            database = scdbHelper.getWritableDatabase();
-            Cursor cursor = database.query(
-                    DataBaseConstants.TABLE_NAME, DataBaseConstants.getColumns(), null, null,
-                    null, null, null);
+
+        SQLiteDatabase database;
+        database = scdbHelper.getWritableDatabase();
+        Cursor cursor = database.query(DataBaseConstants.TABLE_NAME, DataBaseConstants.getColumns(),
+                null, null, null, null, DataBaseConstants.DATE+" DESC");
+        for (String articletype :articleTypes) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast())
             {
@@ -67,8 +66,36 @@ public class SCDataBaseClass {
                 }
                 cursor.moveToNext();
             }
-            cursor.close();
+
         }
+        cursor.close();
+        return articles;
+    }
+    public  ArrayList<Article> getMyFeeds(String... gamesPrefs){
+        ArrayList<Article> articles = new ArrayList<>();
+
+            SQLiteDatabase database;
+            database = scdbHelper.getWritableDatabase();
+            Cursor cursor = database.query(true,DataBaseConstants.TABLE_NAME, DataBaseConstants.getColumns(), null,null,
+                    DataBaseConstants.ARTICLE_ID, null,DataBaseConstants.DATE+" DESC",null);
+
+            cursor.moveToFirst();
+            boolean isPreferred;
+            while (!cursor.isAfterLast()) {
+                isPreferred=false;
+                for (String game : gamesPrefs ){
+                    if (cursor.getString(7).equals(game)){
+                        isPreferred=true;
+                    }
+                }
+                if (isPreferred) {
+                    Article articleTemp = SCDataBaseClass.cursorToArticle(cursor);
+                    articles.add(articleTemp);
+                }
+                cursor.moveToNext();
+            }
+
+        cursor.close();
         return articles;
     }
 
