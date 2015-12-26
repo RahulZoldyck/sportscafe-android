@@ -1,8 +1,5 @@
 package app.sportscafe.in.sportscafe.App;
 
-/**
- * Created by rb on 19/12/15.
- */
 public class DataBaseConstants
 {
     public static final String DATABASE_NAME = "SportsCafeDatabase";

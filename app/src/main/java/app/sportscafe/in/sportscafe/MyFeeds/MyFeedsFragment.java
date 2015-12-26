@@ -1,7 +1,6 @@
 package app.sportscafe.in.sportscafe.MyFeeds;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,7 +31,6 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 
 import app.sportscafe.in.sportscafe.App.Article;
-import app.sportscafe.in.sportscafe.App.MainActivity;
 import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.Articles.ArticleAdapter;
@@ -83,11 +81,10 @@ public class MyFeedsFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
-        Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
-        if (gameSet != null && gameSet.size()!=0) {
+        Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
+        if (gameSet != null && gameSet.size() != 0) {
             gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
-        }
-        else{
+        } else {
             return inflater.inflate(R.layout.dummy_my_feeds, container, false);
         }
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -101,12 +98,11 @@ public class MyFeedsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
-                Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
-                if (gameSet != null && gameSet.size()!=0) {
+                Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
+                if (gameSet != null && gameSet.size() != 0) {
                     gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
-                }
-                else{
-                    Toast.makeText(getContext(),"Please Select your preference in Settings Above",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Please Select your preference in Settings Above", Toast.LENGTH_LONG).show();
 
                 }
                 new AsyncFeeds().execute(gamePrefArray);
@@ -231,7 +227,6 @@ public class MyFeedsFragment extends Fragment {
             Collections.sort(articles, new Utilites.ArticleComparator(getActivity()));
             Collections.reverse(articles);
             scDataBaseClass.insertData(articles);
-            //TODO:gamePrefs
             articles = scDataBaseClass.getMyFeeds(gamePrefArray);
             adapter = new ArticleAdapter(articles, getActivity(), "long feature");
             adapter.notifyDataSetChanged();
