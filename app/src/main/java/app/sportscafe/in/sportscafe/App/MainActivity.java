@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
             else if (position == 3)
                 return FixtureFragment.newInstance("Fixtures");
             else if (position == 4)
-                return MyFeedsFragment.newInstance("", "");
+                return MyFeedsFragment.newInstance();
             else if (position == 5)
                 return MostViewedFragment.newInstance();
             else
