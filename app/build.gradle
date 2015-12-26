@@ -58,7 +58,7 @@ dependencies {
     compile('com.twitter.sdk.android:twitter:1.11.0@aar') {
         transitive = true;
     }
-    compile files('/home/rahul/coding/sportscafe-android/jsoup-1.8.3.jar')
+    compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
