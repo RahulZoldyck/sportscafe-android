@@ -15,7 +15,7 @@ public class Article implements Parcelable
     private String imageUrl;
     private String author;
     private String sport;
-    private String date;                //This contains date from api
+    private String date;
     private String articleType;
     private String credits;
     private String slug;

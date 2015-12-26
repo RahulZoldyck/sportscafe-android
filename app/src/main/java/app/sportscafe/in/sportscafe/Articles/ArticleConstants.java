@@ -9,6 +9,7 @@ public class ArticleConstants
     public static final String PUBLISHED = "published";
     public static final String CLASSIFICATIONS_SECTIONS_ARTICLETYPE = "classifications.sections.articleType";
     public static final String CONTENT = "content";
+    public static final String CREATION_DATE = "creationDate";      //TODO Save creation date in article to get proper link for sharing
     public static final String PUBLISH_DATE = "publishDate";
     public static final String MODIFICATION_DATE = "modificationDate";
     public static final String SORT = "sort";
