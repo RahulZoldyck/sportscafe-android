@@ -36,7 +36,8 @@
         <activity
             android:name=".App.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".App.MainActivity">
+            android:parentActivityName=".App.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.sportscafe.in.sportscafe.App.MainActivity" />
