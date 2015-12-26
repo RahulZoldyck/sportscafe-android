@@ -113,7 +113,7 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
     }
 
     private View inflateWrestling(FixtureListItem listItem) {
-        child = childInflater.inflate(R.layout.score_list_layout, null);
+        child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
 
         String date = listItem.getDateTime();
         ImageView teamImg1 = (ImageView) child.findViewById(R.id.listTeamImage1);
@@ -142,7 +142,7 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
     }
 
     private View inflateFootball(FixtureListItem listItem) {
-        child = childInflater.inflate(R.layout.score_list_layout, null);
+        child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
 
         String date = listItem.getDateTime();
         ImageView teamImg1 = (ImageView) child.findViewById(R.id.listTeamImage1);

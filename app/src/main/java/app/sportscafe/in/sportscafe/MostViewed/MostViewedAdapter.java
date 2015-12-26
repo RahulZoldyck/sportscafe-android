@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ import app.sportscafe.in.sportscafe.R;
 /**
  * Created by rahul on 16/12/15.
  */
-import android.support.v7.widget.RecyclerView;
 
 public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.CustomViewHolder> {
     Activity activity;
