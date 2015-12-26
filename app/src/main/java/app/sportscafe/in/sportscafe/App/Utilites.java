@@ -27,6 +27,7 @@ public class Utilites {
     public static final String image_height = "400";
     private static final String stateArticles = "state_articles";
     private static final String TAG = "LOGGING";
+    private static String sportscafeURL = "https://sportscafe.in/";
     private static String articlesWithConditionsURL = "https://sportscafe.in/api/articles/getArticlesWithConditions";
     private static String initialImageURL = "https://sportscafe.in/img/es3";
     private static String fixturesURL = "https://sportscafe.in/api/fixtures/getMatchesWithAggregation";
@@ -59,6 +60,11 @@ public class Utilites {
 
     public static String getTAG() {
         return TAG;
+    }
+
+    public static String getSportscafeURL()
+    {
+        return sportscafeURL;
     }
 
     public static String getQuery(String... pref) {

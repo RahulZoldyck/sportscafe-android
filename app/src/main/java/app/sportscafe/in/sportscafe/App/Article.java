@@ -18,6 +18,7 @@ public class Article implements Parcelable
     private String date;                //This contains date from api
     private String articleType;
     private String credits;
+    private String slug;
 
     public Article()
     {
@@ -35,6 +36,7 @@ public class Article implements Parcelable
         date = parcel.readString();
         articleType = parcel.readString();
         credits = parcel.readString();
+        slug = parcel.readString();
     }
 
     public String getId()
@@ -135,6 +137,16 @@ public class Article implements Parcelable
         this.content = content;
     }
 
+    public String getSlug()
+    {
+        return slug;
+    }
+
+    public void setSlug(String slug)
+    {
+        this.slug = slug;
+    }
+
     @Override
     public int describeContents()
     {
@@ -154,6 +166,7 @@ public class Article implements Parcelable
         dest.writeString(date);
         dest.writeString(articleType);
         dest.writeString(credits);
+        dest.writeString(slug);
     }
 
     public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>()

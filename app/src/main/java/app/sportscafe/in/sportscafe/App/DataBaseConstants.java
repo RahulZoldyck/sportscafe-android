@@ -16,6 +16,7 @@ public class DataBaseConstants
     public static final String ARTICLE_TYPE = "articleType";
     public static final String CREDITS = "credits";
     public static final String ARTICLE_DOWNLOADED = "articleDownloaded";
+    public static final String SLUG = "slug";
 
     public static final String[] getColumns()
     {
@@ -32,6 +33,7 @@ public class DataBaseConstants
         columns[9] = ARTICLE_TYPE;
         columns[10] = CREDITS;
         columns[11] = ARTICLE_DOWNLOADED;
+        columns[12] = SLUG;
         return columns;
     }
 }
