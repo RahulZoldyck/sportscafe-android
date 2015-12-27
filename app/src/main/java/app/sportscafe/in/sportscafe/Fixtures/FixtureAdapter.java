@@ -23,13 +23,13 @@ import app.sportscafe.in.sportscafe.R;
 /**
  * Created by rahul on 15/12/15.
  */
-public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
+public class FixtureAdapter extends ArrayAdapter<FixtureCardItem> {
     View child;
     LayoutInflater childInflater;
     Context context;
     boolean isFixture;
 
-    public FixtureCardAdapter(Context context, FixtureCardItem[] objects, String type) {
+    public FixtureAdapter(Context context, FixtureCardItem[] objects, String type) {
         super(context, R.layout.fixture_card_layout, objects);
         isFixture = type.equals("Fixtures");
         this.context = context;
