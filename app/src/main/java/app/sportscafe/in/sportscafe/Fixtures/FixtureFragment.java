@@ -292,7 +292,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
 
         FixtureCardItem[] cardItemArray = new FixtureCardItem[cardItems.size()];
         cardItemArray = cardItems.toArray(cardItemArray);
-        FixtureCardAdapter adapter = new FixtureCardAdapter(getContext(), cardItemArray, type);
+        FixtureAdapter adapter = new FixtureAdapter(getContext(), cardItemArray, type);
         lv.setAdapter(adapter);
         layout.setRefreshing(false);
 

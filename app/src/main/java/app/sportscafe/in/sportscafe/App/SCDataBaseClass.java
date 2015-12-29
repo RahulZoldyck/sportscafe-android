@@ -132,7 +132,7 @@ public class SCDataBaseClass {
 
         public SCDBHelper(Context context) {
             super(context, DataBaseConstants.DATABASE_NAME, null, dbVersion);
-            Log.d(Utilites.getTAG(), "COnstructor Called");
+            Log.d(Utilites.getTAG(), "Constructor Called");
         }
 
         @Override

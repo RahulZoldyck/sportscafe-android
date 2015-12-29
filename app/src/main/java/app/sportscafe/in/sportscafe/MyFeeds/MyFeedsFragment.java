@@ -46,18 +46,13 @@ public class MyFeedsFragment extends Fragment {
     ArticleAdapter adapter;
     RecyclerView recyclerView;
     SCDataBaseClass scDataBaseClass;
-    SCDataBaseClass.SCDBHelper scdbHelper;
-    private String[] gamePrefs;
-    private String mParam1;
-    private String mParam2;
     private OnFragmentInteractionListener mListener;
 
     public MyFeedsFragment() {
-        // Required empty public constructor
     }
 
 
-    public static MyFeedsFragment newInstance(String param1, String param2) {
+    public static MyFeedsFragment newInstance() {
         MyFeedsFragment fragment = new MyFeedsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -76,10 +71,11 @@ public class MyFeedsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_feeds, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // getting Preference from Settings TODO: after Login Implemented the Preference Should be synced online
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
         Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
         if (gameSet != null && gameSet.size() != 0) {
@@ -87,6 +83,7 @@ public class MyFeedsFragment extends Fragment {
         } else {
             return inflater.inflate(R.layout.dummy_my_feeds, container, false);
         }
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
