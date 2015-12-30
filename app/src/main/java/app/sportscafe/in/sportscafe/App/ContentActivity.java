@@ -91,7 +91,7 @@ public class ContentActivity extends AppCompatActivity {
         summary = (TextView) findViewById(R.id.summary);
         author = (TextView) findViewById(R.id.author_name);
         contentImage = (ImageView) findViewById(R.id.mvContentImage);
-        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height,imageQuality,imgURL)).centerCrop().resize(300,300).into(contentImage);
+        Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, imageQuality, imgURL)).centerCrop().resize(300, 300).into(contentImage);
         header = (TextView) findViewById(R.id.content_title);
         header.setText(title);
         getSupportActionBar().setTitle(title);
@@ -107,9 +107,9 @@ public class ContentActivity extends AppCompatActivity {
             imageSettings.set(2,"80");
         }
         else {
-            imageSettings.set(0,"600");
-            imageSettings.set(1,"300");
-            imageSettings.set(2,"70");
+            imageSettings.set(0, "600");
+            imageSettings.set(1, "300");
+            imageSettings.set(2, "70");
         }
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -123,7 +123,8 @@ public class ContentActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             Transition.TransitionListener listener = new Transition.TransitionListener() {
                 @Override
-                public void onTransitionStart(Transition transition) {}
+                public void onTransitionStart(Transition transition) {
+                }
 
                 @Override
                 public void onTransitionEnd(Transition transition) {
@@ -134,13 +135,16 @@ public class ContentActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onTransitionCancel(Transition transition) {}
+                public void onTransitionCancel(Transition transition) {
+                }
 
                 @Override
-                public void onTransitionPause(Transition transition) {}
+                public void onTransitionPause(Transition transition) {
+                }
 
                 @Override
-                public void onTransitionResume(Transition transition) {}
+                public void onTransitionResume(Transition transition) {
+                }
             };
             getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
                     .inflateTransition(R.transition.shared_image_transition));
@@ -237,29 +241,29 @@ public class ContentActivity extends AppCompatActivity {
             try {
                 Drawable drawable = contentImage.getDrawable();
                 Picasso.with(ContentActivity.this).load(Utilites.getInitialImageURL(
-                        Utilites.image_width, Utilites.image_height,"100",imgURL))
+                        Utilites.image_width, Utilites.image_height, "100", imgURL))
                         .placeholder(drawable)
                         .into(contentImage);
                 JSONObject jsonResult = new JSONObject(result);
                 JSONObject dataJSON = jsonResult.getJSONObject(MostViewedConstants.DATA);
                 contentString = dataJSON.getString(MostViewedConstants.CONTENT);
                 String summaryString = dataJSON.getString(MostViewedConstants.SUMMARY);
-                imageGetter=new Html.ImageGetter() {
+                imageGetter = new Html.ImageGetter() {
                     @Override
                     public Drawable getDrawable(String source) {
                         final Drawable[] d = new Drawable[1];
 
-                        Target target=new Target() {
+                        Target target = new Target() {
 
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                 double height = bitmap.getHeight();
                                 double width = bitmap.getWidth();
                                 Bitmap bitmapNew = Bitmap.createScaledBitmap(bitmap,
-                                        nestedScrollView.getWidth(),(int)((height/width)*nestedScrollView.getWidth()),false);
-                                d[0] =new BitmapDrawable(bitmapNew);
-                                d[0].setBounds(0,0,d[0].getIntrinsicWidth(),d[0].getIntrinsicHeight());
-                                if(from.equals(Picasso.LoadedFrom.NETWORK)){
+                                        nestedScrollView.getWidth(), (int) ((height / width) * nestedScrollView.getWidth()), false);
+                                d[0] = new BitmapDrawable(bitmapNew);
+                                d[0].setBounds(0, 0, d[0].getIntrinsicWidth(), d[0].getIntrinsicHeight());
+                                if (from.equals(Picasso.LoadedFrom.NETWORK)) {
                                     manifestContent();
                                 }
                             }
@@ -275,7 +279,8 @@ public class ContentActivity extends AppCompatActivity {
 
                             }
                         };
-                            tagHandler=new Html.TagHandler() {
+                        //TODO: Twitter Tags
+                        tagHandler = new Html.TagHandler() {
                             @Override
                             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
 //                                if(tag.equals(""))
@@ -298,8 +303,9 @@ public class ContentActivity extends AppCompatActivity {
         private void manifestContent() {
             content.setText(Html.fromHtml(contentString, imageGetter, null));
         }
-        private View parseHTML(String html){
-            LinearLayout linearLayout=new LinearLayout(ContentActivity.this);
+        //TODO: Twitter Tags
+        private View parseHTML(String html) {
+            LinearLayout linearLayout = new LinearLayout(ContentActivity.this);
             return null;
 
         }

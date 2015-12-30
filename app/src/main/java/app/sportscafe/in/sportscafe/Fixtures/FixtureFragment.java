@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +31,9 @@ import java.util.TimeZone;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.Articles.ArticleConstants;
 import app.sportscafe.in.sportscafe.R;
-import app.sportscafe.in.sportscafe.App.Utilites;
 
 
 public class FixtureFragment extends android.support.v4.app.Fragment {
@@ -294,7 +292,7 @@ public class FixtureFragment extends android.support.v4.app.Fragment {
 
         FixtureCardItem[] cardItemArray = new FixtureCardItem[cardItems.size()];
         cardItemArray = cardItems.toArray(cardItemArray);
-        FixtureCardAdapter adapter = new FixtureCardAdapter(getContext(), cardItemArray, type);
+        FixtureAdapter adapter = new FixtureAdapter(getContext(), cardItemArray, type);
         lv.setAdapter(adapter);
         layout.setRefreshing(false);
 

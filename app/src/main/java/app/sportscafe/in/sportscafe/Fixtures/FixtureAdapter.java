@@ -23,13 +23,13 @@ import app.sportscafe.in.sportscafe.R;
 /**
  * Created by rahul on 15/12/15.
  */
-public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
+public class FixtureAdapter extends ArrayAdapter<FixtureCardItem> {
     View child;
     LayoutInflater childInflater;
     Context context;
     boolean isFixture;
 
-    public FixtureCardAdapter(Context context, FixtureCardItem[] objects, String type) {
+    public FixtureAdapter(Context context, FixtureCardItem[] objects, String type) {
         super(context, R.layout.fixture_card_layout, objects);
         isFixture = type.equals("Fixtures");
         this.context = context;
@@ -113,7 +113,7 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
     }
 
     private View inflateWrestling(FixtureListItem listItem) {
-        child = childInflater.inflate(R.layout.score_list_layout, null);
+        child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
 
         String date = listItem.getDateTime();
         ImageView teamImg1 = (ImageView) child.findViewById(R.id.listTeamImage1);
@@ -142,7 +142,7 @@ public class FixtureCardAdapter extends ArrayAdapter<FixtureCardItem> {
     }
 
     private View inflateFootball(FixtureListItem listItem) {
-        child = childInflater.inflate(R.layout.score_list_layout, null);
+        child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
 
         String date = listItem.getDateTime();
         ImageView teamImg1 = (ImageView) child.findViewById(R.id.listTeamImage1);

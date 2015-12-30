@@ -1,7 +1,6 @@
 package app.sportscafe.in.sportscafe.MyFeeds;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,7 +31,6 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 
 import app.sportscafe.in.sportscafe.App.Article;
-import app.sportscafe.in.sportscafe.App.MainActivity;
 import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.Articles.ArticleAdapter;
@@ -48,18 +46,13 @@ public class MyFeedsFragment extends Fragment {
     ArticleAdapter adapter;
     RecyclerView recyclerView;
     SCDataBaseClass scDataBaseClass;
-    SCDataBaseClass.SCDBHelper scdbHelper;
-    private String[] gamePrefs;
-    private String mParam1;
-    private String mParam2;
     private OnFragmentInteractionListener mListener;
 
     public MyFeedsFragment() {
-        // Required empty public constructor
     }
 
 
-    public static MyFeedsFragment newInstance(String param1, String param2) {
+    public static MyFeedsFragment newInstance() {
         MyFeedsFragment fragment = new MyFeedsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -78,18 +71,19 @@ public class MyFeedsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_feeds, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.feedRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // getting Preference from Settings TODO: after Login Implemented the Preference Should be synced online
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
-        Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
-        if (gameSet != null && gameSet.size()!=0) {
+        Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
+        if (gameSet != null && gameSet.size() != 0) {
             gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
-        }
-        else{
+        } else {
             return inflater.inflate(R.layout.dummy_my_feeds, container, false);
         }
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -101,12 +95,11 @@ public class MyFeedsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("gamePref", Context.MODE_PRIVATE);
-                Set<String> gameSet = sharedPreferences.getStringSet("keys",null);
-                if (gameSet != null && gameSet.size()!=0) {
+                Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
+                if (gameSet != null && gameSet.size() != 0) {
                     gamePrefArray = gameSet.toArray(new String[gameSet.size()]);
-                }
-                else{
-                    Toast.makeText(getContext(),"Please Select your preference in Settings Above",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Please Select your preference in Settings Above", Toast.LENGTH_LONG).show();
 
                 }
                 new AsyncFeeds().execute(gamePrefArray);
@@ -231,7 +224,6 @@ public class MyFeedsFragment extends Fragment {
             Collections.sort(articles, new Utilites.ArticleComparator(getActivity()));
             Collections.reverse(articles);
             scDataBaseClass.insertData(articles);
-            //TODO:gamePrefs
             articles = scDataBaseClass.getMyFeeds(gamePrefArray);
             adapter = new ArticleAdapter(articles, getActivity(), "long feature");
             adapter.notifyDataSetChanged();

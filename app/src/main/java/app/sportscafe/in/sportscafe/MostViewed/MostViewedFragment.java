@@ -115,8 +115,8 @@ public class MostViewedFragment extends Fragment {
         spec.setContent(new TabHost.TabContentFactory() {
                             @Override
                             public View createTabContent(String tag) {
-                                LayoutInflater li = getActivity().getLayoutInflater();
-                                View view = li.inflate(R.layout.mostviewed_tab_layout, null);
+                                LayoutInflater tabInflater = getActivity().getLayoutInflater();
+                                View view = tabInflater.inflate(R.layout.mostviewed_tab_layout, null);
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tabList);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
@@ -134,8 +134,8 @@ public class MostViewedFragment extends Fragment {
 
                             @Override
                             public View createTabContent(String tag) {
-                                LayoutInflater li = getActivity().getLayoutInflater();
-                                View view = li.inflate(R.layout.mostviewed_tab_layout, null);
+                                LayoutInflater tabInflater = getActivity().getLayoutInflater();
+                                View view = tabInflater.inflate(R.layout.mostviewed_tab_layout, null);
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tabList);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(),
@@ -153,8 +153,8 @@ public class MostViewedFragment extends Fragment {
 
                             @Override
                             public View createTabContent(String tag) {
-                                LayoutInflater li = getActivity().getLayoutInflater();
-                                View view = li.inflate(R.layout.mostviewed_tab_layout, null);
+                                LayoutInflater tabInflater = getActivity().getLayoutInflater();
+                                View view = tabInflater.inflate(R.layout.mostviewed_tab_layout, null);
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tabList);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                                 MostViewedAdapter adapter = new MostViewedAdapter(getContext(),

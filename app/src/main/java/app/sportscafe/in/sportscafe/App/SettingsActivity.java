@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.MultiSelectListPreference;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -42,27 +39,27 @@ public class SettingsActivity extends AppCompatActivity {
     public void gamePrefClicked(View view) {
         final ArrayList<String> itemsSelected = new ArrayList();
         final SharedPreferences sharedPreferences = getSharedPreferences("gamePref", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor=sharedPreferences.edit();
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
         Set<String> gameSet = sharedPreferences.getStringSet("keys", null);
-        String[] gameArray={};
+        String[] gameArray = {};
         if (gameSet != null) {
             gameArray = gameSet.toArray(new String[gameSet.size()]);
         }
         String[] totalGames = getResources().getStringArray(R.array.game_pref);
-        boolean[] checkedList=new boolean[totalGames.length];
+        boolean[] checkedList = new boolean[totalGames.length];
         boolean isPresent;
-        int i =0;
-        for(String game : totalGames){
-            isPresent=false;
-            for(String checkedGame : gameArray){
-                if(checkedGame.equals(game)){
-                    isPresent=true;
+        int i = 0;
+        for (String game : totalGames) {
+            isPresent = false;
+            for (String checkedGame : gameArray) {
+                if (checkedGame.equals(game)) {
+                    isPresent = true;
                     itemsSelected.add(checkedGame);
                 }
 
 
             }
-            checkedList[i]=isPresent;
+            checkedList[i] = isPresent;
             i++;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -72,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedItemId,
                                         boolean isSelected) {
-                            if (isSelected) {
+                        if (isSelected) {
                             itemsSelected.add(getItemFromId(selectedItemId));
                         } else if (itemsSelected.contains(getItemFromId(selectedItemId))) {
                             itemsSelected.remove(getItemFromId(selectedItemId));
@@ -95,7 +92,8 @@ public class SettingsActivity extends AppCompatActivity {
         Dialog dialog = builder.create();
         dialog.show();
     }
-    public String getItemFromId(int id){
+
+    public String getItemFromId(int id) {
         String[] allGamesArray = getResources().getStringArray(R.array.game_pref);
         return allGamesArray[id];
     }
