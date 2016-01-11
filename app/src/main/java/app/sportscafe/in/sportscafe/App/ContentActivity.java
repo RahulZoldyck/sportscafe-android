@@ -18,6 +18,7 @@ import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,14 +75,15 @@ public class ContentActivity extends AppCompatActivity {
             id = article.getId();
             authorName = article.getAuthor();
         }
+
         setContentView(R.layout.activity_report);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (Exception e) {
-            Log.d(Utilites.getTAG(), e.toString());
-        }
+            } catch (Exception e) {
+                Log.d(Utilites.getTAG(), e.toString());
+            }
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
         nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
@@ -94,15 +96,17 @@ public class ContentActivity extends AppCompatActivity {
         header.setText(title);
         getSupportActionBar().setTitle(title);
         author.setText(authorName);
+
         new AsyncMostViewedContent().execute(id);
 
+        imageSettings = new ArrayList<>(Arrays.asList("","",""));
 
-        imageSettings = new ArrayList<>(Arrays.asList("", "", ""));
-        if (article.getArticleType().equals("news") || article.getArticleType().equals("match report")) {
-            imageSettings.set(0, "300");
-            imageSettings.set(1, "300");
-            imageSettings.set(2, "80");
-        } else {
+        if(article.getArticleType().equals("news")||article.getArticleType().equals("match report")) {
+            imageSettings.set(0,"300");
+            imageSettings.set(1,"300");
+            imageSettings.set(2,"80");
+        }
+        else {
             imageSettings.set(0, "600");
             imageSettings.set(1, "300");
             imageSettings.set(2, "70");
@@ -112,14 +116,14 @@ public class ContentActivity extends AppCompatActivity {
         okHttpClient.setCache(new Cache(getCacheDir(), Integer.MAX_VALUE));
         OkHttpDownloader okHttpDownloader = new OkHttpDownloader(okHttpClient);
         Picasso picasso = new Picasso.Builder(this).downloader(okHttpDownloader).build();
-        picasso.load(Utilites.getInitialImageURL(imageSettings.get(0), imageSettings.get(1), imageSettings.get(2), imgURL))
+        picasso.load(Utilites.getInitialImageURL(imageSettings.get(0),
+                imageSettings.get(1),imageSettings.get(2),imgURL))
                 .networkPolicy(NetworkPolicy.OFFLINE).into(contentImage);
 
         if (Build.VERSION.SDK_INT >= 21) {
             Transition.TransitionListener listener = new Transition.TransitionListener() {
                 @Override
                 public void onTransitionStart(Transition transition) {
-
                 }
 
                 @Override
@@ -132,23 +136,22 @@ public class ContentActivity extends AppCompatActivity {
 
                 @Override
                 public void onTransitionCancel(Transition transition) {
-
                 }
 
                 @Override
                 public void onTransitionPause(Transition transition) {
-
                 }
 
                 @Override
                 public void onTransitionResume(Transition transition) {
-
                 }
             };
-            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_image_transition));
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
+                    .inflateTransition(R.transition.shared_image_transition));
             transition = getWindow().getSharedElementEnterTransition();
             transition.addListener(listener);
-        } else {
+        }
+        else {
             header = (TextView) findViewById(R.id.content_title);
             header.setText(title);
             author.setText(authorName);
@@ -174,16 +177,21 @@ public class ContentActivity extends AppCompatActivity {
                 {
                     e.printStackTrace();
                 }
+
                 startActivity(intent);
             }
         });
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_content,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home : onBackPressed();
                                      return true;
         }

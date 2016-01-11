@@ -32,43 +32,37 @@ import app.sportscafe.in.sportscafe.App.SCDataBaseClass;
 import app.sportscafe.in.sportscafe.App.Utilites;
 import app.sportscafe.in.sportscafe.R;
 
-public class ArticlesFragment extends Fragment
-{
+public class ArticlesFragment extends Fragment {
     public Context context;
     public RecyclerView recyclerView;
     public RecyclerView.LayoutManager layoutManager;
+    public String articleType1;
+    public String articleType2;
     SwipeRefreshLayout swipeRefreshLayout;
     SCDataBaseClass scDataBaseClass;
     SCDataBaseClass.SCDBHelper scdbHelper;
     ArticleAdapter adapter;
     AsyncArticlesTask asyncArticlesTask;
-
-    public String articleType1;
-    public String articleType2;
-
-    String image_width="600";
-    String image_height="300";
+    String image_width = "600";
+    String image_height = "300";
 
     private OnFragmentInteractionListener mListener;
 
-    public ArticlesFragment()
-    {
+    public ArticlesFragment() {
 
     }
 
-    public static ArticlesFragment newInstance(String articletype1,String articletype2)
-    {
+    public static ArticlesFragment newInstance(String articletype1, String articletype2) {
         ArticlesFragment fragment = new ArticlesFragment();
         Bundle args = new Bundle();
         args.putString(ArticleConstants.ARTICLE_TYPE1, articletype1);
-        args.putString(ArticleConstants.ARTICLE_TYPE2,articletype2);
+        args.putString(ArticleConstants.ARTICLE_TYPE2, articletype2);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.articleType1 = getArguments().getString(ArticleConstants.ARTICLE_TYPE1, "default");
         this.articleType2 = getArguments().getString(ArticleConstants.ARTICLE_TYPE2, "default");
@@ -78,24 +72,27 @@ public class ArticlesFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
         context = getContext();
-        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefreshlayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshlayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ArticleAdapter(new ArrayList<Article>(),context,articleType1);
+        adapter = new ArticleAdapter(new ArrayList<Article>(), context, articleType1);
         recyclerView.setAdapter(adapter);
-        new AsyncArticlesTask().execute();
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        asyncArticlesTask = new AsyncArticlesTask();
+        asyncArticlesTask.execute();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
-                new AsyncArticlesTask().execute();
+            public void onRefresh() {
+                if(asyncArticlesTask.isCancelled()) {
+                    asyncArticlesTask = new AsyncArticlesTask();
+                    asyncArticlesTask.execute();
+                }
+                else
+                    swipeRefreshLayout.setRefreshing(false);
                 adapter.notifyDataSetChanged();
 
             }
@@ -103,63 +100,71 @@ public class ArticlesFragment extends Fragment
         return view;
     }
 
-    public void onButtonPressed(Uri uri)
-    {
-        if (mListener != null)
-        {
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-    public class AsyncAuthorByID extends AsyncTask<String,Void,String>
-    {
 
-        @Override
-        protected String doInBackground(String... params)
-        {
-            return null;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
-    public class AsyncArticlesTask extends AsyncTask<Void,Void,Void>
-    {
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+    }
+
+    public class AsyncArticlesTask extends AsyncTask<Void, Void, Void> {
         ArrayList<Article> articles = new ArrayList<>();
+
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected Void doInBackground(Void... params)
-        {
-            if(articleType1.equals("news"))
+        protected Void doInBackground(Void... params) {
+            if (articleType1.equals("news"))
                 getArticles(articleType1);
             getArticles(articleType2);
             return null;
         }
-        private void getArticles(String articletype)
-        {
+
+        private void getArticles(String articletype) {
             String link = Utilites.getArticlesWithConditionsURL();
             JSONObject msg = new JSONObject();
-            try
-            {
+            try {
                 JSONObject conditions = new JSONObject();
-                conditions.accumulate(ArticleConstants.PUBLISHED,true);
-                Log.d(Utilites.getTAG(),articleType1);
-                conditions.accumulate(ArticleConstants.CLASSIFICATIONS_SECTIONS_ARTICLETYPE,articletype);
+                conditions.accumulate(ArticleConstants.PUBLISHED, true);
+                Log.d(Utilites.getTAG(), articleType1);
+                conditions.accumulate(ArticleConstants.CLASSIFICATIONS_SECTIONS_ARTICLETYPE, articletype);
                 JSONObject projection = new JSONObject();
-                projection.accumulate(ArticleConstants.CONTENT,0);
+                projection.accumulate(ArticleConstants.CONTENT, 0);
                 JSONObject options = new JSONObject();
                 JSONObject sort = new JSONObject();
-                sort.accumulate(ArticleConstants.PUBLISH_DATE,-1);
-                options.accumulate(ArticleConstants.SORT,sort);
-                options.accumulate(ArticleConstants.LIMIT,10);
-                msg.accumulate(ArticleConstants.CONDITIONS,conditions);
-                msg.accumulate(ArticleConstants.PROJECTION,projection);
-                msg.accumulate(ArticleConstants.OPTIONS,options);
+                sort.accumulate(ArticleConstants.PUBLISH_DATE, -1);
+                options.accumulate(ArticleConstants.SORT, sort);
+                options.accumulate(ArticleConstants.LIMIT, 10);
+                msg.accumulate(ArticleConstants.CONDITIONS, conditions);
+                msg.accumulate(ArticleConstants.PROJECTION, projection);
+                msg.accumulate(ArticleConstants.OPTIONS, options);
                 JSONObject object = new JSONObject();
-                object.accumulate(ArticleConstants.MSG,msg);
-                try
-                {
+                object.accumulate(ArticleConstants.MSG, msg);
+                try {
                     URL url = new URL(link);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
@@ -169,7 +174,6 @@ public class ArticlesFragment extends Fragment
                     OutputStream out = connection.getOutputStream();
                     out.write(bytes);
                     out.close();
-                    // handle the response
                     InputStream in = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     String line;
@@ -179,30 +183,25 @@ public class ArticlesFragment extends Fragment
                     Log.d(Utilites.getTAG(), result);
                     JSONArray jsonArray = new JSONArray(result);
                     int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        String authorName="SportsCafe";
+                    for (int i = 0; i < length; i++) {
+                        String authorName = "SportsCafe";
                         JSONObject json_article = new JSONObject();
                         json_article = jsonArray.getJSONObject(i);
                         String title = json_article.getString(ArticleConstants.TITLE);
                         String date = json_article.getString(ArticleConstants.MODIFICATION_DATE);
                         String slug = json_article.getJSONArray(ArticleConstants.SLUG).getString(0);
                         String authorId = json_article.getString("authorId");                       //TODO Backend change to not provide null author
-                        if(authorId.equals("Vijayaleti"))
+                        if (authorId.equals("Vijayaleti"))
                             authorName = "Vijayaleti ";
-                        else
-                        {
+                        else {
                             JSONObject author = json_article.getJSONObject(ArticleConstants.AUTHOR);
                             authorName = author.getString(ArticleConstants.AUTHOR_NAME);
                         }
                         String id = json_article.getString(ArticleConstants.ID);
                         String summary;
-                        try
-                        {
+                        try {
                             summary = json_article.getString(ArticleConstants.CONTENT_SUMMARY);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             summary = "";
                         }
                         JSONObject images = json_article.getJSONObject(ArticleConstants.IMAGES);
@@ -222,59 +221,29 @@ public class ArticlesFragment extends Fragment
                         article_temp.setAuthor(authorName);
                         article_temp.setDate(date);
                         article_temp.setSlug(slug);
-                        if(!articles.contains(article_temp))
+                        if (!articles.contains(article_temp))
                             articles.add(article_temp);
                     }
-                } catch (IOException e)
-                {
-                    Log.d(Utilites.getTAG(),"Error in IO : "+e);
+                } catch (IOException e) {
+                    Log.d(Utilites.getTAG(), "Error in IO : " + e);
                 }
 
-                } catch (JSONException e)
-                {
-                    Log.d(Utilites.getTAG(),"Error in JSONAccum : "+e);
-                }
+            } catch (JSONException e) {
+                Log.d(Utilites.getTAG(), "Error in JSONAccum : " + e);
+            }
         }
+
         @Override
-        protected void onPostExecute(Void aVoid)
-        {
+        protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             scDataBaseClass.insertData(articles);
-            articles=scDataBaseClass.getArticleList(articleType1,articleType2);
-            Collections.sort(articles,new Utilites.ArticleComparator(getActivity()));
+            articles = scDataBaseClass.getArticleList(articleType1, articleType2);
+            Collections.sort(articles, new Utilites.ArticleComparator(getActivity()));
             Collections.reverse(articles);
-            adapter = new ArticleAdapter(articles,context,articleType1);
+            adapter = new ArticleAdapter(articles, context, articleType1);
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);
         }
-    }
-
-
-    @Override
-    public void onAttach(Context context)
-    {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener)
-        {
-            mListener = (OnFragmentInteractionListener) context;
-        } else
-        {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    public interface OnFragmentInteractionListener
-    {
-        void onFragmentInteraction(Uri uri);
     }
 }

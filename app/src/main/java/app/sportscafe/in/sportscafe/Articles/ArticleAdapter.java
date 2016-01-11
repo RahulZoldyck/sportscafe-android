@@ -1,6 +1,5 @@
 package app.sportscafe.in.sportscafe.Articles;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,8 +37,7 @@ import app.sportscafe.in.sportscafe.R;
 /**
  * Created by rb on 30/11/15.
  */
-public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>
-{
+public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
     Context context;
     String imageWidth = "600";
     String imageHeight = "300";
@@ -49,25 +47,24 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     OkHttpClient okHttpClient = new OkHttpClient();
     OkHttpDownloader okHttpDownloader;
     Picasso picasso;
-    public ArticleAdapter(ArrayList<Article> articles_array,Context context,String articleType)
-    {
+
+    public ArticleAdapter(ArrayList<Article> articles_array, Context context, String articleType) {
         this.articles = articles_array;
         this.context = context;
-        this.articleType=articleType;
+        this.articleType = articleType;
         okHttpClient.setCache(new Cache(context.getCacheDir(), Integer.MAX_VALUE));
         okHttpDownloader = new OkHttpDownloader(okHttpClient);
         picasso = new Picasso.Builder(context).downloader(okHttpDownloader).build();
     }
-    public String getDate(String date)
-    {
-        String returnDate="";
+
+    public String getDate(String date) {
+        String returnDate = "";
         Resources resources = context.getResources();
-        SimpleDateFormat format=new SimpleDateFormat(resources.getString(R.string.parseISO));
+        SimpleDateFormat format = new SimpleDateFormat(resources.getString(R.string.parseISO));
         format.setTimeZone(TimeZone.getTimeZone(resources.getString(R.string.gmt)));
         Calendar calendarArticle = Calendar.getInstance();
         Calendar calendarNow = Calendar.getInstance();
-        try
-        {
+        try {
             calendarArticle.setTime(format.parse(date));
             int articleDay = calendarArticle.get(Calendar.DAY_OF_MONTH);
             int currentDay = calendarNow.get(Calendar.DAY_OF_MONTH);
@@ -77,43 +74,89 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             int currentHour = calendarNow.get(Calendar.HOUR_OF_DAY);
             int articleMinute = calendarArticle.get(Calendar.MINUTE);
             int currentMinute = calendarNow.get(Calendar.MINUTE);
-            if(articleMonth-currentMonth==0)
-            {
-                if(articleDay-currentDay==0)
-                {
-                    if(articleHour-currentHour==0)
-                    {
-                        if(articleMinute-currentMinute==0)
-                        {
+            if (articleMonth - currentMonth == 0) {
+                if (articleDay - currentDay == 0) {
+                    if (articleHour - currentHour == 0) {
+                        if (articleMinute - currentMinute == 0) {
                             returnDate = "Just now";
+                        } else {
+                            returnDate = (currentMinute - articleMinute) + "m ago";
                         }
-                        else
-                        {
-                            returnDate = (currentMinute-articleMinute)+"m ago";
-                        }
+                    } else {
+                        returnDate = (currentHour - articleHour) + "h ago";
                     }
-                    else
-                    {
-                        returnDate = (currentHour - articleHour)+"h ago";
-                    }
+                } else {
+                    returnDate = (currentDay - articleDay) + "d ago";
                 }
-                else
-                {
-                    returnDate = (currentDay - articleDay)+"d ago";
-                }
+            } else {
+                returnDate = (currentMonth - articleMonth) + "M ago";
             }
-            else
-            {
-                returnDate = (currentMonth-articleMonth)+"M ago";
-            }
-        } catch (ParseException e)
-        {
-            Log.e(Utilites.getTAG(),e.toString());
+        } catch (ParseException e) {
+            Log.e(Utilites.getTAG(), e.toString());
         }
         return returnDate;
     }
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
+
+    @Override
+    public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+        if (articleType.equals("long feature"))      //Inflate different view for news and feature
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_feature, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_news, parent, false);
+        }
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(ArticleAdapter.ViewHolder holder, final int position) {
+        holder.textViewTitle.setText(articles.get(position).getTitle());
+        {
+            String authorName = articles.get(position).getAuthor();
+            if (authorName == null)
+                authorName = "";
+            int i = authorName.indexOf(' ');
+            String authorFirst = "";
+            if (i == -1) {
+                authorFirst = authorName;
+            } else {
+                authorFirst = authorName.substring(0, i);
+            }
+            holder.textViewAuthor.setText(authorFirst);
+        }
+        holder.textViewDate.setText(getDate(articles.get(position).getDate()));
+        holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
+        if (articleType.equals("long feature")) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                //No shadow , align the dark background
+                int dpValue = 5 + 8; // margin in dips
+                float d = context.getResources().getDisplayMetrics().density;
+                int margin = (int) (dpValue * d); // margin in pixels
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.overlayLayout.getLayoutParams();
+                params.leftMargin = margin;
+                params.bottomMargin = margin;
+                params.rightMargin = margin;
+                holder.overlayLayout.setLayoutParams(params);
+            }
+            picasso.load(Utilites.getInitialImageURL(imageWidth, imageHeight, imageQuality, articles.get(position).getImageUrl()))
+                    .placeholder(R.drawable.sportscafe)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(holder.image);
+        } else {
+            picasso.load(Utilites.getInitialImageURL("300", "300", "80", articles.get(position).getImageUrl()))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(holder.image);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return articles.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         LinearLayout overlayLayout;
         TextView textViewTitle;
         TextView textViewSummary;
@@ -122,99 +165,36 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         TextView textViewDate;
         CardView cardView;
         ImageView image;
-        public ViewHolder(View V)
-        {
+
+        public ViewHolder(View V) {
             super(V);
-            overlayLayout = (LinearLayout)V.findViewById(R.id.overlay_layout);
-            cardView = (CardView)V.findViewById(R.id.card_view);
-            textViewTitle = (TextView)V.findViewById(R.id.title);
-            textViewSummary = (TextView)V.findViewById(R.id.summary);
-            textViewAuthor = (TextView)V.findViewById(R.id.author);
-            textViewSport = (TextView)V.findViewById(R.id.sport);
-            textViewDate = (TextView)V.findViewById(R.id.time);
-            image = (ImageView)V.findViewById(R.id.imageView);
+            overlayLayout = (LinearLayout) V.findViewById(R.id.overlay_layout);
+            cardView = (CardView) V.findViewById(R.id.card_view);
+            textViewTitle = (TextView) V.findViewById(R.id.title);
+            textViewSummary = (TextView) V.findViewById(R.id.summary);
+            textViewAuthor = (TextView) V.findViewById(R.id.author);
+            textViewSport = (TextView) V.findViewById(R.id.sport);
+            textViewDate = (TextView) V.findViewById(R.id.time);
+            image = (ImageView) V.findViewById(R.id.imageView);
             V.setOnClickListener(this);
         }
 
-        @SuppressLint("NewApi")
         @Override
-        public void onClick(View view)
-        {
-            View v = view.findViewById(R.id.imageView);
-            v.setTransitionName("shared_img_transition");
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context,v,v.getTransitionName());
-            Intent intent = new Intent(context,ContentActivity.class);
-            intent.putExtra(MostViewedConstants.ARG_ITEM,articles.get(getAdapterPosition()));
-            context.startActivity(intent,options.toBundle());
-        }
-    }
-    @Override
-    public ArticleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        View view;
-        if(articleType.equals("long feature"))      //Inflate different view for news and feature
-        {
-             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_feature,parent,false);
-        }
-        else
-        {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_news,parent,false);
-        }
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(ArticleAdapter.ViewHolder holder, final int position)
-    {
-        holder.textViewTitle.setText(articles.get(position).getTitle());
-        //holder.textViewSummary.setText(articles.get(position).getSummary());
-        {
-            String authorName = articles.get(position).getAuthor();
-            if(authorName==null)
-                authorName = "";
-            int i = authorName.indexOf(' ');
-            String authorFirst = "";
-            if(i==-1)
-            {
-                authorFirst = authorName;
+        public void onClick(View view) {
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+                View v = view.findViewById(R.id.imageView);
+                v.setTransitionName("shared_img_transition");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, v, v.getTransitionName());
+                Intent intent = new Intent(context, ContentActivity.class);
+                intent.putExtra(MostViewedConstants.ARG_ITEM, articles.get(getAdapterPosition()));
+                context.startActivity(intent, options.toBundle());
             }
-            else
-            {
-                authorFirst = authorName.substring(0, i);
+            else {
+                Intent intent = new Intent(context, ContentActivity.class);
+                intent.putExtra(MostViewedConstants.ARG_ITEM, articles.get(getAdapterPosition()));
+                context.startActivity(intent);
             }
-            holder.textViewAuthor.setText(authorFirst);
         }
-        holder.textViewDate.setText(getDate(articles.get(position).getDate()));
-        holder.textViewSport.setText(articles.get(position).getSport().toUpperCase());
-        if(articleType.equals("long feature"))
-        {
-            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP)
-            {
-                int dpValue = 5+8; // margin in dips
-                float d = context.getResources().getDisplayMetrics().density;
-                int margin = (int)(dpValue * d); // margin in pixels
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)holder.overlayLayout.getLayoutParams();
-                params.leftMargin = margin; params.bottomMargin = margin;params.rightMargin=margin;
-                holder.overlayLayout.setLayoutParams(params);
-            }
-            picasso.load(Utilites.getInitialImageURL(imageWidth, imageHeight, imageQuality, articles.get(position).getImageUrl()))
-                    .placeholder(R.drawable.sportscafe)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(holder.image);
-        }
-        else
-        {
-            picasso.load(Utilites.getInitialImageURL("300", "300", "80", articles.get(position).getImageUrl()))
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(holder.image);
-        }
-    }
-
-    @Override
-    public int getItemCount()
-    {
-        return articles.size();
     }
 
 
