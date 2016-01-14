@@ -10,6 +10,7 @@
         android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_centerVertical="true">
         <ImageView
             android:id="@+id/listTeamImage1"
@@ -21,7 +22,7 @@
             android:id="@+id/listTeamName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="0"/>
     </LinearLayout>
 
@@ -107,19 +108,20 @@
         android:layout_height="wrap_content"
         card_view:cardElevation="4dp"
         android:padding="2dp"
+        android:orientation="vertical"
         android:layout_centerVertical="true">
-        <TextView android:id="@+id/listTeamName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="team2"
-
-            android:layout_weight="0"/>
         <ImageView
             android:id="@+id/listTeamImage2"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_gravity="center_vertical"
+            android:layout_weight="0"/>
+        <TextView android:id="@+id/listTeamName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="team2"
+
             android:layout_weight="0"/>
     </LinearLayout>
 

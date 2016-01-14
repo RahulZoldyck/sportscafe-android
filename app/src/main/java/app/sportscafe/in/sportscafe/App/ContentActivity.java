@@ -3,6 +3,7 @@ package app.sportscafe.in.sportscafe.App;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -86,14 +87,23 @@ public class ContentActivity extends AppCompatActivity {
             }
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
+
+
+        Typeface georgia = Typeface.createFromAsset(getAssets(),  "fonts/Georgia.ttf");
+        Typeface montserrat = Typeface.createFromAsset(getAssets(),  "fonts/montserrat_regular.ttf");
+
+
+
         nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
         content = (TextView) findViewById(R.id.content);
+        content.setTypeface(georgia);
         summary = (TextView) findViewById(R.id.summary);
         author = (TextView) findViewById(R.id.author_name);
         contentImage = (ImageView) findViewById(R.id.mvContentImage);
         Picasso.with(this).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, imageQuality, imgURL)).centerCrop().resize(300, 300).into(contentImage);
         header = (TextView) findViewById(R.id.content_title);
         header.setText(title);
+        header.setTypeface(montserrat);
         getSupportActionBar().setTitle(title);
         author.setText(authorName);
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
@@ -112,7 +113,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ArticleAdapter.ViewHolder holder, final int position) {
+        Typeface montserrat = Typeface.createFromAsset(context.getAssets(),  "fonts/montserrat_regular.ttf");
         holder.textViewTitle.setText(articles.get(position).getTitle());
+        holder.textViewTitle.setTypeface(montserrat);
+
         {
             String authorName = articles.get(position).getAuthor();
             if (authorName == null)

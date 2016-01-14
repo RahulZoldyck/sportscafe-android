@@ -17,8 +17,8 @@
             android:layout_gravity="center"
             android:foreground="?android:attr/selectableItemBackground"
             card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="4dp"
-            android:layout_margin="8dp">
+            card_view:cardElevation="2dp"
+            android:layout_margin="2dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,6 +42,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:minLines="1"
+                        android:maxLines="3"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:background="@color/colorPureWhite"

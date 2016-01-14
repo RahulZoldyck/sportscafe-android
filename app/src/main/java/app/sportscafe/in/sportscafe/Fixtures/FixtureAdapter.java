@@ -2,6 +2,7 @@ package app.sportscafe.in.sportscafe.Fixtures;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class FixtureAdapter extends ArrayAdapter<FixtureCardItem> {
         sport.setText(cardItem.getSport());
         title.setText(cardItem.getTournamentName());
         ArrayList<FixtureListItem> listItems = cardItem.getListItems();
+        Typeface montserrat = Typeface.createFromAsset(context.getAssets(), "fonts/montserrat_regular.ttf");
         for (FixtureListItem listItem : listItems) {
             if (isFixture) {
                 child = childInflater.inflate(R.layout.fixture_list_layout, null);
@@ -56,7 +58,9 @@ public class FixtureAdapter extends ArrayAdapter<FixtureCardItem> {
                 ImageView teamImg1 = (ImageView) child.findViewById(R.id.listTeamImage1);
                 ImageView teamImg2 = (ImageView) child.findViewById(R.id.listTeamImage2);
                 TextView teamName1 = (TextView) child.findViewById(R.id.listTeamName1);
+                teamName1.setTypeface(montserrat);
                 TextView teamName2 = (TextView) child.findViewById(R.id.listTeamName2);
+                teamName2.setTypeface(montserrat);
                 TextView matchName = (TextView) child.findViewById(R.id.listMatchName);
                 TextView dateTextView = (TextView) child.findViewById(R.id.listDate);
                 TextView monthTextView = (TextView) child.findViewById(R.id.listMonth);

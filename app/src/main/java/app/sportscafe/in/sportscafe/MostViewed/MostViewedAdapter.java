@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
@@ -88,8 +89,10 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Cu
 
         public CustomViewHolder(View view) {
             super(view);
+            Typeface montserrat = Typeface.createFromAsset(mContext.getAssets(),  "fonts/montserrat_regular.ttf");
             this.image = (ImageView) view.findViewById(R.id.MVimage);
             this.title = (TextView) view.findViewById(R.id.MVtitle);
+            this.title.setTypeface(montserrat);
             this.tag = (TextView) view.findViewById(R.id.MVtag);
             this.linearLayout = (LinearLayout) view.findViewById(R.id.mvCard);
         }
