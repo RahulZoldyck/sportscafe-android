@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ArticlesFragment.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setSelectedTabIndicatorHeight((int) (5*getResources().getDisplayMetrics().density));
         tabLayout.setupWithViewPager(mViewPager);
 
     }

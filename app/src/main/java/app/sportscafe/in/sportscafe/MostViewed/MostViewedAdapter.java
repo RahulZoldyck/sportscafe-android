@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -54,7 +54,7 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Cu
         Picasso.with(mContext).load(Utilites.getInitialImageURL(Utilites.image_width, Utilites.image_height, "60", article.getImageUrl()))
                 .placeholder(R.mipmap.logo)
                 .into(customViewHolder.image);
-        customViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
@@ -85,7 +85,7 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Cu
         ImageView image;
         TextView title;
         TextView tag;
-        LinearLayout linearLayout;
+        CardView cardView;
 
         public CustomViewHolder(View view) {
             super(view);
@@ -94,7 +94,7 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Cu
             this.title = (TextView) view.findViewById(R.id.MVtitle);
             this.title.setTypeface(montserrat);
             this.tag = (TextView) view.findViewById(R.id.MVtag);
-            this.linearLayout = (LinearLayout) view.findViewById(R.id.mvCard);
+            this.cardView = (CardView) view.findViewById(R.id.mvCard);
         }
     }
 }

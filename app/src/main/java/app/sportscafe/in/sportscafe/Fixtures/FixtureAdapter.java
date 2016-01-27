@@ -108,12 +108,12 @@ public class FixtureAdapter extends ArrayAdapter<FixtureCardItem> {
 
     private View inflateHockey(FixtureListItem listItem) {
         //TODO:Hockey layout
-        return null;
+        return child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
     }
 
     private View inflateCricket(FixtureListItem listItem) {
         //TODO:Cricket layout
-        return null;
+        return child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
     }
 
     private View inflateWrestling(FixtureListItem listItem) {
@@ -137,12 +137,12 @@ public class FixtureAdapter extends ArrayAdapter<FixtureCardItem> {
 
     private View inflateTennis(FixtureListItem listItem) {
         //TODO:Tennis layout
-        return null;
+        return child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
     }
 
     private View inflateBadminton(FixtureListItem listItem) {
         //TODO:Badminton layout
-        return null;
+        return child = childInflater.inflate(R.layout.scores_for_football_wrestling, null);
     }
 
     private View inflateFootball(FixtureListItem listItem) {

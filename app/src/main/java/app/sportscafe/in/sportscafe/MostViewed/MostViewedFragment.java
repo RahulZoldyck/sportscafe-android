@@ -1,6 +1,7 @@
 package app.sportscafe.in.sportscafe.MostViewed;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -101,11 +102,28 @@ public class MostViewedFragment extends Fragment {
 
 
     }
+    public void setTabColor(TabHost tabhost) {
+
+        for(int i=0;i<tabhost.getTabWidget().getChildCount();i++)
+            tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.WHITE); //unselected
+
+
+            tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.RED); //1st tab selected
+    }
 
     private void inflateTabs(Article[] dayitems, Article[] monthitems, Article[] weekitems) {
         mTabHost = (TabHost) v.findViewById(R.id.tabHost);
         mTabHost.setup();
         mTabHost.clearAllTabs();
+        mTabHost.setOnTabChangedListener(
+                new TabHost.OnTabChangeListener() {
+                    @Override
+                    public void onTabChanged(String tabId) {
+                        setTabColor(mTabHost);
+                    }
+                }
+        );
+//        setTabColor(mTabHost);
         final Article[] dayItems = dayitems;
         final Article[] weekItems = weekitems;
         final Article[] monthItems = monthitems;
